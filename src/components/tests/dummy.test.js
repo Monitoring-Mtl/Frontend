@@ -1,4 +1,4 @@
-// utils.test.js
+// dummy.test.js
 const { add } = require('../dummyTest');
 
 test('add function adds two numbers correctly', () => {
