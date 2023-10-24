@@ -1,4 +1,4 @@
-let SampleShapeData = 
+const sampleShapeData = JSON.parse(JSON.stringify(
     {"shape":[
         {"shape_id":11071,"shape_pt_lat":45.446466,"shape_pt_lon":-73.603118,"shape_pt_sequence":10001},
         {"shape_id":11071,"shape_pt_lat":45.451158,"shape_pt_lon":-73.593242,"shape_pt_sequence":10002},
@@ -27,6 +27,7 @@ let SampleShapeData =
         {"shape_id":11071,"shape_pt_lat":45.582736,"shape_pt_lon":-73.543133,"shape_pt_sequence":240002},
         {"shape_id":11071,"shape_pt_lat":45.589431,"shape_pt_lon":-73.539269,"shape_pt_sequence":250002},
         {"shape_id":11071,"shape_pt_lat":45.596572,"shape_pt_lon":-73.535376,"shape_pt_sequence":260002}
-    ]};
+    ]}
+));
 
-export {SampleShapeData};
+export {sampleShapeData};

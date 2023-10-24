@@ -3,14 +3,14 @@ import 'ol/ol.css';
 import {Map, View} from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
-import { fromLonLat } from 'ol/proj';
+import {fromLonLat} from 'ol/proj';
 import {Feature} from "ol"
-import {LineString} from "ol/geom"
+import {LineString, Point} from "ol/geom"
 import {Vector as VectorLayer} from "ol/layer" 
 import {Vector as VectorSource} from "ol/source"
 import {Style, Stroke} from "ol/style"
 
-import { RouteShape } from './RouteShape';
+import { RouteShape, Stop } from '@/types/mapTypes';
 
 export class MapProxy {
 
@@ -37,7 +37,7 @@ export class MapProxy {
     }
 
     public addRoute(routeShape:RouteShape){
-      let route = new VectorLayer({
+      let routelayer = new VectorLayer({
         source: new VectorSource({
           features: [new Feature({
             geometry: new LineString(routeShape.coordinates)
@@ -50,8 +50,26 @@ export class MapProxy {
            })
       })
     });
+    this.olMap.addLayer(routelayer);
+  }
 
-    this.olMap.addLayer(route);
+    public addStops(stops:Stop[]){
+
+      let features : Feature[] = [];
+
+      for (let i = 0; i < stops.length; i++){
+        features.push(new Feature({
+          geometry: new Point(stops[i].coordinates)
+          })
+        )};
+
+      let stopsLayer = new VectorLayer({
+        source: new VectorSource({
+          features: features
+        })
+    });
+
+    this.olMap.addLayer(stopsLayer);
   }
 
     public dispose(){
