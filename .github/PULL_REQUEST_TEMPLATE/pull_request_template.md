@@ -1,4 +1,4 @@
-### 🛠  Why are these changes being made? / Quel est l'objectif du changement?
+### 🛠 Why are these changes being made? / Quel est l'objectif du changement?
 
 What's the context for the changes? Is there an issue linked with this merge request?
 Pourquoi faire ce changement? Est-ce qu'il y a une issue liée à la merge request?
