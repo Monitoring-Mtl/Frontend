@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import BasicForm from "./layouts/BasicForm";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,18 +20,24 @@ export default function RootLayout({
         <div className="map-and-side-menu grid grid-cols-12 h-full w-full">
           <div className="header-and-map col-span-9 h-full w-full">
             <div className="header h-12 bg-red-600">
-              <img
-                src={"/logo-pfe.png"}
-                alt={"logo"}
-                width={`${(48 * 252) / 155}`}
-                height={48}
-              />
+              <picture>
+                <img
+                  src={"/logo-pfe.png"}
+                  alt={"logo"}
+                  width={`${(48 * 252) / 155}`}
+                  height={48}
+                />
+              </picture>
             </div>
             <div className="map h-full w-full">{children}</div>
           </div>
           <div className="side-menu col-span-3">
             <div className="side-menu-top h-80 border-b-2"></div>
-            <div className="side-menu-bottom"></div>
+            <div className="side-menu-bottom">
+              <BasicForm title={"Titre"} submitText="Suivant">
+                <>Form!</>
+              </BasicForm>
+            </div>
           </div>
         </div>
       </body>
