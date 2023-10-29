@@ -40,9 +40,9 @@ jobs:
           vulnerabilities=$(< audit_results.json)
           echo "Full audit results:"
           echo "$vulnerabilities"
-          if [ "$vulnerabilities" != "null" ]; then
+          if [ "$(jq '.metadata.vulnerabilities.total' audit_results.json)" -eq 0 ]; then
+            echo "No vulnerabilities found."
+          else
             echo "Vulnerabilities found. Failing the check."
             exit 1
-          else
-            echo "No vulnerabilities found."
           fi
