@@ -1,5 +1,5 @@
 // dummy.test.js
-const { add } = require('../dummyTest');
+const { add } = require('../../src/components/dummyTest');
 
 test('add function adds two numbers correctly', () => {
     const result = add(2, 3);

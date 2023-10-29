@@ -1,5 +1,5 @@
 module.exports = {
-    roots: ["<rootDir>/src/components/tests/"],
+    roots: ["<rootDir>/tests/"],
 
     // Jest configuration options
     coverageDirectory: 'coverage', // Output directory for coverage reports
