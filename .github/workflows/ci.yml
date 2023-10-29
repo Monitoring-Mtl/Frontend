@@ -37,7 +37,9 @@ jobs:
 
       - name: Check for Vulnerabilities
         run: |
-          vulnerabilities=$(jq '.metadata.vulnerabilities' audit_results.json)
+          vulnerabilities=$(< audit_results.json)
+          echo "Full audit results:"
+          echo "$vulnerabilities"
           if [ "$vulnerabilities" != "null" ]; then
             echo "Vulnerabilities found. Failing the check."
             exit 1
