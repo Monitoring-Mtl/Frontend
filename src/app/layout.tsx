@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import BasicForm from "./layouts/BasicForm";
+import SelectBusLineForm from "./layouts/SelectBusLineForm";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,9 +34,7 @@ export default function RootLayout({
           <div className="side-menu col-span-3">
             <div className="side-menu-top h-80 border-b-2"></div>
             <div className="side-menu-bottom">
-              <BasicForm title={"Titre"} submitText="Suivant">
-                <>Form!</>
-              </BasicForm>
+              <SelectBusLineForm />
             </div>
           </div>
         </div>
