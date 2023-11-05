@@ -1,4 +1,4 @@
-name: Run Tests on PR
+name: Run Tests and Audit on PR
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  test:
+  test-and-audit:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,5 +29,20 @@ jobs:
         run: |
           if [ $? -ne 0 ]; then
             echo "Unit tests failed. Commit rejected."
+            exit 1
+          fi
+
+      - name: Run npm audit
+        run: npm audit --json > audit_results.json || true
+
+      - name: Check for Vulnerabilities
+        run: |
+          vulnerabilities=$(< audit_results.json)
+          echo "Full audit results:"
+          echo "$vulnerabilities"
+          if [ "$(jq '.metadata.vulnerabilities.total' audit_results.json)" -eq 0 ]; then
+            echo "No vulnerabilities found."
+          else
+            echo "Vulnerabilities found. Failing the check."
             exit 1
           fi
