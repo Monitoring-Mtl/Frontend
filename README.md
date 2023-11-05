@@ -46,3 +46,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - [mui](https://mui.com/material-ui/getting-started/)
 - [yup](https://www.npmjs.com/package/yup)
 - [formik](https://formik.org/docs/overview)
+
+## Unit tests
+
+npm run setup
+npx jest or npm test
+open coverage/index.html

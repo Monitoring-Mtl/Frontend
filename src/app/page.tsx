@@ -1,9 +1,9 @@
 "use client"
 
 import React, {useEffect} from 'react';
-import { MapProxy } from '@/types/map/MapProxy';
-import { ServerlessApiService } from '@/services/api/ServerlessApiService';
-import { RouteShape } from '@/types/map/RouteShape';
+import { MapProxy } from '@/models/MapProxy';
+import { ServerlessApiService } from '@/services/ServerlessApiService';
+import { RouteShape } from '@/types/mapTypes';
 
 export default function Home() {
 
@@ -13,6 +13,15 @@ export default function Home() {
       const routeShape : RouteShape | null = await ServerlessApiService.getShape("shapeId");
       if (routeShape){
         map.addRoute(routeShape);
+      }
+
+      const busData = await ServerlessApiService.GetBusData("", "");
+
+      const rampAccessSchedule = await ServerlessApiService.GetRampAccessSchedule("", "");
+
+      const stops = await ServerlessApiService.GetStops("");
+      if (stops){
+        map.addStops(stops);
       }
     }
 
