@@ -1,7 +1,6 @@
 "use client";
 
-import { Field, FormikHelpers } from "formik";
-import FormikWrapper from "../components/FormikWrapper";
+import { Field, Formik, FormikHelpers } from "formik";
 import BasicFormLayout from "./BasicFormLayout";
 import { useState } from "react";
 import * as yup from "yup";
@@ -25,7 +24,7 @@ export default function SelectBusLineForm() {
   });
 
   return (
-    <FormikWrapper
+    <Formik
       initialValues={formInitialValues}
       validationSchema={SelectBusLineFormSchema}
       onSubmit={(
@@ -49,6 +48,6 @@ export default function SelectBusLineForm() {
           </BasicFormLayout>
         </>
       )}
-    </FormikWrapper>
+    </Formik>
   );
 }
