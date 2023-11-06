@@ -4,7 +4,9 @@ import { Field, Formik, FormikHelpers } from "formik";
 import BasicFormLayout from "./BasicFormLayout";
 import { useState } from "react";
 import * as yup from "yup";
-import TxtDanger from "../components/TxtDanger";
+import TxtDanger from "../../components/TxtDanger";
+import BusLineOptionList from "@/components/BusLineOptionList";
+import StopIdOptionList from "@/components/StopIdOptionList";
 
 type SelectBusLineFormFields = {
   test: string;
@@ -45,6 +47,18 @@ export default function SelectBusLineForm() {
             {errors.test && touched.test ? (
               <TxtDanger>{errors.test}</TxtDanger>
             ) : null}
+            <div>
+              <label htmlFor="busLine">Bus Line:</label>
+              <Field name="busLine" as="select">
+                <BusLineOptionList />
+              </Field>
+            </div>
+            <div>
+            <label htmlFor="stopId">Stop Id:</label>
+            <Field name="stopId" as="select">
+              <StopIdOptionList />
+            </Field>
+            </div>
           </BasicFormLayout>
         </>
       )}
