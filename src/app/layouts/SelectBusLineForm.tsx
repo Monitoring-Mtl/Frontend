@@ -10,6 +10,8 @@ import StopIdOptionList from "@/components/StopIdOptionList";
 
 type SelectBusLineFormFields = {
   test: string;
+  busLine: number;
+  stopId: number;
 };
 
 const SelectBusLineFormSchema = yup.object().shape({
@@ -23,6 +25,8 @@ const SelectBusLineFormSchema = yup.object().shape({
 export default function SelectBusLineForm() {
   const [formInitialValues] = useState<SelectBusLineFormFields>({
     test: "allo",
+    busLine: 51,
+    stopId: 1
   });
 
   return (
