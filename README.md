@@ -8,7 +8,12 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+Uninstall other version of node and install node 18.16.0: https://nodejs.org/dist/v18.16.0/
+yarn install -force
+yarn -force
+yarn build
+
+and run the development server:
 
 ```bash
 npm run dev
