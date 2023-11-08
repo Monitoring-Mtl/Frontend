@@ -31,7 +31,7 @@ export class MapProxy {
         ],
         view: new View({
           center: MapProxy.montrealCoordinates,
-          zoom: 12
+          zoom: 10
         })
       });
     }

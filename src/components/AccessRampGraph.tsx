@@ -4,8 +4,8 @@ import * as d3 from 'd3';
 
 export const AccessRampGraph = ({id, busData}) => {
 
-    const computeOuterRadius = (width, height, margin) => (Math.min(width, height) / 3) - (margin.top + margin.bottom);
-    const computeFontSize = (width, height) => Math.min(width, height) / 40;
+    const computeOuterRadius = (width, height, margin) => (Math.min(width, height) / 2) - (margin.top + margin.bottom);
+    const computeFontSize = (width, height) => Math.min(width, height) / 25;
 
     const margin = {
         top: 20, 
@@ -117,7 +117,7 @@ export const AccessRampGraph = ({id, busData}) => {
 
     return (
         <div id={id}>
-            <div id={overlayId} className='bg-white border rounded-lg px-2 py-2 opacity-90'>
+            <div id={overlayId} className='bg-white border rounded-lg px-2 py-2 opacity-90 hidden'>
             </div>
         </div>
     );
