@@ -14,6 +14,21 @@ body {
   height: 100%;
 }
 
+#header {
+  background-color: #ef3e45;
+  height : 5%;
+}
+
+#footer {
+  background-color: #414042;
+  height : 5%;
+}
+
+#dashboard-and-side-menu {
+  height: 90%;
+}
+
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;

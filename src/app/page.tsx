@@ -45,8 +45,8 @@ export default function Home() {
           id={"ramp-access-graph"}
           busData={busData}
       />
-      <div className="bg-black h-full w-full"></div>
-      <div className="bg-black h-full w-full"></div>
+      <div className="bg-gray-500 h-full w-full"></div>
+      <div className="bg-gray-500 h-full w-full"></div>
     </main>
   )
 }

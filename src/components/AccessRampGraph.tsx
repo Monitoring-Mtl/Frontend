@@ -4,8 +4,8 @@ import * as d3 from 'd3';
 
 export const AccessRampGraph = ({id, busData}) => {
 
-    const computeOuterRadius = (width, height, margin) => (Math.min(width, height) / 3) - (margin.top + margin.bottom);
-    const computeFontSize = (width, height) => Math.min(width, height) / 40;
+    const computeOuterRadius = (width, height, margin) => (Math.min(width, height) / 2) - (margin.top + margin.bottom);
+    const computeFontSize = (width, height) => Math.min(width, height) / 25;
 
     const margin = {
         top: 20, 
