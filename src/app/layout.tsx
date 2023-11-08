@@ -18,8 +18,8 @@ export default function RootLayout({
     <html lang="fr">
       <body className={inter.className}>
 
-        <div id="header" className="bg-red-600">
-          <picture>
+        <div id="header">
+          <picture className="h-full">
             <img
               src={"/logo-pfe.png"}
               alt={"logo"}

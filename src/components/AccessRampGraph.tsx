@@ -117,7 +117,7 @@ export const AccessRampGraph = ({id, busData}) => {
 
     return (
         <div id={id}>
-            <div id={overlayId} className='bg-white border rounded-lg px-2 py-2 opacity-90'>
+            <div id={overlayId} className='bg-white border rounded-lg px-2 py-2 opacity-90 hidden'>
             </div>
         </div>
     );
