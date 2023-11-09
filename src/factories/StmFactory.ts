@@ -1,6 +1,6 @@
 import { fromLonLat } from 'ol/proj';
-import { BusData, RampAccessSchedule, RouteShape, Stop } from "@/types/mapTypes";
-import { routeShapeProperties } from "@/factories/propertyObjects";
+import { BusData, RampAccessSchedule, Route, RouteShape, Stop } from "@/types/stmTypes";
+import { routeProperties, routeShapeProperties  } from "@/factories/propertyObjects";
 
 export class StmFactory {
     
@@ -36,6 +36,12 @@ export class StmFactory {
         rampAccessSchedules.sort((a, b) => a.date.getTime() - b.date.getTime());
 
         return rampAccessSchedules;
+    }
+
+    static createRoutes(data:JSON) : Route[] {
+        return data["response"]
+            .filter(route => route[routeProperties.type] === routeProperties.busType)
+            .map(route => ({id:route[routeProperties.id], name:route[routeProperties.name]}))
     }
 
     static createRouteShape(data: JSON) : RouteShape | null{

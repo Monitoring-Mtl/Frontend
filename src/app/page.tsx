@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import { ServerlessApiService } from '@/services/ServerlessApiService';
-import { BusData, RouteShape, Stop } from '@/types/mapTypes';
+import { BusData, RouteShape, Stop } from '@/types/stmTypes';
 import { AccessRampGraph } from '@/components/AccessRampGraph';
 import { StmMap } from '@/components/map/StmMap';
 
