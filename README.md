@@ -57,3 +57,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 npm run setup
 npx jest or npm test
 open coverage/index.html
+
+## AWS amplify
+npm update if getting : npm ERR! `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+2023-11-09T00:46:09.052Z [WARNING]: npm ERR!
