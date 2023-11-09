@@ -19,14 +19,14 @@ export default function Home() {
         setRouteShape(routeShape);
       }
 
-      const busData = await ServerlessApiService.GetBusData("", "");
+      const busData = await ServerlessApiService.getBusData("", "");
       if (busData){
         setBusData(busData);
       }
 
       const rampAccessSchedule = await ServerlessApiService.GetRampAccessSchedule("", "");
 
-      const stops = await ServerlessApiService.GetStops("");
+      const stops = await ServerlessApiService.getStops("");
       if (stops){
         setStops(stops);
       }

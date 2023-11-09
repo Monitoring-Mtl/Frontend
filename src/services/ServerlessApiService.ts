@@ -6,7 +6,7 @@ const routesEndpoint = "routes";
 
 export class ServerlessApiService {
 
-    public static async GetBusData(routeId:string, stopId:string){
+    public static async getBusData(routeId:string, stopId:string){
         return StmFactory.createBusData(JSON.parse("{}"));
     }
 
@@ -14,7 +14,7 @@ export class ServerlessApiService {
         return StmFactory.createRampAccessSchedule(JSON.parse("{}"));
     }
 
-    public static async GetRoutes(){
+    public static async getRoutes(){
         const response = await fetch(baseUrl+routesEndpoint, { method: "GET"});
         if (response.status === 200){
             const json = await response.json();
@@ -29,7 +29,7 @@ export class ServerlessApiService {
         return StmFactory.createRouteShape(JSON.parse("{}"));
     }
 
-    public static async GetStops(routeId:string){
+    public static async getStops(routeId:string){
         return StmFactory.createStops(JSON.parse("{}"));
     }
 }
