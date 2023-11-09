@@ -52,13 +52,13 @@ export default function SelectBusLineForm() {
               <TxtDanger>{errors.test}</TxtDanger>
             ) : null}
             <div>
-              <label htmlFor="busLine">Ligne d'autobus: </label>
+              <label htmlFor="busLine">Ligne d&#39;autobus: </label>
               <Field name="busLine" as="select">
                 <BusLineOptionList />
               </Field>
             </div>
             <div>
-            <label htmlFor="stopId">Numéro d'arrêt: </label>
+            <label htmlFor="stopId">Numéro d&#39;arrêt: </label>
             <Field name="stopId" as="select">
               <StopIdOptionList />
             </Field>
