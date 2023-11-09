@@ -24,7 +24,7 @@ export default function Home() {
         setBusData(busData);
       }
 
-      const rampAccessSchedule = await ServerlessApiService.GetRampAccessSchedule("", "");
+      const rampAccessSchedule = await ServerlessApiService.getRampAccessSchedule("", "");
 
       const stops = await ServerlessApiService.getStops("");
       if (stops){

@@ -10,7 +10,7 @@ export class ServerlessApiService {
         return StmFactory.createBusData(JSON.parse("{}"));
     }
 
-    public static async GetRampAccessSchedule(routeId:string, stopId:string){
+    public static async getRampAccessSchedule(routeId:string, stopId:string){
         return StmFactory.createRampAccessSchedule(JSON.parse("{}"));
     }
 
