@@ -27,7 +27,7 @@ export default function PieChart({
   renderListener,
   colorRange,
 }: IPieChart) {
-  const overlayId = "access-ramp-overlay";
+  const overlayId = "access-ramp-overlay-" + id;
 
   const computeFontSize = (width: number, height: number) =>
     Math.min(width, height) / 25;
