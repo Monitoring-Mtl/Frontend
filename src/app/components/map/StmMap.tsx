@@ -5,11 +5,17 @@ import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
 import { Style, Stroke } from "ol/style";
 import { Map } from "./Map";
-import { MapOptions } from "@/types/stmTypes";
+import { MapOptions, RouteShape, Stop } from "@/types/stmTypes";
+import { memo } from "react";
 
 const montrealCoordinates = fromLonLat([-73.56198339521531, 45.49501768328183]);
 
-export const StmMap = ({ routeShape, stops }) => {
+interface IStmMap {
+  routeShape?: RouteShape;
+  stops: Stop[];
+}
+
+export const StmMap = memo(function StmMap({ routeShape, stops }: IStmMap) {
   let routeLayer;
   if (routeShape) {
     routeLayer = new VectorLayer({
@@ -56,4 +62,4 @@ export const StmMap = ({ routeShape, stops }) => {
   };
 
   return <Map mapOptions={mapOptions} />;
-};
+});
