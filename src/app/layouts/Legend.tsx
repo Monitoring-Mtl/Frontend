@@ -3,7 +3,7 @@ type LegendItem = {
   label: string;
 };
 
-interface ILegend {
+export interface ILegend {
   items: LegendItem[];
 }
 

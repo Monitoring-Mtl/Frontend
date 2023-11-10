@@ -1,35 +1,32 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect } from "react";
 import * as d3 from "d3";
-import { BusData } from "@/types/stmTypes";
 
 //Cette ligne fix l'erreur "document is not defined", mais next s'attend à ce que le svg soit retourné par le serveur
 // Cause une autre erreur d'hydration
 // if (typeof window !== "undefined") {
 
-interface IAccessRampGraph {
+interface IPieChart {
   id: string;
-  busData: BusData[];
+  pies: Pie[];
   renderListener?: any;
+  colorRange: string[];
 }
 
-type ChartData = {
+export type Pie = {
   label: string;
   value: number;
 };
 
 type Margin = { top: number; bottom: number };
 
-export default function AccessRampGraph({
+export default function PieChart({
   id,
-  busData,
+  pies,
   renderListener,
-}: IAccessRampGraph) {
-  let accessRampCount = busData.filter((bus) => bus.hasAccessRamp).length;
-
-  const graphElementClass = "graph-element";
-
+  colorRange,
+}: IPieChart) {
   const computeFontSize = (width: number, height: number) =>
     Math.min(width, height) / 25;
 
@@ -38,17 +35,9 @@ export default function AccessRampGraph({
 
   const drawChart = useCallback(
     (width: number, height: number, margin: Margin) => {
-      const pies: ChartData[] = [
-        { label: "Avec rampe d'accès", value: accessRampCount },
-        {
-          label: "Sans rampe d'accès",
-          value: busData.length - accessRampCount,
-        },
-      ];
-
       d3.select(`#${id}`).select("svg").remove();
 
-      let colorScale: any = d3.scaleOrdinal().range(["#F8B1B4", "#ef3e45"]);
+      let colorScale: any = d3.scaleOrdinal().range(colorRange);
 
       const svg = d3
         .select(`#${id}`)
@@ -76,7 +65,7 @@ export default function AccessRampGraph({
       arc
         .append("path")
         .attr("d", arcGenerator)
-        .attr("class", graphElementClass)
+        .attr("class", "graph-element")
         .style("fill", (_, i) => colorScale(i))
         .style("stroke", "#ffffff")
         .style("stroke-width", 0);
@@ -85,7 +74,7 @@ export default function AccessRampGraph({
         .append("text")
         .attr("text-anchor", "middle")
         .attr("alignment-baseline", "middle")
-        .attr("class", graphElementClass)
+        .attr("class", "graph-element")
         .text((d) => d.value)
         .style("font-size", `${computeFontSize(width, height)}px`)
         .attr("transform", (d) => {
@@ -93,7 +82,7 @@ export default function AccessRampGraph({
           return `translate(${x}, ${y})`;
         });
     },
-    [accessRampCount, busData.length, id]
+    [colorRange, id, pies]
   );
 
   const render = useCallback(() => {

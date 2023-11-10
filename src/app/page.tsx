@@ -4,12 +4,11 @@ import React, { useEffect, useState } from "react";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
 import { BusData, RouteShape, Stop } from "@/types/stmTypes";
 import SelectBusLineForm from "./layouts/SelectBusLineForm";
-import { Card, CardContent, CardHeader } from "@mui/material";
+import { Card } from "@mui/material";
 import Row from "./layouts/Row";
-import Legend from "@/app/layouts/Legend";
-import AccessRampGraph from "./components/AccessRampGraph";
 import { StmMap } from "./components/map/StmMap";
 import Button from "./components/Button";
+import PieChartLayout from "./layouts/PieChart";
 
 export default function Home() {
   const [busData, setBusData] = useState<BusData[]>([]);
@@ -43,43 +42,45 @@ export default function Home() {
     fetchData();
   }, []);
 
+  const numWithRamp = busData.filter((b) => b.hasAccessRamp).length;
+
   return (
     <div>
       <Row>
         {displayedDiagram == 0 && (
           <Card className="col-span-4">
-            <CardHeader title="Nombre d'autobus ayant une rampe d'accès"></CardHeader>
-            <CardContent id="ramp-access-graph" className="w-full h-96">
-              <AccessRampGraph
-                id={"ramp-access-graph"}
-                busData={busData}
-                renderListener={displayedDiagram}
-              />
-            </CardContent>
-            <Legend
-              items={[
-                { color: "#ef3e45", label: "Ont une rampe" },
-                { color: "#f8b1b4", label: "N'ont pas de rampe" },
+            <PieChartLayout
+              title="Autobus ayant une rampe d'accès"
+              pies={[
+                {
+                  label: "Ont une rampe d'accès",
+                  value: numWithRamp,
+                },
+                {
+                  label: "N'ont pas une rampe d'accès",
+                  value: busData.length - numWithRamp,
+                },
               ]}
+              renderListener={displayedDiagram}
             />
           </Card>
         )}
 
         {displayedDiagram != 0 && (
           <Card className="col-span-4">
-            <CardHeader title="Ceci est un autre diagramme"></CardHeader>
-            <CardContent id="ramp-access-graph" className="w-full h-96">
-              <AccessRampGraph
-                id={"ramp-access-graph"}
-                busData={busData}
-                renderListener={displayedDiagram}
-              />
-            </CardContent>
-            <Legend
-              items={[
-                { color: "#ef3e45", label: "Ont une rampe" },
-                { color: "#f8b1b4", label: "N'ont pas de rampe" },
+            <PieChartLayout
+              title={"Ceci est un autre diagramme" + displayedDiagram}
+              pies={[
+                {
+                  label: "Ont une rampe d'accès",
+                  value: numWithRamp,
+                },
+                {
+                  label: "N'ont pas une rampe d'accès",
+                  value: busData.length - numWithRamp,
+                },
               ]}
+              renderListener={displayedDiagram}
             />
           </Card>
         )}
