@@ -1,33 +1,40 @@
-"use client"
+"use client";
 
-import React, {useEffect, useState} from 'react';
-import { ServerlessApiService } from '@/services/ServerlessApiService';
-import { BusData, RouteShape, Stop } from '@/types/stmTypes';
-import { AccessRampGraph } from '@/components/AccessRampGraph';
-import { StmMap } from '@/components/map/StmMap';
+import React, { useEffect, useState } from "react";
+import { ServerlessApiService } from "@/services/ServerlessApiService";
+import { BusData, RouteShape, Stop } from "@/types/stmTypes";
+import SelectBusLineForm from "./layouts/SelectBusLineForm";
+import { Card } from "@mui/material";
+import Row from "./layouts/Row";
+import { StmMap } from "./components/map/StmMap";
+import Button from "./components/Button";
+import PieChartLayout from "./layouts/PieChart";
 
 export default function Home() {
-
   const [busData, setBusData] = useState<BusData[]>([]);
   const [routeShape, setRouteShape] = useState<RouteShape>();
   const [stops, setStops] = useState<Stop[]>([]);
+  const [displayedDiagram, setDisplayedDiagram] = useState<number>(0);
 
-  useEffect(() =>  {
-    async function fetchData(){
-      const routeShape : RouteShape | null = await ServerlessApiService.getShape("shapeId");
-      if (routeShape){
+  useEffect(() => {
+    async function fetchData() {
+      const routeShape: RouteShape | null = await ServerlessApiService.getShape(
+        "shapeId"
+      );
+      if (routeShape) {
         setRouteShape(routeShape);
       }
 
       const busData = await ServerlessApiService.getBusData("", "");
-      if (busData){
+      if (busData) {
         setBusData(busData);
       }
 
-      const rampAccessSchedule = await ServerlessApiService.getRampAccessSchedule("", "");
+      const rampAccessSchedule =
+        await ServerlessApiService.getRampAccessSchedule("", "");
 
       const stops = await ServerlessApiService.getStops("");
-      if (stops){
+      if (stops) {
         setStops(stops);
       }
     }
@@ -35,23 +42,82 @@ export default function Home() {
     fetchData();
   }, []);
 
+  const numWithRamp = busData.filter((b) => b.hasAccessRamp).length;
+
   return (
-    <main className="h-full w-full grid grid-rows-2 grid-cols-2">
+    <div>
+      <Row>
+        <Card className="col-span-10 h-96">
+          <StmMap routeShape={routeShape} stops={stops} />
+        </Card>
 
-      <StmMap
-        routeShape={routeShape}
-        stops={stops}
-      />
+        <Card
+          className="col-span-2"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          <SelectBusLineForm />
+        </Card>
+      </Row>
 
-      <AccessRampGraph
-        id={"ramp-access-graph"}
-        busData={busData}
-      />
+      <Row>
+        <Card className="col-span-4">
+          <PieChartLayout
+            id="ramp-chart"
+            title="Autobus ayant une rampe d'accès"
+            pies={[
+              {
+                label: "Ont une rampe d'accès",
+                value: numWithRamp,
+              },
+              {
+                label: "N'ont pas une rampe d'accès",
+                value: busData.length - numWithRamp,
+              },
+            ]}
+            renderListener={displayedDiagram}
+          />
+        </Card>
 
-      <div className="bg-gray-500 h-full w-full border-r border-black"></div>
+        <Card className="col-span-4">
+          <PieChartLayout
+            id="other-chart1"
+            title={"Ceci est un autre diagramme 1"}
+            pies={[
+              {
+                label: "Ont une rampe d'accès",
+                value: numWithRamp,
+              },
+              {
+                label: "N'ont pas une rampe d'accès",
+                value: busData.length - numWithRamp,
+              },
+            ]}
+            renderListener={displayedDiagram}
+          />
+        </Card>
 
-      <div className="bg-gray-500 h-full w-full"></div>
-
-    </main>
-  )
+        <Card className="col-span-4">
+          <PieChartLayout
+            id="other-chart2"
+            title={"Ceci est un autre diagramme 2"}
+            pies={[
+              {
+                label: "Ont une rampe d'accès",
+                value: numWithRamp,
+              },
+              {
+                label: "N'ont pas une rampe d'accès",
+                value: busData.length - numWithRamp,
+              },
+            ]}
+            renderListener={displayedDiagram}
+          />
+        </Card>
+      </Row>
+    </div>
+  );
 }

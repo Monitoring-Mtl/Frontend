@@ -1,7 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import SelectBusLineForm from "./layouts/SelectBusLineForm";
+import Footer from "./layouts/Footer";
+import Header from "./layouts/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,29 +18,11 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={inter.className}>
-
-        <div id="header">
-          <picture className="h-full">
-            <img
-              src={"/logo-pfe.png"}
-              alt={"logo"}
-              className="h-full"
-            />
-          </picture>
-        </div>
-
-        <div id="dashboard-and-side-menu" className="grid grid-cols-12">
-          <div id="dashboard" className="col-span-10">{children}</div>
-          <div className="side-menu col-span-2">
-            <div className="side-menu-top h-80 border-b-2"></div>
-            <div className="side-menu-bottom">
-              <SelectBusLineForm />
-            </div>
-          </div>
-        </div>
-
-        <div id="footer"></div>
-
+        <Header />
+        <div style={{ height: "6rem" }}></div>
+        <main>{children}</main>
+        <div style={{ height: "6rem" }}></div>
+        <Footer />
       </body>
     </html>
   );

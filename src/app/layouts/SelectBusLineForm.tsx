@@ -1,15 +1,19 @@
 "use client";
 
-import { Field, Formik, FormikHelpers } from "formik";
-import BasicFormLayout from "./BasicFormLayout";
+import { Formik, FormikHelpers } from "formik";
 import { useState } from "react";
 import * as yup from "yup";
-import TxtDanger from "../../components/TxtDanger";
-import BusLineOptionList from "@/components/BusLineOptionList";
-import StopIdOptionList from "@/components/StopIdOptionList";
+import {
+  CardContent,
+  CardHeader,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
+import FullButton from "../components/FullButton";
 
 type SelectBusLineFormFields = {
-  test: string;
   busLine: number;
   stopId: number;
 };
@@ -22,11 +26,11 @@ const SelectBusLineFormSchema = yup.object().shape({
     .required("Required"),
 });
 
+//Ce composant est fait pour être placé dans une Card MUI
 export default function SelectBusLineForm() {
   const [formInitialValues] = useState<SelectBusLineFormFields>({
-    test: "allo",
     busLine: 51,
-    stopId: 1
+    stopId: 1,
   });
 
   return (
@@ -40,30 +44,39 @@ export default function SelectBusLineForm() {
         console.log(values);
       }}
     >
-      {({ errors, touched, submitForm }) => (
+      {({ submitForm, setFieldValue }) => (
         <>
-          <BasicFormLayout
-            onSubmit={() => submitForm()}
-            title={"Titre"}
-            submitText="Suivant"
-          >
-            <Field name="test" />
-            {errors.test && touched.test ? (
-              <TxtDanger>{errors.test}</TxtDanger>
-            ) : null}
-            <div>
-              <label htmlFor="busLine">Ligne d&#39;autobus: </label>
-              <Field name="busLine" as="select">
-                <BusLineOptionList />
-              </Field>
-            </div>
-            <div>
-            <label htmlFor="stopId">Numéro d&#39;arrêt: </label>
-            <Field name="stopId" as="select">
-              <StopIdOptionList />
-            </Field>
-            </div>
-          </BasicFormLayout>
+          <div>
+            <CardHeader title="Choix de la ligne et de l'arrêt" />
+            <CardContent>
+              <FormControl fullWidth>
+                <InputLabel># ligne</InputLabel>
+                <Select
+                  label="# ligne"
+                  onChange={(e) => setFieldValue("busLine", e.target.value)}
+                >
+                  <MenuItem value={51}>51</MenuItem>
+                  <MenuItem value={80}>80</MenuItem>
+                  <MenuItem value={480}>480</MenuItem>
+                  <MenuItem value={168}>168</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth>
+                <InputLabel># arrêt</InputLabel>
+                <Select
+                  label="# arrêt"
+                  onChange={(e) => setFieldValue("stopId", e.target.value)}
+                >
+                  <MenuItem value={1}>1</MenuItem>
+                  <MenuItem value={2}>2</MenuItem>
+                  <MenuItem value={3}>3</MenuItem>
+                  <MenuItem value={4}>4</MenuItem>
+                </Select>
+              </FormControl>
+            </CardContent>
+          </div>
+          <FullButton onClick={() => submitForm()}>Suivant</FullButton>
         </>
       )}
     </Formik>
