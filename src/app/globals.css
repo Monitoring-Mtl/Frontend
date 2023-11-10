@@ -40,9 +40,3 @@ main {
 .MuiCard-root {
   border-top: rgb(239, 62, 69) solid 1rem;
 }
-
-h2 {
-  font-size: 20px;
-  font-weight: 500;
-  margin-bottom: 1rem;
-}
