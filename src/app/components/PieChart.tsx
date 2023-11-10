@@ -43,7 +43,7 @@ export default function PieChart({
 
       const overlay = d3
         .select(`#${overlayId}`)
-        .style("position", "absolute")
+        .style("position", "fixed")
         .style("display", "none");
 
       const svg = d3
