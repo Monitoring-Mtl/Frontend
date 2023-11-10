@@ -27,6 +27,8 @@ export default function PieChart({
   renderListener,
   colorRange,
 }: IPieChart) {
+  const overlayId = "access-ramp-overlay";
+
   const computeFontSize = (width: number, height: number) =>
     Math.min(width, height) / 25;
 
@@ -38,6 +40,11 @@ export default function PieChart({
       d3.select(`#${id}`).select("svg").remove();
 
       let colorScale: any = d3.scaleOrdinal().range(colorRange);
+
+      const overlay = d3
+        .select(`#${overlayId}`)
+        .style("position", "absolute")
+        .style("display", "none");
 
       const svg = d3
         .select(`#${id}`)
@@ -81,6 +88,25 @@ export default function PieChart({
           const [x, y] = arcGenerator.centroid(d);
           return `translate(${x}, ${y})`;
         });
+
+      svg
+        .selectAll(".graph-element")
+        .on("mouseover", function (event, d: any) {
+          const sum: number = pies.reduce((a, b) => a + b.value, 0);
+          overlay
+            .html(`${((d.data / sum) * 100).toFixed(1)}%`)
+            .style("left", event.clientX + 10 + "px")
+            .style("top", event.clientY - 40 + "px")
+            .style("display", "block");
+        })
+        .on("mousemove", function (event, d) {
+          overlay
+            .style("left", event.clientX + 10 + "px")
+            .style("top", event.clientY - 40 + "px");
+        })
+        .on("mouseout", function () {
+          overlay.style("display", "none");
+        });
     },
     [colorRange, id, pies]
   );
@@ -108,5 +134,10 @@ export default function PieChart({
   render();
   window.addEventListener("resize", render);
 
-  return <div></div>;
+  return (
+    <div
+      id={overlayId}
+      className="bg-white border rounded-lg px-2 py-2 opacity-90 hidden"
+    ></div>
+  );
 }
