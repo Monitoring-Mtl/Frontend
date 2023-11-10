@@ -1,124 +1,109 @@
+"use client";
 
-import React, { useEffect} from 'react';
-import * as d3 from 'd3';
+import React, { useCallback, useEffect, useRef } from "react";
+import * as d3 from "d3";
+import { BusData } from "@/types/stmTypes";
 
-export const AccessRampGraph = ({id, busData}) => {
+//Cette ligne fix l'erreur "document is not defined", mais next s'attend à ce que le svg soit retourné par le serveur
+// Cause une autre erreur d'hydration
+// if (typeof window !== "undefined") {
 
-    const computeOuterRadius = (width, height, margin) => (Math.min(width, height) / 2) - (margin.top + margin.bottom);
-    const computeFontSize = (width, height) => Math.min(width, height) / 25;
+interface IAccessRampGraph {
+  id: string;
+  busData: BusData[];
+}
 
-    const margin = {
-        top: 20, 
-        bottom: 20
-    };
+type ChartData = {
+  label: string;
+  value: number;
+};
 
-    let width = 0;
-    let height = 0;
-    let data;
+type Margin = { top: number; bottom: number };
 
-    const overlayId = "access-ramp-overlay";
-    const graphElementClass = "graph-element";
+export default function AccessRampGraph({ id, busData }: IAccessRampGraph) {
+  let accessRampCount = busData.filter((bus) => bus.hasAccessRamp).length;
 
-    const render = () => {
-        let containerWidth = document.getElementById(id)?.offsetWidth;
-        let containerHeight = document.getElementById(id)?.offsetHeight;
-        if (containerWidth && containerHeight){
-            width = containerWidth;
-            height = containerHeight;
-        }
-        
-        let accessRampCount = busData.filter((bus) => bus.hasAccessRamp).length;
-        data = [
-            {label: "Avec rampe d'accès", value: accessRampCount}, 
-            {label: "Sans rampe d'accès", value: busData.length - accessRampCount}
-        ];
-        drawChart();
+  const pies: ChartData[] = [
+    { label: "Avec rampe d'accès", value: accessRampCount },
+    { label: "Sans rampe d'accès", value: busData.length - accessRampCount },
+  ];
+
+  const graphElementClass = "graph-element";
+
+  const computeFontSize = (width: number, height: number) =>
+    Math.min(width, height) / 25;
+
+  const computeOuterRadius = (width: number, height: number, margin: Margin) =>
+    Math.min(width, height) / 2 - (margin.top + margin.bottom);
+
+  const drawChart = (width: number, height: number, margin: Margin) => {
+    d3.select(`#${id}`).select("svg").remove();
+
+    let colorScale: any = d3.scaleOrdinal().range(["#F8B1B4", "#ef3e45"]);
+
+    const svg = d3
+      .select(`#${id}`)
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", `translate(${width * 0.5}, ${height * 0.5})`);
+
+    const arcGenerator: any = d3
+      .arc()
+      .innerRadius(0)
+      .outerRadius(computeOuterRadius(width, height, margin));
+
+    const pieGenerator = d3
+      .pie()
+      .padAngle(0)
+      .value((d) => d.valueOf());
+
+    const arc = svg
+      .selectAll()
+      .data(pieGenerator(pies.map((d) => d.value)))
+      .enter();
+
+    arc
+      .append("path")
+      .attr("d", arcGenerator)
+      .attr("class", graphElementClass)
+      .style("fill", (_, i) => colorScale(i))
+      .style("stroke", "#ffffff")
+      .style("stroke-width", 0);
+
+    arc
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr("alignment-baseline", "middle")
+      .attr("class", graphElementClass)
+      .text((d) => d.value)
+      .style("font-size", `${computeFontSize(width, height)}px`)
+      .attr("transform", (d) => {
+        const [x, y] = arcGenerator.centroid(d);
+        return `translate(${x}, ${y})`;
+      });
+  };
+
+  const margin: Margin = {
+    top: 10,
+    bottom: 10,
+  };
+
+  const render = () => {
+    let width = 400;
+    let height = 400;
+    const element = document.getElementById(id);
+    if (element) {
+      width = element.offsetWidth;
+      height = element.offsetHeight;
     }
 
-    useEffect(() => {
-        render();
-        window.addEventListener('resize', render)
-    }, [busData]);
+    drawChart(width, height, margin);
+  };
 
-    const drawChart = () => {
-        d3.select(`#${id}`)
-        .select('svg')
-        .remove();
+  render();
+  window.addEventListener("resize", render);
 
-        let colorScale = d3
-            .scaleSequential()      
-            .interpolator(d3.interpolateBlues)      
-            .domain([0, data.length]);
-
-        const overlay = d3.select(`#${overlayId}`)
-            .style('position', 'absolute')
-            .style('display', 'none');
-
-        const svg = d3
-            .select(`#${id}`)
-            .append('svg')
-            .attr('width', width)
-            .attr('height', height)
-            .append('g')
-            .attr('transform', `translate(${Math.max(width * 0.3, 100)}, ${height / 2})`);
-
-        const arcGenerator:any = d3
-            .arc()
-            .innerRadius(0)
-            .outerRadius(computeOuterRadius(width, height, margin));
-
-        const pieGenerator = d3
-            .pie()
-            .padAngle(0)
-            .value((d:any) => d.value);
-
-        const arc = svg
-            .selectAll()
-            .data(pieGenerator(data))
-            .enter()
-            
-
-        arc
-            .append('path')
-            .attr('d', arcGenerator)
-            .attr("class", graphElementClass)
-            .style('fill', (_, i) => colorScale(i))
-            .style('stroke', '#ffffff')
-            .style('stroke-width', 0);
-
-        arc
-            .append('text')
-            .attr('text-anchor', 'middle')
-            .attr('alignment-baseline', 'middle')
-            .attr("class", graphElementClass)
-            .text((d:any) => d.data.label)
-            .style('fill', "black")
-            .style("font-size", `${computeFontSize(width, height)}px`)
-            .attr('transform', (d) => {
-                const [x, y] = arcGenerator.centroid(d);
-                return `translate(${x-10}, ${y})`;
-            });
-
-        svg.selectAll(`.${graphElementClass}`)
-            .on('mouseover', function (event, d:any) {
-                overlay.html(`${(d.data.value / busData.length * 100).toFixed(1)}%`)
-                    .style('left', event.clientX + 10 +'px')
-                    .style('top', event.clientY - 40 + 'px')
-                    .style('display', 'block');
-                })
-            .on("mousemove", function(event, d) {
-                overlay.style('left', event.clientX + 10 +'px')
-                .style('top', event.clientY - 40 + 'px')
-                })
-            .on("mouseout", function () {
-                    overlay.style('display', 'none');
-                });
-    }    
-
-    return (
-        <div id={id}>
-            <div id={overlayId} className='bg-white border rounded-lg px-2 py-2 opacity-90 hidden'>
-            </div>
-        </div>
-    );
+  return <div></div>;
 }

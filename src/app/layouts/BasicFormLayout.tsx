@@ -15,12 +15,13 @@ export default function BasicFormLayout({
   onSubmit,
 }: IBasicFormLayout) {
   return (
-    <>
-      <h1>{title}</h1>
-      <hr />
-      {children}
-      <hr />
+    <div className="relative h-full">
+      <div className="p-2">
+        <h2>{title}</h2>
+        {children}
+      </div>
+      <div></div>
       <Button onClick={() => onSubmit()}>{submitText}</Button>
-    </>
+    </div>
   );
 }

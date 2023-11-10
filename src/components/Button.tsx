@@ -1,3 +1,4 @@
+import { Button as B } from "@mui/material";
 import { ReactNode } from "react";
 
 interface IButton {
@@ -7,11 +8,13 @@ interface IButton {
 
 export default function Button({ children, onClick }: IButton) {
   return (
-    <button
+    <B
+      color="error"
+      sx={{ position: "absolute", bottom: 0, width: "100%" }}
+      variant="contained"
       onClick={() => onClick()}
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
     >
       {children}
-    </button>
+    </B>
   );
 }
