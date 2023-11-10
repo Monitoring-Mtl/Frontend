@@ -5,7 +5,7 @@ import {Vector as VectorLayer} from "ol/layer"
 import {Vector as VectorSource} from "ol/source"
 import {Style, Stroke} from "ol/style"
 import { Map } from '@/components/map/Map';
-import { MapOptions } from '@/types/mapTypes';
+import { MapOptions } from '@/types/stmTypes';
 
 const montrealCoordinates = fromLonLat([-73.56198339521531, 45.49501768328183]);
 

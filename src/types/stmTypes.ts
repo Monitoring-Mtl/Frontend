@@ -25,3 +25,8 @@ export type MapOptions = {
     zoom:number;
     layers;
 }
+
+export type Route = {
+    id:number;
+    name:string;
+}

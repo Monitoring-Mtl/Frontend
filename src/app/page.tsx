@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import { ServerlessApiService } from '@/services/ServerlessApiService';
-import { BusData, RouteShape, Stop } from '@/types/mapTypes';
+import { BusData, RouteShape, Stop } from '@/types/stmTypes';
 import { AccessRampGraph } from '@/components/AccessRampGraph';
 import { StmMap } from '@/components/map/StmMap';
 
@@ -19,14 +19,14 @@ export default function Home() {
         setRouteShape(routeShape);
       }
 
-      const busData = await ServerlessApiService.GetBusData("", "");
+      const busData = await ServerlessApiService.getBusData("", "");
       if (busData){
         setBusData(busData);
       }
 
-      const rampAccessSchedule = await ServerlessApiService.GetRampAccessSchedule("", "");
+      const rampAccessSchedule = await ServerlessApiService.getRampAccessSchedule("", "");
 
-      const stops = await ServerlessApiService.GetStops("");
+      const stops = await ServerlessApiService.getStops("");
       if (stops){
         setStops(stops);
       }
