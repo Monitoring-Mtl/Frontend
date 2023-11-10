@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
 import { BusData, RouteShape, Stop } from "@/types/stmTypes";
 import SelectBusLineForm from "./layouts/SelectBusLineForm";
-import { Card } from "@mui/material";
+import { Card, CardContent, CardHeader } from "@mui/material";
 import Row from "./layouts/Row";
 import Legend from "@/app/layouts/Legend";
 import AccessRampGraph from "./components/AccessRampGraph";
@@ -48,16 +48,14 @@ export default function Home() {
       <Row>
         {displayedDiagram == 0 && (
           <Card className="col-span-4">
-            <div className="p-2">
-              <h2>Nombre d&#39;autobus ayant une rampe d&#39;accès</h2>
-              <div id="ramp-access-graph" className="w-full h-96">
-                <AccessRampGraph
-                  id={"ramp-access-graph"}
-                  busData={busData}
-                  renderListener={displayedDiagram}
-                />
-              </div>
-            </div>
+            <CardHeader title="Nombre d'autobus ayant une rampe d'accès"></CardHeader>
+            <CardContent id="ramp-access-graph" className="w-full h-96">
+              <AccessRampGraph
+                id={"ramp-access-graph"}
+                busData={busData}
+                renderListener={displayedDiagram}
+              />
+            </CardContent>
             <Legend
               items={[
                 { color: "#ef3e45", label: "Ont une rampe" },
@@ -69,16 +67,14 @@ export default function Home() {
 
         {displayedDiagram != 0 && (
           <Card className="col-span-4">
-            <div className="p-2">
-              <h2>Ceci est un autre diagramme</h2>
-              <div id="ramp-access-graph" className="w-full h-96">
-                <AccessRampGraph
-                  id={"ramp-access-graph"}
-                  busData={busData}
-                  renderListener={displayedDiagram}
-                />
-              </div>
-            </div>
+            <CardHeader title="Ceci est un autre diagramme"></CardHeader>
+            <CardContent id="ramp-access-graph" className="w-full h-96">
+              <AccessRampGraph
+                id={"ramp-access-graph"}
+                busData={busData}
+                renderListener={displayedDiagram}
+              />
+            </CardContent>
             <Legend
               items={[
                 { color: "#ef3e45", label: "Ont une rampe" },
@@ -92,7 +88,14 @@ export default function Home() {
           <StmMap routeShape={routeShape} stops={stops} />
         </Card>
 
-        <Card className="col-span-2">
+        <Card
+          className="col-span-2"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
           <SelectBusLineForm />
         </Card>
       </Row>
