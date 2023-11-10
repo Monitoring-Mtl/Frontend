@@ -3,12 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
 import { BusData, RouteShape, Stop } from "@/types/stmTypes";
-import AccessRampGraph from "@/components/AccessRampGraph";
-import { StmMap } from "@/components/map/StmMap";
-import SelectBusLineForm from "../layouts/SelectBusLineForm";
+import SelectBusLineForm from "./layouts/SelectBusLineForm";
 import { Card } from "@mui/material";
-import Row from "../layouts/Row";
-import Button from "@/components/Button";
+import Row from "./layouts/Row";
+import Legend from "@/app/layouts/Legend";
+import AccessRampGraph from "./components/AccessRampGraph";
+import { StmMap } from "./components/map/StmMap";
+import Button from "./components/Button";
 
 export default function Home() {
   const [busData, setBusData] = useState<BusData[]>([]);
@@ -43,7 +44,7 @@ export default function Home() {
   }, []);
 
   return (
-    <>
+    <div>
       <Row>
         {displayedDiagram == 0 && (
           <Card className="col-span-4">
@@ -57,22 +58,36 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div className="flex flex-row gap-1">
-              <div
-                style={{ backgroundColor: "#ef3e45" }}
-                className="w-8 h-6"
-              ></div>
-              A une rampe
-            </div>
-            <div className="flex flex-row gap-1">
-              <div
-                style={{ backgroundColor: "#F8B1B4" }}
-                className="w-8 h-6"
-              ></div>
-              N&#39;a pas de rampe
-            </div>
+            <Legend
+              items={[
+                { color: "#ef3e45", label: "Ont une rampe" },
+                { color: "#f8b1b4", label: "N'ont pas de rampe" },
+              ]}
+            />
           </Card>
         )}
+
+        {displayedDiagram != 0 && (
+          <Card className="col-span-4">
+            <div className="p-2">
+              <h2>Ceci est un autre diagramme</h2>
+              <div id="ramp-access-graph" className="w-full h-96">
+                <AccessRampGraph
+                  id={"ramp-access-graph"}
+                  busData={busData}
+                  renderListener={displayedDiagram}
+                />
+              </div>
+            </div>
+            <Legend
+              items={[
+                { color: "#ef3e45", label: "Ont une rampe" },
+                { color: "#f8b1b4", label: "N'ont pas de rampe" },
+              ]}
+            />
+          </Card>
+        )}
+
         <Card className="col-span-6">
           <StmMap routeShape={routeShape} stops={stops} />
         </Card>
@@ -82,12 +97,22 @@ export default function Home() {
         </Card>
       </Row>
 
-      <Row>
-        <Button onClick={() => setDisplayedDiagram(0)}>1</Button>
-        <Button onClick={() => setDisplayedDiagram(1)}>2</Button>
-        <Button onClick={() => setDisplayedDiagram(2)}>3</Button>
-        <Button onClick={() => setDisplayedDiagram(3)}>4</Button>
+      <Row gap={4}>
+        <Button className="col-span-2" onClick={() => setDisplayedDiagram(0)}>
+          Rampes
+        </Button>
+        <Button className="col-span-2" onClick={() => setDisplayedDiagram(1)}>
+          Ponctualité
+        </Button>
       </Row>
-    </>
+      <Row gap={4}>
+        <Button className="col-span-2" onClick={() => setDisplayedDiagram(2)}>
+          Occupation
+        </Button>
+        <Button className="col-span-2" onClick={() => setDisplayedDiagram(3)}>
+          4
+        </Button>
+      </Row>
+    </div>
   );
 }
