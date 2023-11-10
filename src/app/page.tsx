@@ -47,45 +47,7 @@ export default function Home() {
   return (
     <div>
       <Row>
-        {displayedDiagram == 0 && (
-          <Card className="col-span-4">
-            <PieChartLayout
-              title="Autobus ayant une rampe d'accès"
-              pies={[
-                {
-                  label: "Ont une rampe d'accès",
-                  value: numWithRamp,
-                },
-                {
-                  label: "N'ont pas une rampe d'accès",
-                  value: busData.length - numWithRamp,
-                },
-              ]}
-              renderListener={displayedDiagram}
-            />
-          </Card>
-        )}
-
-        {displayedDiagram != 0 && (
-          <Card className="col-span-4">
-            <PieChartLayout
-              title={"Ceci est un autre diagramme" + displayedDiagram}
-              pies={[
-                {
-                  label: "Ont une rampe d'accès",
-                  value: numWithRamp,
-                },
-                {
-                  label: "N'ont pas une rampe d'accès",
-                  value: busData.length - numWithRamp,
-                },
-              ]}
-              renderListener={displayedDiagram}
-            />
-          </Card>
-        )}
-
-        <Card className="col-span-6">
+        <Card className="col-span-10 h-96">
           <StmMap routeShape={routeShape} stops={stops} />
         </Card>
 
@@ -101,21 +63,60 @@ export default function Home() {
         </Card>
       </Row>
 
-      <Row gap={4}>
-        <Button className="col-span-2" onClick={() => setDisplayedDiagram(0)}>
-          Rampes
-        </Button>
-        <Button className="col-span-2" onClick={() => setDisplayedDiagram(1)}>
-          Ponctualité
-        </Button>
-      </Row>
-      <Row gap={4}>
-        <Button className="col-span-2" onClick={() => setDisplayedDiagram(2)}>
-          Occupation
-        </Button>
-        <Button className="col-span-2" onClick={() => setDisplayedDiagram(3)}>
-          4
-        </Button>
+      <Row>
+        <Card className="col-span-4">
+          <PieChartLayout
+            id="ramp-chart"
+            title="Autobus ayant une rampe d'accès"
+            pies={[
+              {
+                label: "Ont une rampe d'accès",
+                value: numWithRamp,
+              },
+              {
+                label: "N'ont pas une rampe d'accès",
+                value: busData.length - numWithRamp,
+              },
+            ]}
+            renderListener={displayedDiagram}
+          />
+        </Card>
+
+        <Card className="col-span-4">
+          <PieChartLayout
+            id="other-chart1"
+            title={"Ceci est un autre diagramme 1"}
+            pies={[
+              {
+                label: "Ont une rampe d'accès",
+                value: numWithRamp,
+              },
+              {
+                label: "N'ont pas une rampe d'accès",
+                value: busData.length - numWithRamp,
+              },
+            ]}
+            renderListener={displayedDiagram}
+          />
+        </Card>
+
+        <Card className="col-span-4">
+          <PieChartLayout
+            id="other-chart2"
+            title={"Ceci est un autre diagramme 2"}
+            pies={[
+              {
+                label: "Ont une rampe d'accès",
+                value: numWithRamp,
+              },
+              {
+                label: "N'ont pas une rampe d'accès",
+                value: busData.length - numWithRamp,
+              },
+            ]}
+            renderListener={displayedDiagram}
+          />
+        </Card>
       </Row>
     </div>
   );

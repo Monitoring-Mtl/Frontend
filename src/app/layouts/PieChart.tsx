@@ -3,12 +3,14 @@ import PieChart, { Pie } from "../components/PieChart";
 import Legend, { ILegend } from "./Legend";
 
 interface IPieChartLayout {
+  id: string;
   title: string;
   pies: Pie[];
   renderListener: any;
 }
 
 export default function PieChartLayout({
+  id,
   title,
   pies,
   renderListener,
@@ -30,9 +32,9 @@ export default function PieChartLayout({
   return (
     <>
       <CardHeader title={title}></CardHeader>
-      <CardContent id="ramp-access-graph" className="w-full h-96">
+      <CardContent id={id} className="w-full h-96">
         <PieChart
-          id={"ramp-access-graph"}
+          id={id}
           pies={pies}
           renderListener={renderListener}
           colorRange={colors.reverse()}
