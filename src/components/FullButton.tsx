@@ -6,10 +6,11 @@ interface IButton {
   onClick?: Function;
 }
 
-export default function Button({ children, onClick }: IButton) {
+export default function FullButton({ children, onClick }: IButton) {
   return (
     <B
       color="error"
+      sx={{ position: "absolute", bottom: 0, width: "100%" }}
       variant="contained"
       onClick={() => (onClick ? onClick() : "")}
     >

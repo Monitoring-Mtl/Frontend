@@ -11,6 +11,7 @@ import { BusData } from "@/types/stmTypes";
 interface IAccessRampGraph {
   id: string;
   busData: BusData[];
+  renderListener?: any;
 }
 
 type ChartData = {
@@ -20,13 +21,12 @@ type ChartData = {
 
 type Margin = { top: number; bottom: number };
 
-export default function AccessRampGraph({ id, busData }: IAccessRampGraph) {
+export default function AccessRampGraph({
+  id,
+  busData,
+  renderListener,
+}: IAccessRampGraph) {
   let accessRampCount = busData.filter((bus) => bus.hasAccessRamp).length;
-
-  const pies: ChartData[] = [
-    { label: "Avec rampe d'accès", value: accessRampCount },
-    { label: "Sans rampe d'accès", value: busData.length - accessRampCount },
-  ];
 
   const graphElementClass = "graph-element";
 
@@ -36,61 +36,71 @@ export default function AccessRampGraph({ id, busData }: IAccessRampGraph) {
   const computeOuterRadius = (width: number, height: number, margin: Margin) =>
     Math.min(width, height) / 2 - (margin.top + margin.bottom);
 
-  const drawChart = (width: number, height: number, margin: Margin) => {
-    d3.select(`#${id}`).select("svg").remove();
+  const drawChart = useCallback(
+    (width: number, height: number, margin: Margin) => {
+      const pies: ChartData[] = [
+        { label: "Avec rampe d'accès", value: accessRampCount },
+        {
+          label: "Sans rampe d'accès",
+          value: busData.length - accessRampCount,
+        },
+      ];
 
-    let colorScale: any = d3.scaleOrdinal().range(["#F8B1B4", "#ef3e45"]);
+      d3.select(`#${id}`).select("svg").remove();
 
-    const svg = d3
-      .select(`#${id}`)
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .append("g")
-      .attr("transform", `translate(${width * 0.5}, ${height * 0.5})`);
+      let colorScale: any = d3.scaleOrdinal().range(["#F8B1B4", "#ef3e45"]);
 
-    const arcGenerator: any = d3
-      .arc()
-      .innerRadius(0)
-      .outerRadius(computeOuterRadius(width, height, margin));
+      const svg = d3
+        .select(`#${id}`)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${width * 0.5}, ${height * 0.5})`);
 
-    const pieGenerator = d3
-      .pie()
-      .padAngle(0)
-      .value((d) => d.valueOf());
+      const arcGenerator: any = d3
+        .arc()
+        .innerRadius(0)
+        .outerRadius(computeOuterRadius(width, height, margin));
 
-    const arc = svg
-      .selectAll()
-      .data(pieGenerator(pies.map((d) => d.value)))
-      .enter();
+      const pieGenerator = d3
+        .pie()
+        .padAngle(0)
+        .value((d) => d.valueOf());
 
-    arc
-      .append("path")
-      .attr("d", arcGenerator)
-      .attr("class", graphElementClass)
-      .style("fill", (_, i) => colorScale(i))
-      .style("stroke", "#ffffff")
-      .style("stroke-width", 0);
+      const arc = svg
+        .selectAll()
+        .data(pieGenerator(pies.map((d) => d.value)))
+        .enter();
 
-    arc
-      .append("text")
-      .attr("text-anchor", "middle")
-      .attr("alignment-baseline", "middle")
-      .attr("class", graphElementClass)
-      .text((d) => d.value)
-      .style("font-size", `${computeFontSize(width, height)}px`)
-      .attr("transform", (d) => {
-        const [x, y] = arcGenerator.centroid(d);
-        return `translate(${x}, ${y})`;
-      });
-  };
+      arc
+        .append("path")
+        .attr("d", arcGenerator)
+        .attr("class", graphElementClass)
+        .style("fill", (_, i) => colorScale(i))
+        .style("stroke", "#ffffff")
+        .style("stroke-width", 0);
 
-  const margin: Margin = {
-    top: 10,
-    bottom: 10,
-  };
+      arc
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "middle")
+        .attr("class", graphElementClass)
+        .text((d) => d.value)
+        .style("font-size", `${computeFontSize(width, height)}px`)
+        .attr("transform", (d) => {
+          const [x, y] = arcGenerator.centroid(d);
+          return `translate(${x}, ${y})`;
+        });
+    },
+    [accessRampCount, busData.length, id]
+  );
 
-  const render = () => {
+  const render = useCallback(() => {
+    const margin: Margin = {
+      top: 10,
+      bottom: 10,
+    };
     let width = 400;
     let height = 400;
     const element = document.getElementById(id);
@@ -100,7 +110,11 @@ export default function AccessRampGraph({ id, busData }: IAccessRampGraph) {
     }
 
     drawChart(width, height, margin);
-  };
+  }, [drawChart, id]);
+
+  useEffect(() => {
+    render();
+  }, [render, renderListener]);
 
   render();
   window.addEventListener("resize", render);

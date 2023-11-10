@@ -16,7 +16,7 @@ body {
     rgba(255, 255, 255, 1) 15%,
     rgba(239, 62, 69, 1) 22%
   );
-  border-left: 2rem solid rgb(239, 62, 69);
+  border-left: 1rem solid rgb(239, 62, 69);
   position: fixed;
   width: 100%;
   z-index: 1;

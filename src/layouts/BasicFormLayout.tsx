@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import Button from "../../components/Button";
+import FullButton from "../components/FullButton";
 
 interface IBasicFormLayout {
   title: string;
@@ -21,7 +21,7 @@ export default function BasicFormLayout({
         {children}
       </div>
       <div></div>
-      <Button onClick={() => onSubmit()}>{submitText}</Button>
+      <FullButton onClick={() => onSubmit()}>{submitText}</FullButton>
     </div>
   );
 }
