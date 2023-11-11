@@ -3,10 +3,6 @@
 import React, { useCallback, useEffect } from "react";
 import * as d3 from "d3";
 
-//Cette ligne fix l'erreur "document is not defined", mais next s'attend à ce que le svg soit retourné par le serveur
-// Cause une autre erreur d'hydration
-// if (typeof window !== "undefined") {
-
 interface IPieChart {
   pies: Pie[];
   renderListener?: any;
@@ -43,77 +39,75 @@ export default function PieChart({
       height: number,
       margin: Margin
     ) => {
-      if (typeof window !== "undefined") {
-        d3.select(svgRef.current).select("g").remove();
+      d3.select(svgRef.current).select("g").remove();
 
-        let colorScale: any = d3.scaleOrdinal().range(colorRange);
+      let colorScale: any = d3.scaleOrdinal().range(colorRange);
 
-        const overlay = d3
-          .select(overlayRef.current)
-          .style("position", "fixed")
-          .style("display", "none");
+      const overlay = d3
+        .select(overlayRef.current)
+        .style("position", "fixed")
+        .style("display", "none");
 
-        const svg = d3
-          .select(svgRef.current)
-          .attr("width", width)
-          .attr("height", height)
-          .append("g")
-          .attr("transform", `translate(${width * 0.5}, ${height * 0.5})`);
+      const svg = d3
+        .select(svgRef.current)
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${width * 0.5}, ${height * 0.5})`);
 
-        const arcGenerator: any = d3
-          .arc()
-          .innerRadius(0)
-          .outerRadius(computeOuterRadius(width, height, margin));
+      const arcGenerator: any = d3
+        .arc()
+        .innerRadius(0)
+        .outerRadius(computeOuterRadius(width, height, margin));
 
-        const pieGenerator = d3
-          .pie()
-          .padAngle(0)
-          .value((d) => d.valueOf());
+      const pieGenerator = d3
+        .pie()
+        .padAngle(0)
+        .value((d) => d.valueOf());
 
-        const arc = svg
-          .selectAll()
-          .data(pieGenerator(pies.map((d) => d.value)))
-          .enter();
+      const arc = svg
+        .selectAll()
+        .data(pieGenerator(pies.map((d) => d.value)))
+        .enter();
 
-        arc
-          .append("path")
-          .attr("d", arcGenerator)
-          .attr("class", "graph-element")
-          .style("fill", (_, i) => colorScale(i))
-          .style("stroke", "#ffffff")
-          .style("stroke-width", 0);
+      arc
+        .append("path")
+        .attr("d", arcGenerator)
+        .attr("class", "graph-element")
+        .style("fill", (_, i) => colorScale(i))
+        .style("stroke", "#ffffff")
+        .style("stroke-width", 0);
 
-        arc
-          .append("text")
-          .attr("text-anchor", "middle")
-          .attr("alignment-baseline", "middle")
-          .attr("class", "graph-element")
-          .text((d) => d.value)
-          .style("font-size", `${computeFontSize(width, height)}px`)
-          .attr("transform", (d) => {
-            const [x, y] = arcGenerator.centroid(d);
-            return `translate(${x}, ${y})`;
-          });
+      arc
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "middle")
+        .attr("class", "graph-element")
+        .text((d) => d.value)
+        .style("font-size", `${computeFontSize(width, height)}px`)
+        .attr("transform", (d) => {
+          const [x, y] = arcGenerator.centroid(d);
+          return `translate(${x}, ${y})`;
+        });
 
-        svg
-          .selectAll(".graph-element")
-          .on("mouseover", function (event, d: any) {
-            const sum: number = pies.reduce((a, b) => a + b.value, 0);
-            overlay
-              .html(`${((d.data / sum) * 100).toFixed(1)}%`)
-              .style("left", event.clientX + 10 + "px")
-              .style("top", event.clientY - 40 + "px")
-              .style("display", "block");
-          })
-          .on("mousemove", function (event, d) {
-            overlay
-              .style("left", event.clientX + 10 + "px")
-              .style("top", event.clientY - 40 + "px");
-          })
-          .on("mouseout", function () {
-            overlay.style("display", "none");
-          });
-      }
+      svg
+        .selectAll(".graph-element")
+        .on("mouseover", function (event, d: any) {
+          const sum: number = pies.reduce((a, b) => a + b.value, 0);
+          overlay
+            .html(`${((d.data / sum) * 100).toFixed(1)}%`)
+            .style("left", event.clientX + 10 + "px")
+            .style("top", event.clientY - 40 + "px")
+            .style("display", "block");
+        })
+        .on("mousemove", function (event, d) {
+          overlay
+            .style("left", event.clientX + 10 + "px")
+            .style("top", event.clientY - 40 + "px");
+        })
+        .on("mouseout", function () {
+          overlay.style("display", "none");
+        });
     },
     [colorRange, pies]
   );
