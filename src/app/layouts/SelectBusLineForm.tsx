@@ -44,7 +44,7 @@ export default function SelectBusLineForm() {
         console.log(values);
       }}
     >
-      {({ submitForm, setFieldValue }) => (
+      {({ submitForm, setFieldValue, values }) => (
         <>
           <div>
             <CardHeader title="Choix de la ligne et de l'arrêt" />
@@ -52,6 +52,7 @@ export default function SelectBusLineForm() {
               <FormControl fullWidth>
                 <InputLabel># ligne</InputLabel>
                 <Select
+                  value={values["busLine"]}
                   label="# ligne"
                   onChange={(e) => setFieldValue("busLine", e.target.value)}
                 >
@@ -65,6 +66,7 @@ export default function SelectBusLineForm() {
               <FormControl fullWidth>
                 <InputLabel># arrêt</InputLabel>
                 <Select
+                  value={values["stopId"]}
                   label="# arrêt"
                   onChange={(e) => setFieldValue("stopId", e.target.value)}
                 >

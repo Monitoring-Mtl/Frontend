@@ -34,7 +34,6 @@ export default function PieChartLayout({
       <CardHeader title={title}></CardHeader>
       <CardContent id={id} className="w-full h-96">
         <PieChart
-          id={id}
           pies={pies}
           renderListener={renderListener}
           colorRange={colors.reverse()}
