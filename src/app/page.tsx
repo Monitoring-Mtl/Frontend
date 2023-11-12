@@ -7,8 +7,8 @@ import SelectBusLineForm from "./layouts/SelectBusLineForm";
 import { Card } from "@mui/material";
 import Row from "./layouts/Row";
 import { StmMap } from "./components/map/StmMap";
-import Button from "./components/Button";
 import PieChartLayout from "./layouts/PieChart";
+import { OccupancyChart } from "./components/graphs/OccupancyChart";
 
 export default function Home() {
   const [busData, setBusData] = useState<BusData[]>([]);
@@ -83,21 +83,7 @@ export default function Home() {
         </Card>
 
         <Card className="col-span-4">
-          <PieChartLayout
-            id="other-chart1"
-            title={"Ceci est un autre diagramme 1"}
-            pies={[
-              {
-                label: "Ont une rampe d'accès",
-                value: numWithRamp,
-              },
-              {
-                label: "N'ont pas une rampe d'accès",
-                value: busData.length - numWithRamp,
-              },
-            ]}
-            renderListener={displayedDiagram}
-          />
+          <OccupancyChart busData={busData}/>
         </Card>
 
         <Card className="col-span-4">

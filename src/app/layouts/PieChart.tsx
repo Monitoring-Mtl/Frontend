@@ -1,6 +1,7 @@
 import { CardContent, CardHeader } from "@mui/material";
-import PieChart, { Pie } from "../components/PieChart";
+import PieChart, { Pie } from "../components/graphs/PieChart";
 import Legend, { ILegend } from "./Legend";
+import { LightRed, EtsRed } from "@/utils/color-utils";
 
 interface IPieChartLayout {
   id: string;
@@ -15,7 +16,7 @@ export default function PieChartLayout({
   pies,
   renderListener,
 }: IPieChartLayout) {
-  const colors = ["#f8b1b4", "#ef3e45"];
+  const colors = [LightRed, EtsRed];
   const colorsReverse = colors.reverse();
 
   function generateLegend(pies: Pie[]): ILegend {

@@ -19,13 +19,6 @@ export type Stop = {
     coordinates;
 }
 
-export type MapOptions = {
-    id:string;
-    center;
-    zoom:number;
-    layers;
-}
-
 export type Route = {
     id:number;
     name:string;
