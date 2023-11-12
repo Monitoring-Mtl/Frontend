@@ -5,7 +5,8 @@ import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
 import { Style, Stroke } from "ol/style";
 import { Map } from "./Map";
-import { MapOptions, RouteShape, Stop } from "@/types/stmTypes";
+import { RouteShape, Stop } from "@/types/stmTypes";
+import { MapOptions } from "@/types/MapOptions";
 import { memo } from "react";
 
 const montrealCoordinates = fromLonLat([-73.56198339521531, 45.49501768328183]);
