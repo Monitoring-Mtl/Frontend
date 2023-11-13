@@ -12,6 +12,7 @@ import {
   Select,
 } from "@mui/material";
 import FullButton from "../components/FullButton";
+import Dropdown from "../components/Dropdown";
 
 type SelectBusLineFormFields = {
   busLine: number;
@@ -32,7 +33,7 @@ export default function SelectBusLineForm() {
     busLine: 51,
     stopId: 1,
   });
-
+  const dropdownOptions = ['Option 1', 'Option 2', 'Option 3'];
   return (
     <Formik
       initialValues={formInitialValues}
@@ -51,16 +52,7 @@ export default function SelectBusLineForm() {
             <CardContent>
               <FormControl fullWidth>
                 <InputLabel># ligne</InputLabel>
-                <Select
-                  value={values["busLine"]}
-                  label="# ligne"
-                  onChange={(e) => setFieldValue("busLine", e.target.value)}
-                >
-                  <MenuItem value={51}>51</MenuItem>
-                  <MenuItem value={80}>80</MenuItem>
-                  <MenuItem value={480}>480</MenuItem>
-                  <MenuItem value={168}>168</MenuItem>
-                </Select>
+                <Dropdown label="# ligne" options={dropdownOptions} />
               </FormControl>
 
               <FormControl fullWidth>
