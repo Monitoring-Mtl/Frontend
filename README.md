@@ -1,12 +1,19 @@
 # Frontend
+
 Application web pour la visualisation des données.
 
 # Instructions pour le projet Next.js
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
-First, run the development server:
+Uninstall other version of node and install node 18.16.0: https://nodejs.org/dist/v18.16.0/
+yarn install -force
+yarn -force
+yarn build
+
+and run the development server:
 
 ```bash
 npm run dev
@@ -38,3 +45,19 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Documentation vers modules npm installés
+
+- [mui](https://mui.com/material-ui/getting-started/)
+- [yup](https://www.npmjs.com/package/yup)
+- [formik](https://formik.org/docs/overview)
+
+## Unit tests
+
+npm run setup
+npx jest or npm test
+open coverage/index.html
+
+## AWS amplify
+npm update if getting : npm ERR! `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+2023-11-09T00:46:09.052Z [WARNING]: npm ERR!
