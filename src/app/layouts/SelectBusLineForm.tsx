@@ -1,7 +1,7 @@
 "use client";
 
 import { Formik, FormikHelpers } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as yup from "yup";
 import {
   CardContent,
@@ -13,6 +13,8 @@ import {
 } from "@mui/material";
 import FullButton from "../components/FullButton";
 import Dropdown from "../components/Dropdown";
+import { ServerlessApiService } from "@/services/ServerlessApiService";
+import { Route } from "@/types/stmTypes";
 
 type SelectBusLineFormFields = {
   busLine: number;
@@ -33,7 +35,22 @@ export default function SelectBusLineForm() {
     busLine: 51,
     stopId: 1,
   });
-  const dropdownOptions = ['Option 1', 'Option 2', 'Option 3'];
+
+  const [routes, setRoutes] = useState<Route[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const routes = await ServerlessApiService.getRoutes();
+        setRoutes(routes);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    // Call fetchData only once when the component mounts
+    fetchData();
+  }, []); // The empty dependency array ensures this effect runs once
   return (
     <Formik
       initialValues={formInitialValues}
@@ -51,8 +68,7 @@ export default function SelectBusLineForm() {
             <CardHeader title="Choix de la ligne et de l'arrêt" />
             <CardContent>
               <FormControl fullWidth>
-                <InputLabel># ligne</InputLabel>
-                <Dropdown label="# ligne" options={dropdownOptions} />
+                <Dropdown label="# ligne" routes={routes} />
               </FormControl>
 
               <FormControl fullWidth>
