@@ -13,7 +13,7 @@ export const OccupancyChart = ({busData}) => {
         labels:["Vide", "Faible", "Moyen", "Élevé", "Plein"],
         data:busCount,
         colors:getColorsFromScale(occupancyCount, LightRed, EtsRed),
-        xAxisTitle:"Taux d'occupation",
+        xAxisTitle:"Niveau d'occupation",
         yAxisTitle:"Nombre d'autobus",
         tooltipLabelCallBack:(context) => `${context.raw} autobus`
     }

@@ -9,8 +9,8 @@ export class StmFactory {
 
         for (let i = 0; i < 100; i++){
             let isLate = Math.random() > 0.5;
-            let offset = this.random(0, 3601);
-            let occupancy = this.random(0, 5);
+            let offset = random(0, 3601);
+            let occupancy = random(0, 5);
             let hasAccessRamp = Math.random() > 0.66;
             busData.push({
                 punctuality: isLate ? offset : -offset, 
@@ -26,8 +26,8 @@ export class StmFactory {
         let rampAccessSchedules : RampAccessSchedule[] = [];
         for (let i = 0; i < 50; i++){
             const date = new Date();
-            date.setHours(this.random(0,24));
-            date.setMinutes(this.random(0, 60));
+            date.setHours(random(0,24));
+            date.setMinutes(random(0, 60));
             date.setSeconds(0);
             date.setMilliseconds(0);
             rampAccessSchedules.push({date})
@@ -93,10 +93,10 @@ export class StmFactory {
         return stops;
     }
 
-    private static random(min:number, max:number){
-        return Math.floor(Math.random() *  (max - min) + min);
-    }
+    
 }
+
+const random = (min:number, max:number) => Math.floor(Math.random() *  (max - min) + min);
 
 const sampleShapeData = JSON.parse(JSON.stringify(
     {"shape":[
