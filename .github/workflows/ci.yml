@@ -26,7 +26,7 @@ jobs:
         run: npm run build
 
       - name: Run Unit Tests
-        run: npm ci:test
+        run: npm run ci:test
 
       - name: Check Unit Test Results
         run: |
