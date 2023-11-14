@@ -66,7 +66,18 @@ export default function SelectBusLineForm() {
             <CardHeader title="Choix de la ligne et de l'arrêt" />
             <CardContent>
               <FormControl fullWidth>
-                <Dropdown label="# ligne" routes={routes} />
+              <InputLabel># ligne</InputLabel>
+                <Select
+                  value={values["busLine"]}
+                  label="# ligne"
+                  onChange={(e) => setFieldValue("busLine", e.target.value)}
+                >
+                  {routes.map((route) => (
+                    <MenuItem key={route.id} value={route.id}>
+                      {route.id}
+                    </MenuItem>
+                  ))}
+                </Select>
               </FormControl>
 
               <FormControl fullWidth>
