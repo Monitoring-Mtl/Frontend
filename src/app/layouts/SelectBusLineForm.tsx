@@ -1,5 +1,3 @@
-"use client";
-
 import { Formik, FormikHelpers } from "formik";
 import { useEffect, useState } from "react";
 import * as yup from "yup";
@@ -22,14 +20,14 @@ type SelectBusLineFormFields = {
 };
 
 const SelectBusLineFormSchema = yup.object().shape({
-  test: yup
-    .string()
-    .min(2, "Too Short!")
-    .max(5, "Too Long!")
+  busLine: yup
+    .number()
+    .required("Required"),
+  stopId: yup
+    .number()
     .required("Required"),
 });
 
-//Ce composant est fait pour être placé dans une Card MUI
 export default function SelectBusLineForm() {
   const [formInitialValues] = useState<SelectBusLineFormFields>({
     busLine: 51,
