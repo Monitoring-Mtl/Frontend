@@ -1,14 +1,14 @@
 {
   "name": "monitoring-mtl-frontend",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "concurrently  \"npm run start\" \"npm run wait\" --kill-others",
-    "ci:test": "concurrently  \"npm run start\" \"npm run wait\"",
+    "test": "concurrently  \"npm run start\" \"npm run cypress:test\" --kill-others",
+    "ci:test": "concurrently  \"npm run start\" \"npm run cypress:test\"",
     "cypress:e2e": "cypress run",
     "cypress:component": "cypress run --component",
     "cypress:open": "cypress open",
