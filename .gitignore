@@ -37,3 +37,8 @@ next-env.d.ts
 # ide
 .vs
 .idea
+
+# cypress
+cypress/screenshots
+cypress/downloads
+cypress/video
