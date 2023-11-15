@@ -10,9 +10,8 @@ import {
   Select,
 } from "@mui/material";
 import FullButton from "../components/FullButton";
-import Dropdown from "../components/Dropdown";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
-import { Route } from "@/types/stmTypes";
+import { Route, Stop } from "@/types/stmTypes";
 
 type SelectBusLineFormFields = {
   busLine: number;
@@ -20,12 +19,8 @@ type SelectBusLineFormFields = {
 };
 
 const SelectBusLineFormSchema = yup.object().shape({
-  busLine: yup
-    .number()
-    .required("Required"),
-  stopId: yup
-    .number()
-    .required("Required"),
+  busLine: yup.number().required("Required"),
+  stopId: yup.number().required("Required"),
 });
 
 export default function SelectBusLineForm() {
@@ -35,6 +30,7 @@ export default function SelectBusLineForm() {
   });
 
   const [routes, setRoutes] = useState<Route[]>([]);
+  const [stopIds, setStopIds] = useState<Stop[] | null>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,21 +38,28 @@ export default function SelectBusLineForm() {
         const routes = await ServerlessApiService.getRoutes();
         setRoutes(routes);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
     // Call fetchData only once when the component mounts
     fetchData();
   }, []); // The empty dependency array ensures this effect runs once
+
+  const updateStopIds = async (event) => {
+    try {
+      const stopIds = await ServerlessApiService.getStops(event.target.value);
+      setStopIds(stopIds || []);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
     <Formik
       initialValues={formInitialValues}
       validationSchema={SelectBusLineFormSchema}
-      onSubmit={(
-        values: SelectBusLineFormFields,
-        formikHelpers: FormikHelpers<SelectBusLineFormFields>
-      ) => {
+      onSubmit={(values: SelectBusLineFormFields) => {
         console.log(values);
       }}
     >
@@ -66,11 +69,14 @@ export default function SelectBusLineForm() {
             <CardHeader title="Choix de la ligne et de l'arrêt" />
             <CardContent>
               <FormControl fullWidth>
-              <InputLabel># ligne</InputLabel>
+                <InputLabel># ligne</InputLabel>
                 <Select
                   value={values["busLine"]}
                   label="# ligne"
-                  onChange={(e) => setFieldValue("busLine", e.target.value)}
+                  onChange={(e) => {
+                    setFieldValue("busLine", e.target.value);
+                    updateStopIds(e); // Call updateStopIds when bus line changes
+                  }}
                 >
                   {routes.map((route) => (
                     <MenuItem key={route.id} value={route.id}>
@@ -87,10 +93,12 @@ export default function SelectBusLineForm() {
                   label="# arrêt"
                   onChange={(e) => setFieldValue("stopId", e.target.value)}
                 >
-                  <MenuItem value={1}>1</MenuItem>
-                  <MenuItem value={2}>2</MenuItem>
-                  <MenuItem value={3}>3</MenuItem>
-                  <MenuItem value={4}>4</MenuItem>
+                  {stopIds &&
+                    stopIds.map((stop) => (
+                      <MenuItem key={stop.id} value={stop.id}>
+                        {stop.id}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </CardContent>
