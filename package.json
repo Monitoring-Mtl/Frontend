@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "concurrently  \"npm run start\" \"npm run cypress:test\" --kill-others",
+    "test": "npm run build && concurrently  \"npm run start\" \"npm run cypress:test\" --kill-others",
     "ci:test": " bash scripts/ci_tests.sh",
     "cypress:e2e": "cypress run",
     "cypress:component": "cypress run --component",

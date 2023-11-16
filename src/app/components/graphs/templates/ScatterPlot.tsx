@@ -1,7 +1,7 @@
 import React, { useEffect} from "react";
 import {Chart, registerables, Tooltip} from "chart.js"
 
-export const BarChart = ({chartOptions}) => {
+export const ScatterPlot = ({chartOptions}) => {
 
     Chart.register(...registerables);
 
@@ -19,17 +19,22 @@ export const BarChart = ({chartOptions}) => {
                     display: false
                 },
                 title: {
-                    display: true,
-                    text: chartOptions.xAxisTitle
-                }
+                    display: false
+                },
+                ticks: 
+                { 
+                    display: false 
+                },
             },
             y: {
-                ticks: { precision: 0 },
+                beginAtZero:chartOptions.yAxisBeginAt0,
+                ticks: { 
+                    precision: 0 
+                },
                 title:{
                     display: true,
                     text: chartOptions.yAxisTitle
-                },
-                type: "linear"
+                }
             }
         },
         plugins: {
@@ -44,6 +49,8 @@ export const BarChart = ({chartOptions}) => {
                 padding: 10,
                 position:"cursor",
                 displayColors: false,
+                borderWidth: 1,
+                borderColor:'rgb(0, 0, 0)',
                 callbacks: {
                     title : () => null,
                     label: chartOptions.tooltipLabelCallBack
@@ -55,18 +62,15 @@ export const BarChart = ({chartOptions}) => {
     useEffect(() => {
 
         const data = {
-            labels: chartOptions.labels,
             datasets: [{
                 data: chartOptions.data,
-                borderWidth: 0,
-                barPercentage: 0.95,
-                categoryPercentage: 1,
-                backgroundColor: chartOptions.colors
+                backgroundColor: chartOptions.colors,
+                pointRadius: 5,
             }],
             
         };
 
-        let barChart
+        let chart
         let context;
 
         if (canvasRef.current) {
@@ -74,15 +78,15 @@ export const BarChart = ({chartOptions}) => {
         }
 
         if (context){
-            barChart = new Chart(context, {
-                type: "bar",
+            chart = new Chart(context, {
+                type: "scatter",
                 data: data,
                 options: options
             });
         }
         return () => {
-            if (barChart){
-                barChart.destroy();
+            if (chart){
+                chart.destroy();
             }
         }
     });
