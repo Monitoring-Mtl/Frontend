@@ -1,5 +1,5 @@
 import { CardContent, CardHeader } from "@mui/material";
-import PieChart, { Pie } from "../components/graphs/PieChart";
+import PieChart, { Pie } from "../components/graphs/templates/PieChart";
 import Legend, { ILegend } from "./Legend";
 import { LightRed, EtsRed } from "@/utils/color-utils";
 
