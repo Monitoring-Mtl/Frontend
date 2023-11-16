@@ -30,8 +30,6 @@ export default function PieChart({
 
   const computeOuterRadius = (width: number, height: number, margin: Margin) =>
     Math.min(width, height) / 2 - (margin.top + margin.bottom);
-  
-  const sum: number = pies.reduce((a, b) => a + b.value, 0);
 
   const drawChart = useCallback(
     (
@@ -39,12 +37,13 @@ export default function PieChart({
       overlayRef: React.RefObject<HTMLDivElement>,
       width: number,
       height: number,
-      margin: Margin,
-      sum:number
+      margin: Margin
     ) => {
       d3.select(svgRef.current).select("g").remove();
 
       let colorScale: any = d3.scaleOrdinal().range(colorRange);
+
+      const sum: number = pies.reduce((a, b) => a + b.value, 0);
 
       const overlay = d3
         .select(overlayRef.current)
@@ -126,7 +125,7 @@ export default function PieChart({
       height = container.current.offsetHeight;
     }
 
-    drawChart(svg, overlay, width, height, margin, sum);
+    drawChart(svg, overlay, width, height, margin);
   }, [drawChart, svg, overlay, container]);
 
   useEffect(() => {
