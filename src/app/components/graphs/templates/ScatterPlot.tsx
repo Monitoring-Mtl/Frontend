@@ -62,7 +62,8 @@ export const ScatterPlot = ({chartOptions}) => {
         const data = {
             datasets: [{
                 data: chartOptions.data,
-                backgroundColor: chartOptions.colors
+                backgroundColor: chartOptions.colors,
+                pointRadius: 5,
             }],
             
         };
