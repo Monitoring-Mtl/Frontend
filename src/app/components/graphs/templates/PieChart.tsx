@@ -142,7 +142,7 @@ export default function PieChart({
       <svg ref={svg} />
       <div
         ref={overlay}
-        className="bg-white border rounded-lg px-2 py-2 opacity-90 hidden"
+        className="bg-white border border-black rounded-lg  px-2 py-2 opacity-90 hidden"
       ></div>
     </div>
   );

@@ -47,6 +47,8 @@ export const BarChart = ({chartOptions}) => {
                 padding: 10,
                 position:"cursor",
                 displayColors: false,
+                borderWidth: 1,
+                borderColor:'rgb(0, 0, 0)',
                 callbacks: {
                     title : () => null,
                     label: chartOptions.tooltipLabelCallBack
