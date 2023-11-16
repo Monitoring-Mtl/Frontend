@@ -39,7 +39,8 @@ export default function PieChart({
       overlayRef: React.RefObject<HTMLDivElement>,
       width: number,
       height: number,
-      margin: Margin
+      margin: Margin,
+      sum:number
     ) => {
       d3.select(svgRef.current).select("g").remove();
 
@@ -125,7 +126,7 @@ export default function PieChart({
       height = container.current.offsetHeight;
     }
 
-    drawChart(svg, overlay, width, height, margin);
+    drawChart(svg, overlay, width, height, margin, sum);
   }, [drawChart, svg, overlay, container]);
 
   useEffect(() => {

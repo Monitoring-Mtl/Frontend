@@ -19,8 +19,7 @@ export const ScatterPlot = ({chartOptions}) => {
                     display: false
                 },
                 title: {
-                    display: true,
-                    text: chartOptions.xAxisTitle
+                    display: false
                 },
                 ticks: 
                 { 

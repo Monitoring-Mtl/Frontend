@@ -13,7 +13,7 @@ export const BusPunctualityChart = ({busData}) => {
         labels:["Test"],
         data:data,
         colors:colors,
-        xAxisTitle:"Autobus",
+        xAxisTitle:"",
         yAxisTitle:"Décalage avec le temps d'arrivé prévu (secondes)",
         yAxisBeginAt0:false,
         tooltipLabelCallBack:(context) => offsetToString(context.raw.y)
