@@ -9,6 +9,7 @@ import Row from "./layouts/Row";
 import { StmMap } from "./components/map/StmMap";
 import PieChartLayout from "./layouts/PieChart";
 import { OccupancyChart } from "./components/graphs/OccupancyChart";
+import { BusPunctualityChart } from "./components/graphs/BusPunctualityChart";
 
 export default function Home() {
   const [busData, setBusData] = useState<BusData[]>([]);
@@ -87,22 +88,9 @@ export default function Home() {
         </Card>
 
         <Card className="col-span-4">
-          <PieChartLayout
-            id="other-chart2"
-            title={"Ceci est un autre diagramme 2"}
-            pies={[
-              {
-                label: "Ont une rampe d'accès",
-                value: numWithRamp,
-              },
-              {
-                label: "N'ont pas une rampe d'accès",
-                value: busData.length - numWithRamp,
-              },
-            ]}
-            renderListener={displayedDiagram}
-          />
+          <BusPunctualityChart busData={busData}/>
         </Card>
+
       </Row>
     </div>
   );

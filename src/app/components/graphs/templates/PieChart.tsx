@@ -43,6 +43,8 @@ export default function PieChart({
 
       let colorScale: any = d3.scaleOrdinal().range(colorRange);
 
+      const sum: number = pies.reduce((a, b) => a + b.value, 0);
+
       const overlay = d3
         .select(overlayRef.current)
         .style("position", "fixed")
@@ -83,7 +85,7 @@ export default function PieChart({
         .attr("text-anchor", "middle")
         .attr("alignment-baseline", "middle")
         .attr("class", "graph-element")
-        .text((d) => d.value)
+        .text((d:any) => `${((d.data / sum) * 100).toFixed(1)}%`)
         .style("font-size", `${computeFontSize(width, height)}px`)
         .attr("transform", (d) => {
           const [x, y] = arcGenerator.centroid(d);
@@ -93,9 +95,8 @@ export default function PieChart({
       svg
         .selectAll(".graph-element")
         .on("mouseover", function (event, d: any) {
-          const sum: number = pies.reduce((a, b) => a + b.value, 0);
           overlay
-            .html(`${((d.data / sum) * 100).toFixed(1)}%`)
+            .html(`${d.data} autobus`)
             .style("left", event.clientX + 10 + "px")
             .style("top", event.clientY - 40 + "px")
             .style("display", "block");
@@ -141,7 +142,7 @@ export default function PieChart({
       <svg ref={svg} />
       <div
         ref={overlay}
-        className="bg-white border rounded-lg px-2 py-2 opacity-90 hidden"
+        className="bg-white border border-black rounded-lg  px-2 py-2 opacity-90 hidden"
       ></div>
     </div>
   );
