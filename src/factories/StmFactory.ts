@@ -84,7 +84,7 @@ export class StmFactory {
             const longitude = shapes[i][routeShapeProperties.longitude];
             const latitude = shapes[i][routeShapeProperties.latitude];
             stops.push({
-                id:`id${i}`,
+                id:`${i}`,
                 name:`name${i}`,
                 coordinates:fromLonLat([longitude, latitude])
             })
