@@ -171,10 +171,10 @@ export default function SelectBusLineForm() {
                 label="Direction"
                 onChange={(e) => setFieldValue("direction", e.target.value)}
               >
-                <MenuItem value="north">North</MenuItem>
-                <MenuItem value="south">South</MenuItem>
-                <MenuItem value="east">East</MenuItem>
-                <MenuItem value="west">West</MenuItem>
+                <MenuItem value="north">Nord</MenuItem>
+                <MenuItem value="south">Sud</MenuItem>
+                <MenuItem value="east">Est</MenuItem>
+                <MenuItem value="west">Ouest</MenuItem>
               </Select>
             </CardContent>
           </div>
