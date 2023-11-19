@@ -22,6 +22,7 @@ type SelectBusLineFormFields = {
   beginTime: string;
   endDate: Date;
   endTime: string;
+  direction: string;
 };
 
 const SelectBusLineFormSchema = yup.object().shape({
@@ -31,6 +32,7 @@ const SelectBusLineFormSchema = yup.object().shape({
   beginTime: yup.string().required("Required"),
   endDate: yup.date().required("Required"),
   endTime: yup.string().required("Required"),
+  direction: yup.string().required("Required"),
 });
 
 export default function SelectBusLineForm() {
@@ -41,6 +43,7 @@ export default function SelectBusLineForm() {
     beginTime: "",
     endDate: new Date(),
     endTime: "",
+    direction: "",
   });
 
   const [routes, setRoutes] = useState<Route[]>([]);
@@ -162,6 +165,17 @@ export default function SelectBusLineForm() {
                   shrink: true,
                 }}
               />
+              <InputLabel>Direction</InputLabel>
+              <Select
+                value={values["direction"]}
+                label="Direction"
+                onChange={(e) => setFieldValue("direction", e.target.value)}
+              >
+                <MenuItem value="north">North</MenuItem>
+                <MenuItem value="south">South</MenuItem>
+                <MenuItem value="east">East</MenuItem>
+                <MenuItem value="west">West</MenuItem>
+              </Select>
             </CardContent>
           </div>
           <FullButton onClick={() => submitForm()}>Suivant</FullButton>
