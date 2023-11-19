@@ -1,4 +1,5 @@
-import { Formik, FormikHelpers } from "formik";
+import React from "react";
+import { Formik, FormikHelpers, Field } from "formik";
 import { useEffect, useState } from "react";
 import * as yup from "yup";
 import {
@@ -8,6 +9,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TextField,
 } from "@mui/material";
 import FullButton from "../components/FullButton";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
@@ -16,17 +18,29 @@ import { Route, Stop } from "@/types/stmTypes";
 type SelectBusLineFormFields = {
   busLine: number;
   stopId: number;
+  beginDate: Date;
+  beginTime: string;
+  endDate: Date;
+  endTime: string;
 };
 
 const SelectBusLineFormSchema = yup.object().shape({
   busLine: yup.number().required("Required"),
   stopId: yup.number().required("Required"),
+  beginDate: yup.date().required("Required"),
+  beginTime: yup.string().required("Required"),
+  endDate: yup.date().required("Required"),
+  endTime: yup.string().required("Required"),
 });
 
 export default function SelectBusLineForm() {
   const [formInitialValues] = useState<SelectBusLineFormFields>({
     busLine: 51,
     stopId: 1,
+    beginDate: new Date(),
+    beginTime: "",
+    endDate: new Date(),
+    endTime: "",
   });
 
   const [routes, setRoutes] = useState<Route[]>([]);
@@ -42,9 +56,8 @@ export default function SelectBusLineForm() {
       }
     };
 
-    // Call fetchData only once when the component mounts
     fetchData();
-  }, []); // The empty dependency array ensures this effect runs once
+  }, []);
 
   const updateStopIds = async (event) => {
     try {
@@ -75,7 +88,7 @@ export default function SelectBusLineForm() {
                   label="# ligne"
                   onChange={(e) => {
                     setFieldValue("busLine", e.target.value);
-                    updateStopIds(e); // Call updateStopIds when bus line changes
+                    updateStopIds(e);
                   }}
                 >
                   {routes.map((route) => (
@@ -101,6 +114,54 @@ export default function SelectBusLineForm() {
                     ))}
                 </Select>
               </FormControl>
+
+              <Field
+                component={TextField}
+                fullWidth
+                name="beginDate"
+                label="Date de début"
+                type="date"
+                onChange={(e) => setFieldValue("beginDate", e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+
+              <Field
+                component={TextField}
+                fullWidth
+                name="beginTime"
+                label="Heure de début"
+                type="time"
+                onChange={(e) => setFieldValue("beginTime", e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+
+              <Field
+                component={TextField}
+                fullWidth
+                name="endDate"
+                label="Date de fin"
+                type="date"
+                onChange={(e) => setFieldValue("endDate", e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+
+              <Field
+                component={TextField}
+                fullWidth
+                name="endTime"
+                label="Heure de fin"
+                type="time"
+                onChange={(e) => setFieldValue("endTime", e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
             </CardContent>
           </div>
           <FullButton onClick={() => submitForm()}>Suivant</FullButton>
