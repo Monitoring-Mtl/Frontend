@@ -23,7 +23,7 @@ export const OccupancyChart = ({busData}) => {
     return (
         <>
             <CardHeader title="Niveau d&#39;occupation des autobus"></CardHeader>
-                <CardContent className="w-full h-full">
+                <CardContent id="occupancy-chart" className="w-full h-full">
                     <BarChart chartOptions={chartOptions}/>
                 </CardContent>
         </>

@@ -2,7 +2,7 @@ import { CardContent, CardHeader } from "@mui/material";
 import { ChartjsOptions } from "@/types/ChartjsOptions"
 import * as colorUtils from "@/utils/color-utils";
 import { ScatterPlot } from "./templates/ScatterPlot";
-import { integerDivision, negativeIntegerDivision } from "@/utils/math-utils";
+import { integerDivision } from "@/utils/math-utils";
 
 export const BusPunctualityChart = ({busData}) => {
 
@@ -22,7 +22,7 @@ export const BusPunctualityChart = ({busData}) => {
     return (
         <>
             <CardHeader title="Ponctualité des autobus"></CardHeader>
-            <CardContent className="w-full h-full">
+            <CardContent id="punctuality-chart" className="w-full h-full">
                 <ScatterPlot chartOptions={chartOptions}/>
             </CardContent>
         </>
@@ -31,9 +31,7 @@ export const BusPunctualityChart = ({busData}) => {
 
 const timeDivisor : number = 1000;
 
-const toColorIndex = (value) => value <= 0 
-    ? Math.abs(negativeIntegerDivision(value, timeDivisor)) 
-    : Math.abs(integerDivision(value, timeDivisor));
+const toColorIndex = (value) => integerDivision(Math.abs(value), timeDivisor);
 
 const generateColors = (data) => {
     const nbGreens = toColorIndex(Math.min(...data)) + 1;
