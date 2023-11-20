@@ -86,7 +86,7 @@ export default function Home() {
         <OccupancyChart busData={busData}/>
       </Card>
 
-      <Card className="md:col-span-1"> {/* This Card now spans 1 column on medium screens */}
+      <Card className="md:col-span-1">
         <PieChartLayout
           id="other-chart2"
           title={"Ceci est un autre diagramme 2"}
