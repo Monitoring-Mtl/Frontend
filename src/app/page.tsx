@@ -2,25 +2,24 @@
 
 import React, { useEffect, useState } from "react";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
-import { BusData, RouteShape, Stop } from "@/types/stmTypes";
-import SelectBusLineForm from "./layouts/SelectBusLineForm";
+import { BusData, RouteShape, Stop, RampAccessSchedule } from "@/types/stmTypes";
 import { Card } from "@mui/material";
-import Row from "./layouts/Row";
 import { StmMap } from "./components/map/StmMap";
 import PieChartLayout from "./layouts/PieChart";
 import { OccupancyChart } from "./components/graphs/OccupancyChart";
+import RampAccessScheduleTable from './components/RampAccessScheduleTable';
+import SelectBusLineForm from "./layouts/SelectBusLineForm";
 
 export default function Home() {
   const [busData, setBusData] = useState<BusData[]>([]);
   const [routeShape, setRouteShape] = useState<RouteShape>();
   const [stops, setStops] = useState<Stop[]>([]);
+  const [rampAccessSchedule, setRampAccessSchedule] = useState<RampAccessSchedule[]>([]);
   const [displayedDiagram, setDisplayedDiagram] = useState<number>(0);
 
   useEffect(() => {
     async function fetchData() {
-      const routeShape: RouteShape | null = await ServerlessApiService.getShape(
-        "shapeId"
-      );
+      const routeShape = await ServerlessApiService.getShape("shapeId");
       if (routeShape) {
         setRouteShape(routeShape);
       }
@@ -30,13 +29,17 @@ export default function Home() {
         setBusData(busData);
       }
 
-      const rampAccessSchedule =
-        await ServerlessApiService.getRampAccessSchedule("", "");
-
       const stops = await ServerlessApiService.getStops("");
       if (stops) {
         setStops(stops);
       }
+
+      const rampAccessSchedule = await ServerlessApiService.getRampAccessSchedule("","");
+      if (rampAccessSchedule) {
+        setRampAccessSchedule(rampAccessSchedule);
+      }
+
+
     }
 
     fetchData();
@@ -45,65 +48,62 @@ export default function Home() {
   const numWithRamp = busData.filter((b) => b.hasAccessRamp).length;
 
   return (
-    <div>
-      <Row>
-        <Card className="col-span-10 h-96">
+    <div className="flex flex-col">
+      <div className="flex flex-wrap mb-4">
+        <Card className="flex-grow h-96" style={{ maxHeight: '24rem' }}>
           <StmMap routeShape={routeShape} stops={stops} />
         </Card>
 
-        <Card
-          className="col-span-2"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
+        <Card className="w-full md:w-1/6 h-96 overflow-auto">
           <SelectBusLineForm />
         </Card>
-      </Row>
 
-      <Row>
-        <Card className="col-span-4">
-          <PieChartLayout
-            id="ramp-chart"
-            title="Autobus ayant une rampe d'accès"
-            pies={[
-              {
-                label: "Ont une rampe d'accès",
-                value: numWithRamp,
-              },
-              {
-                label: "N'ont pas une rampe d'accès",
-                value: busData.length - numWithRamp,
-              },
-            ]}
-            renderListener={displayedDiagram}
-          />
+        <Card className="w-full md:w-1/6 h-96 overflow-auto">
+          <RampAccessScheduleTable data={rampAccessSchedule} />
         </Card>
+      </div>
 
-        <Card className="col-span-4">
-          <OccupancyChart busData={busData}/>
-        </Card>
+      <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-4">
+      <Card className="md:col-span-1">
+        <PieChartLayout
+          id="ramp-chart"
+          title="Autobus ayant une rampe d'accès"
+          pies={[
+            {
+              label: "Ont une rampe d'accès",
+              value: numWithRamp,
+            },
+            {
+              label: "N'ont pas une rampe d'accès",
+              value: busData.length - numWithRamp,
+            },
+          ]}
+          renderListener={displayedDiagram}
+        />
+      </Card>
 
-        <Card className="col-span-4">
-          <PieChartLayout
-            id="other-chart2"
-            title={"Ceci est un autre diagramme 2"}
-            pies={[
-              {
-                label: "Ont une rampe d'accès",
-                value: numWithRamp,
-              },
-              {
-                label: "N'ont pas une rampe d'accès",
-                value: busData.length - numWithRamp,
-              },
-            ]}
-            renderListener={displayedDiagram}
-          />
-        </Card>
-      </Row>
+      <Card className="md:col-span-1">
+        <OccupancyChart busData={busData}/>
+      </Card>
+
+      <Card className="md:col-span-1"> {/* This Card now spans 1 column on medium screens */}
+        <PieChartLayout
+          id="other-chart2"
+          title={"Ceci est un autre diagramme 2"}
+          pies={[
+            {
+              label: "Ont une rampe d'accès",
+              value: numWithRamp,
+            },
+            {
+              label: "N'ont pas une rampe d'accès",
+              value: busData.length - numWithRamp,
+            },
+          ]}
+          renderListener={displayedDiagram}
+        />
+      </Card>
     </div>
-  );
+  </div>
+);
 }
