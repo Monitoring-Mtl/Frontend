@@ -90,3 +90,5 @@ export const StmMap = memo(({ routeShape, stops }: IStmMap) => {
 
     return <Map mapOptions={mapOptions} />;
 });
+
+StmMap.displayName = "StmMap";
