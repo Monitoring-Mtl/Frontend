@@ -5,7 +5,7 @@ const RampAccessScheduleTable = ({ data }) => {
     const columns = React.useMemo(
         () => [
             {
-                Header: 'Date',
+                Header: 'Prochains passages',
                 accessor: 'date',
                 Cell: ({ value }) => {
                     return value.toLocaleString(); 

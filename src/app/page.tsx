@@ -87,28 +87,10 @@ export default function Home() {
         <OccupancyChart busData={busData}/>
       </Card>
 
-      <Card className="md:col-span-1">
-        <PieChartLayout
-          id="other-chart2"
-          title={"Ceci est un autre diagramme 2"}
-          pies={[
-            {
-              label: "Ont une rampe d'accès",
-              value: numWithRamp,
-            },
-            {
-              label: "N'ont pas une rampe d'accès",
-              value: busData.length - numWithRamp,
-            },
-          ]}
-          renderListener={displayedDiagram}
-        />
-      </Card>
-        <Card className="col-span-4">
+        <Card className="md:col-span-1">
           <BusPunctualityChart busData={busData}/>
         </Card>
 
-      </Row>
     </div>
   </div>
 );
