@@ -3,6 +3,5 @@ export type MapOptions = {
     center;
     zoom:number;
     layers;
-    showOverlayCallback;
-    overlayContentCallback;
+    pointermoveCallback?;
 }

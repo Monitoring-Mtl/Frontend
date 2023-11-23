@@ -43,17 +43,11 @@ export const Map = ({mapOptions}) => {
           
             map.addOverlay(overlay);
 
-            map.on('pointermove', (event) => {
-                let feature = map.forEachFeatureAtPixel(event.pixel, (feature) => feature );
-                if (feature !== undefined && mapOptions.showOverlayCallback(feature)) {
-                    overlay.setPosition(event.coordinate);
-                    if (overlayRef.current){
-                        overlayRef.current.textContent = mapOptions.overlayContentCallback(feature)
-                    }
-                } else {
-                    overlay.setPosition(undefined);
-                }
-            });
+            if (mapOptions.pointermoveCallback){
+                map.on('pointermove', (event) => {
+                    mapOptions.pointermoveCallback(event, map, overlay);
+                });
+            }
         }
 
         return () => {

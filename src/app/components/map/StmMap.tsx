@@ -1,14 +1,14 @@
+import { memo } from "react";
 import { fromLonLat } from "ol/proj";
-import { Feature } from "ol";
+import { Feature, MapBrowserEvent, Overlay } from "ol";
 import { LineString, Point } from "ol/geom";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
 import { Style, Stroke } from "ol/style";
-import { Map } from "./Map";
 import { RouteShape, Stop } from "@/types/stmTypes";
 import { MapOptions } from "@/types/MapOptions";
-import { memo } from "react";
-import { FeatureLike } from "ol/Feature";
+import { Map as OlMap } from "openlayers";
+import { Map } from "./Map";
 
 const montrealCoordinates = fromLonLat([-73.56198339521531, 45.49501768328183]);
 
@@ -65,18 +65,27 @@ export const StmMap = memo(({ routeShape, stops }: IStmMap) => {
             }),
         });
     }
-    
-    const showOverlayCallback = (feature:FeatureLike) => feature.getProperties().isStop;
 
-    const overlayContentCallback = (feature:FeatureLike) => `Arrêt ${feature.getProperties().name}`;
+    const pointermoveCallback = (event:MapBrowserEvent<any>, map:OlMap, overlay:Overlay) => {
+        let feature = map.forEachFeatureAtPixel(event.pixel as ol.Pixel, (feature) => feature );
+        const properties = feature?.getProperties();
+        if (feature !== undefined && properties.isStop) {
+            overlay.setPosition(event.coordinate);
+            const overlayRef = overlay.getElement();
+            if (overlayRef){
+                overlayRef.textContent = `Arrêt ${properties.name}`
+            }
+        } else {
+            overlay.setPosition(undefined);
+        }
+    }
 
     const mapOptions: MapOptions = {
         id: "stm-map",
         center: montrealCoordinates,
         zoom: 10,
         layers: [routeLayer, stopsLayer],
-        showOverlayCallback: showOverlayCallback,
-        overlayContentCallback: overlayContentCallback
+        pointermoveCallback:pointermoveCallback
     };
 
     return <Map mapOptions={mapOptions} />;
