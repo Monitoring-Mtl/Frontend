@@ -9,6 +9,7 @@ import PieChartLayout from "./layouts/PieChart";
 import { OccupancyChart } from "./components/graphs/OccupancyChart";
 import RampAccessScheduleTable from './components/RampAccessScheduleTable';
 import SelectBusLineForm from "./layouts/SelectBusLineForm";
+import { BusPunctualityChart } from "./components/graphs/BusPunctualityChart";
 
 export default function Home() {
   const [busData, setBusData] = useState<BusData[]>([]);
@@ -103,6 +104,11 @@ export default function Home() {
           renderListener={displayedDiagram}
         />
       </Card>
+        <Card className="col-span-4">
+          <BusPunctualityChart busData={busData}/>
+        </Card>
+
+      </Row>
     </div>
   </div>
 );
