@@ -3,4 +3,5 @@ export type MapOptions = {
     center;
     zoom:number;
     layers;
+    pointermoveCallback?;
 }
