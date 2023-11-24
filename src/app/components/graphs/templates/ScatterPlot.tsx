@@ -27,13 +27,13 @@ export const ScatterPlot = ({chartOptions}) => {
                 },
             },
             y: {
-                beginAtZero:chartOptions.yAxisBeginAt0,
+                beginAtZero:chartOptions.yBeginAt0,
                 ticks: { 
                     precision: 0 
                 },
                 title:{
                     display: true,
-                    text: chartOptions.yAxisTitle
+                    text: chartOptions.yTitle
                 }
             }
         },
@@ -94,7 +94,7 @@ export const ScatterPlot = ({chartOptions}) => {
 
     return (
         <div className="h-full w-full flex justify-center items-center">
-            <div ref={containerRef} className="w-4/5 h-4/5 flex justify-center items-center">
+            <div ref={containerRef} className="w-4/5 h-5/6 flex justify-center items-center">
                 {/* The direct container of the canvas determines its sizing. */}
                 <canvas ref={canvasRef} className="mr-10"></canvas>
             </div>

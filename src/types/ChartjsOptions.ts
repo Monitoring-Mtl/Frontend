@@ -2,8 +2,8 @@ export type ChartjsOptions = {
     labels:string[];
     data:number[];
     colors:string[];
-    xAxisTitle:string;
-    yAxisTitle:string;
-    yAxisBeginAt0:boolean;
+    xTitle:string;
+    yTitle:string;
+    yBeginAt0:boolean;
     tooltipLabelCallBack?;
 }
