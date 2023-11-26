@@ -1,4 +1,4 @@
-npm jestTest
+npm run jestTest
 
 # Check the exit code to see if tests failed
 if ($LASTEXITCODE -ne 0) {
