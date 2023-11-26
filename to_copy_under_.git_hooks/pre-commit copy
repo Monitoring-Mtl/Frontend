@@ -1,0 +1,19 @@
+#!/bin/sh
+
+npm run build
+npm run ci:test
+
+# Check the exit code to see if tests failed
+if [ $? -ne 0 ]; then
+  echo "Unit tests failed. Commit rejected."
+  exit 1
+fi
+
+# Run npm audit to check for vulnerabilities
+npm audit
+
+# Check the exit code to see if vulnerabilities were found
+if [ $? -ne 0 ]; then
+  echo "Vulnerabilities found. Commit rejected."
+  exit 1
+fi
