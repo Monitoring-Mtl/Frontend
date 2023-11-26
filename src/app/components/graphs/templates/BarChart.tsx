@@ -20,17 +20,17 @@ export const BarChart = ({chartOptions}) => {
                 },
                 title: {
                     display: true,
-                    text: chartOptions.xAxisTitle
+                    text: chartOptions.xTitle
                 }
             },
             y: {
-                beginAtZero:chartOptions.yAxisBeginAt0,
+                beginAtZero:chartOptions.yBeginAt0,
                 ticks: { 
                     precision: 0 
                 },
                 title:{
                     display: true,
-                    text: chartOptions.yAxisTitle
+                    text: chartOptions.yTitle
                 },
                 type: "linear"
             }
