@@ -48,7 +48,7 @@ export default function Home() {
   return (
     <div>
       <Row>
-        <Card className="col-span-10 h-96">
+        <Card className="col-span-10 h-100">
           <StmMap routeShape={routeShape} stops={stops} />
         </Card>
 
