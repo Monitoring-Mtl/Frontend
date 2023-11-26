@@ -1,6 +1,6 @@
 @echo off
 
-npm test
+npm jestTest
 
 :: Check the exit code to see if tests failed
 if %errorlevel% neq 0 (

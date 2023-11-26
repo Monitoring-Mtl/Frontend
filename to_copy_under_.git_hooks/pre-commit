@@ -1,6 +1,6 @@
 #!/bin/sh
 
-npm test
+npm jestTest
 
 # Check the exit code to see if tests failed
 if [ $? -ne 0 ]; then
