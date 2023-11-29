@@ -7,7 +7,20 @@ export const routeShapeProperties = {
 
 export const routeProperties = {
     id : "route_id",
-    type: "route_type",
-    name: "route_long_name",
-    busType:"3"
+    info : "route_info",
+    name : "route_long_name",
+    shortName : "route_short_name",
+}
+
+export const routeDirectionProperties = {
+    direction : "direction",
+    shapeId : "shape_id",
+    stops : "stops"
+}
+
+export const stopProperties = {
+    id : "stop_id",
+    name : "stop_name",
+    latitude : "stop_lat",
+    longitude :"stop_long"
 }

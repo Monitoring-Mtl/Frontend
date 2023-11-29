@@ -7,19 +7,3 @@ export type BusData = {
 export type RampAccessSchedule = {
     date:Date
 }
-
-export type RouteShape = {
-    id:string;
-    coordinates;
-}
-
-export type Stop = {
-    id:string;
-    name:string;
-    coordinates;
-}
-
-export type Route = {
-    id:number;
-    name:string;
-}

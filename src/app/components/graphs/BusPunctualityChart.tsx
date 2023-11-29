@@ -8,6 +8,7 @@ export const BusPunctualityChart = ({busData}) => {
 
     const scatterFormatData = busData.map((bus, i) => ({x:i+1, y:integerDivision(bus.punctuality, 60)}));
     const offsets = busData.map((bus) => bus.punctuality);
+    const minuteOffsets = busData.map((bus) => integerDivision(bus.punctuality, 60));
     const colors = generateColors(offsets);
 
     const chartOptions : ChartjsOptions = {
@@ -26,8 +27,8 @@ export const BusPunctualityChart = ({busData}) => {
             <CardContent id="punctuality-chart" className="w-full h-full">
                 <div className="flex flex-col w-full h-5/6">
                     <ScatterPlot chartOptions={chartOptions}/>
-                    <span><strong>Moyenne: </strong>{offsetToString(mean(offsets).toFixed(1))}</span>
-                    <span><strong>Médiane: </strong>{offsetToString(median(offsets).toFixed(1))}</span>
+                    <span><strong>Moyenne: </strong>{offsetToString(mean(minuteOffsets).toFixed(1))}</span>
+                    <span><strong>Médiane: </strong>{offsetToString(median(minuteOffsets).toFixed(1))}</span>
                 </div>
             </CardContent>
         </>
