@@ -48,7 +48,7 @@ export default function Home() {
   return (
     <div>
       <Row>
-        <Card className="col-span-10 h-96">
+        <Card className="col-span-10 h-96 pt-0">
           <StmMap routeShape={routeShape} stops={stops} />
         </Card>
 
@@ -84,13 +84,16 @@ export default function Home() {
         </Card>
 
         <Card className="col-span-4">
-          <OccupancyChart busData={busData}/>
+          <OccupancyChart busData={busData} />
         </Card>
 
         <Card className="col-span-4">
-          <BusPunctualityChart busData={busData}/>
+          <BusPunctualityChart busData={busData} />
         </Card>
-
+      </Row>
+      <Row>
+        {/* Dernière ligne vide qui réutilise le même padding que les rows précédentes. Si jamais on change le padding des rows, ceci va changer aussi. */}
+        <></>
       </Row>
     </div>
   );
