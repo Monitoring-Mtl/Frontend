@@ -20,6 +20,7 @@ export default function Home() {
   const [routeShape, setRouteShape] = useState<RouteShape>();
   const [stops, setStops] = useState<Stop[]>([]);
   const [displayedDiagram, setDisplayedDiagram] = useState<number>(0);
+  const [routes, setRoutes] = useState<Route[]>([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -32,10 +33,11 @@ export default function Home() {
       const rampAccessSchedule =
         await ServerlessApiService.getRampAccessSchedule("", "");
 
-      const routeData : Route[] = await ServerlessApiService.getRoutes();
+      const routeData = await ServerlessApiService.getRoutes()
+      setRoutes(routeData);
 
       if (routeData && routeData.length > 0){
-        showDirection(routeData[0].directions[0]);
+        setDirection(routeData[0].directions[0]);
       }
     }
 
@@ -44,7 +46,7 @@ export default function Home() {
 
   const numWithRamp = busData.filter((b) => b.hasAccessRamp).length;
 
-  const showDirection = (direction:Direction) => {
+  const setDirection = (direction:Direction) => {
     ServerlessApiService.getShape(direction.shapeId).then(shape => {
         if (shape) {
             setRouteShape(shape);
