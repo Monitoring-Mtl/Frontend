@@ -10,6 +10,7 @@ export const BusPunctualityChart = ({ busData }) => {
     y: integerDivision(bus.punctuality, 60),
   }));
   const offsets = busData.map((bus) => bus.punctuality);
+  const minuteOffsets = busData.map((bus) => integerDivision(bus.punctuality, 60));
   const colors = generateColors(offsets);
 
   const chartOptions: ChartjsOptions = {
@@ -30,11 +31,11 @@ export const BusPunctualityChart = ({ busData }) => {
           <ScatterPlot chartOptions={chartOptions} />
           <span>
             <strong>Moyenne: </strong>
-            {offsetToString(mean(offsets).toFixed(1))}
+            {offsetToString(mean(minuteOffsets).toFixed(1))}
           </span>
           <span>
             <strong>Médiane: </strong>
-            {offsetToString(median(offsets).toFixed(1))}
+            {offsetToString(median(minuteOffsets).toFixed(1))}
           </span>
         </div>
       </CardContent>

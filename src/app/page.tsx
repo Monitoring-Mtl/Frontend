@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
-import { BusData, RouteShape, Stop } from "@/types/stmTypes";
+import { BusData} from "@/types/stmTypes";
 import SelectBusLineForm from "./layouts/SelectBusLineForm";
 import { Card } from "@mui/material";
 import Row from "./layouts/Row";
@@ -10,23 +10,22 @@ import { StmMap } from "./components/map/StmMap";
 import PieChartLayout from "./layouts/PieChart";
 import { OccupancyChart } from "./components/graphs/OccupancyChart";
 import { BusPunctualityChart } from "./components/graphs/BusPunctualityChart";
+import { Stop } from "@/types/Stop";
+import { Route } from "@/types/Route";
+import { Direction } from "@/types/Direction";
+import { RouteShape } from "@/types/RouteShape";
 
 export default function Home() {
   const [busData, setBusData] = useState<BusData[]>([]);
   const [routeShape, setRouteShape] = useState<RouteShape>();
   const [stops, setStops] = useState<Stop[]>([]);
   const [displayedDiagram, setDisplayedDiagram] = useState<number>(0);
+  const [routes, setRoutes] = useState<Route[]>([]);
 
   useEffect(() => {
     async function fetchData() {
-      const routeShape: RouteShape | null = await ServerlessApiService.getShape(
-        "shapeId"
-      );
-      if (routeShape) {
-        setRouteShape(routeShape);
-      }
 
-      const busData = await ServerlessApiService.getBusData("", "");
+    const busData = await ServerlessApiService.getBusData("", "");
       if (busData) {
         setBusData(busData);
       }
@@ -34,9 +33,11 @@ export default function Home() {
       const rampAccessSchedule =
         await ServerlessApiService.getRampAccessSchedule("", "");
 
-      const stops = await ServerlessApiService.getStops("");
-      if (stops) {
-        setStops(stops);
+      const routeData = await ServerlessApiService.getRoutes()
+      setRoutes(routeData);
+
+      if (routeData && routeData.length > 0){
+        setDirection(routeData[0].directions[0]);
       }
     }
 
@@ -44,6 +45,16 @@ export default function Home() {
   }, []);
 
   const numWithRamp = busData.filter((b) => b.hasAccessRamp).length;
+
+  const setDirection = (direction:Direction) => {
+    ServerlessApiService.getShape(direction.shapeId).then(shape => {
+        if (shape) {
+            setRouteShape(shape);
+        }
+
+        setStops(direction.stops);
+    });
+  }
 
   return (
     <div>
