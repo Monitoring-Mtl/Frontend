@@ -13,16 +13,19 @@ import {
 } from "@mui/material";
 import FullButton from "../components/FullButton";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
-import { Route, Stop } from "@/types/stmTypes";
+import { Route } from "@/types/Route";
+import { Direction } from "@/types/Direction";
+import { Stop } from "@/types/Stop";
+
 
 type SelectBusLineFormFields = {
   busLine: number;
+  direction: string;
   stopId: number;
   beginDate: Date;
   beginTime: string;
   endDate: Date;
   endTime: string;
-  direction: string;
 };
 
 const SelectBusLineFormSchema = yup.object().shape({
@@ -38,16 +41,17 @@ const SelectBusLineFormSchema = yup.object().shape({
 export default function SelectBusLineForm() {
   const [formInitialValues] = useState<SelectBusLineFormFields>({
     busLine: 51,
-    stopId: 1,
+    direction: "",
+    stopId: -1,
     beginDate: new Date(),
     beginTime: "",
     endDate: new Date(),
     endTime: "",
-    direction: "",
   });
 
   const [routes, setRoutes] = useState<Route[]>([]);
-  const [stopIds, setStopIds] = useState<Stop[] | null>([]);
+  const [directions, setDirections] = useState<Direction[] | null>([]);
+  const [stops, setStops] = useState<Stop[] | null>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,10 +66,37 @@ export default function SelectBusLineForm() {
     fetchData();
   }, []);
 
-  const updateStopIds = async (event) => {
+  /**
+   * Filter by BusLine
+   * @param id Bus line
+   * @returns Json of the BusLine
+   */
+  const findRouteById = (id: string): Route | undefined => {
+    return routes.find((route) => route.id === id);
+  };
+
+  const updateDirections = async (event) => {
     try {
-      const stopIds = await ServerlessApiService.getStops(event.target.value);
-      setStopIds(stopIds || []);
+      const route = findRouteById(event.target.value)
+      setDirections(route?.directions || []);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  /**
+   * Filter by Direction name
+   * @param id Direction name
+   * @returns Json of the Direction
+   */
+  const findDirectionByName = (name: string): Direction | undefined => {
+    return directions?.find((direction) => direction.name === name);
+  };
+
+  const updateStops = async (event) => {
+    try {
+      const direction = findDirectionByName(event.target.value);
+      setStops(direction?.stops || []);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -91,17 +122,35 @@ export default function SelectBusLineForm() {
                   label="# ligne"
                   onChange={(e) => {
                     setFieldValue("busLine", e.target.value);
-                    updateStopIds(e);
+                    updateDirections(e);
                   }}
                 >
                   {routes.map((route) => (
                     <MenuItem key={route.id} value={route.id}>
-                      {route.id}
+                      {route.id} {route.name}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-
+              <FormControl fullWidth>
+                <InputLabel>Direction</InputLabel>
+                <Select
+                  value={values["direction"]}
+                  label="Direction"
+                  onChange={
+                    (e) => {
+                      setFieldValue("direction", e.target.value)
+                      updateStops(e)
+                    }
+                  }
+                >
+                  {directions?.map((direction) => (
+                    <MenuItem key={direction.name} value={direction.name}>
+                      {direction.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <FormControl fullWidth>
                 <InputLabel># arrêt</InputLabel>
                 <Select
@@ -109,10 +158,10 @@ export default function SelectBusLineForm() {
                   label="# arrêt"
                   onChange={(e) => setFieldValue("stopId", e.target.value)}
                 >
-                  {stopIds &&
-                    stopIds.map((stop) => (
+                  {stops &&
+                    stops.map((stop) => (
                       <MenuItem key={stop.id} value={stop.id}>
-                        {stop.id}
+                        {stop.id} {stop.name}
                       </MenuItem>
                     ))}
                 </Select>
@@ -165,17 +214,6 @@ export default function SelectBusLineForm() {
                   shrink: true,
                 }}
               />
-              <InputLabel>Direction</InputLabel>
-              <Select
-                value={values["direction"]}
-                label="Direction"
-                onChange={(e) => setFieldValue("direction", e.target.value)}
-              >
-                <MenuItem value="north">Nord</MenuItem>
-                <MenuItem value="south">Sud</MenuItem>
-                <MenuItem value="east">Est</MenuItem>
-                <MenuItem value="west">Ouest</MenuItem>
-              </Select>
             </CardContent>
           </div>
           <FullButton onClick={() => submitForm()}>Suivant</FullButton>
