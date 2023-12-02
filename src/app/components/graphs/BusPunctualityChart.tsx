@@ -1,22 +1,19 @@
 import { CardContent, CardHeader } from "@mui/material";
 import { ChartjsOptions } from "@/types/ChartjsOptions";
-import * as colorUtils from "@/utils/color-utils";
+import {LightGreen, Green, LightRed, EtsRed} from "@/utils/color-utils";
 import { ScatterPlot } from "./templates/ScatterPlot";
 import { integerDivision, mean, median } from "@/utils/math-utils";
 import { StmAnalysis } from "@/types/StmAnalysis";
 
 export const BusPunctualityChart = ({analysis } : IBusPunctualityChart)  => {
 
-    if (!analysis){
-        return <CardHeader title={title}></CardHeader>
-    }
-
     const scatterFormatData = analysis.offsets.map((offset, i) => ({
         x: i + 1,
         y: integerDivision(offset, 60),
     }));
+    
     const minuteOffsets = analysis.offsets.map((offset) => integerDivision(offset, 60));
-    const colors = generateColors(analysis.offsets);
+    const colors = minuteOffsets.map(toColor);
 
     const chartOptions: ChartjsOptions = {
         labels: [],
@@ -30,7 +27,7 @@ export const BusPunctualityChart = ({analysis } : IBusPunctualityChart)  => {
 
     return (
         <>
-            <CardHeader title={title}></CardHeader>
+            <CardHeader title="Ponctualité des autobus"></CardHeader>
             <CardContent id="punctuality-chart" className="w-full h-full">
                 <div className="flex flex-col w-full h-5/6">
                     <ScatterPlot chartOptions={chartOptions} />
@@ -49,34 +46,24 @@ export const BusPunctualityChart = ({analysis } : IBusPunctualityChart)  => {
 };
 
 interface IBusPunctualityChart {
-    analysis?: StmAnalysis
+    analysis: StmAnalysis
 }
 
-const title = "Ponctualité des autobus";
+const toColor = (offset) => {
+    if (offset <= -5){
+        return Green;
+    }
 
-const timeDivisor: number = 20;
+    if (offset < 1){
+        return LightGreen;
+    }
 
-const toColorIndex = (value) => integerDivision(Math.abs(value), timeDivisor);
+    if (offset < 5){
+        return LightRed;
+    }
 
-const generateColors = (data) => {
-    const nbGreens = toColorIndex(Math.min(...data)) + 1;
-    const nbReds = toColorIndex(Math.max(...data)) + 1;
-
-    const greens = colorUtils.getColorsFromScale(
-        nbGreens,
-        colorUtils.LightGreen,
-        colorUtils.Green
-    );
-    const reds = colorUtils.getColorsFromScale(
-        nbReds,
-        colorUtils.LightRed,
-        colorUtils.EtsRed
-    );
-
-    return data.map((offset) =>
-        offset <= 0 ? greens[toColorIndex(offset)] : reds[toColorIndex(offset)]
-    );
-};
+    return EtsRed;
+}
 
 const offsetToString = (offset) => {
     if (offset === 0) {

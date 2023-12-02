@@ -4,13 +4,7 @@ import { LightRed, EtsRed, getColorsFromScale } from "@/utils/color-utils";
 import { BarChart } from "./templates/BarChart";
 import { StmAnalysis } from "@/types/StmAnalysis";
 
-const occupancyCount = 5;
-
 export const OccupancyChart = ({analysis} : IOccupancyChart) => {
-
-    if(!analysis){
-        return <CardHeader title={title}></CardHeader>
-    }
 
     const chartOptions : ChartjsOptions = {
         labels: analysis.occupancyLabels,
@@ -24,7 +18,7 @@ export const OccupancyChart = ({analysis} : IOccupancyChart) => {
 
     return (
         <>
-            <CardHeader title={title}></CardHeader>
+            <CardHeader title="Niveau d'occupation des autobus"></CardHeader>
             <CardContent id="occupancy-chart" className="w-full h-full">
                 <BarChart chartOptions={chartOptions}/>
             </CardContent>
@@ -33,7 +27,5 @@ export const OccupancyChart = ({analysis} : IOccupancyChart) => {
 }
 
 interface IOccupancyChart {
-    analysis?:StmAnalysis
+    analysis:StmAnalysis
 }
-
-const title = "Niveau d'occupation des autobus";

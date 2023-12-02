@@ -37,8 +37,6 @@ export default function PieChart({
         ) => {
             d3.select(svgRef.current).select("g").remove();
 
-            const sum: number = arcs.reduce((a, b) => a + b.value, 0);
-
             const overlay = d3
                 .select(overlayRef.current)
                 .style("position", "fixed")
@@ -104,7 +102,7 @@ export default function PieChart({
                     overlay.style("display", "none");
                 });
         },
-        [colors, arcs]
+        [colors, arcs, labelCallback, tooltipCallback]
     );
 
     const render = useCallback(() => {
@@ -112,8 +110,10 @@ export default function PieChart({
             top: 10,
             bottom: 10,
         };
+
         let width = 400;
         let height = 400;
+
         if (container.current) {
             width = container.current.offsetWidth;
             height = container.current.offsetHeight;

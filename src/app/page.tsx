@@ -22,21 +22,18 @@ export default function Home() {
     const [routes, setRoutes] = useState<Route[]>([]);
 
     useEffect(() => {
-        async function fetchData() {
-
-            const stmAnalysisData = await ServerlessApiService.getStmAnalysis("16", "51095", "1699524000", "1699542000");
-            if (stmAnalysisData){
-                setStmAnalysis(stmAnalysisData);
-            }
-
-            const rampAccessSchedule =
-                await ServerlessApiService.getRampAccessSchedule("", "");
+        const fetchData= async () => {
+            const rampAccessSchedule = await ServerlessApiService.getRampAccessSchedule("", "");
 
             const routeData = await ServerlessApiService.getRoutes()
             setRoutes(routeData);
 
             if (routeData && routeData.length > 0) {
-                setDirection(routeData[0].directions[0]);
+                setDirection(routeData[5].directions[0]);
+                const stmAnalysisData = await ServerlessApiService.getStmAnalysis(routeData[5].id, routeData[5].directions[0].stops[0].id, "1699524000", "1699542000");
+                if (stmAnalysisData){
+                    setStmAnalysis(stmAnalysisData);
+                }
             }
         }
 
@@ -61,6 +58,7 @@ export default function Home() {
                 </Card>
 
                 <Card
+                    id="bus-line-form"
                     className="col-span-2"
                     style={{
                         display: "flex",
@@ -72,6 +70,7 @@ export default function Home() {
                 </Card>
             </Row>
 
+            {stmAnalysis && (
             <Row>
                 <Card className="col-span-4">
                     <AccessRampChart analysis={stmAnalysis}/>
@@ -85,6 +84,8 @@ export default function Home() {
                     <BusPunctualityChart analysis={stmAnalysis}/>
                 </Card>
             </Row>
+            )}
+
             <Row>
                 {/* Dernière ligne vide qui réutilise le même padding que les rows précédentes. Si jamais on change le padding des rows, ceci va changer aussi. */}
                 <></>

@@ -8,10 +8,6 @@ const stmAnalysisEndpoint = "analyze?"
 
 export class ServerlessApiService {
 
-    public static async getBusData(routeId:string, stopId:string){
-        return StmFactory.createBusData(JSON.parse("{}"));
-    }
-
     public static async getRampAccessSchedule(routeId:string, stopId:string){
         return StmFactory.createRampAccessSchedule(JSON.parse("{}"));
     }
