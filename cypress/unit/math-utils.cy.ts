@@ -93,4 +93,4 @@ describe("Test math utility functions.", () => {
             expect(mathUtils.median(values)).to.be.equal(777);
         });
     });
-  })
+});

@@ -1,31 +1,12 @@
 import { fromLonLat } from 'ol/proj';
-import { BusData, RampAccessSchedule} from "@/types/stmTypes";
+import { RampAccessSchedule} from "@/types/stmTypes";
 import { Direction } from '@/types/Direction';
 import { Route } from '@/types/Route';
 import { Stop } from '@/types/Stop';
 import { RouteShape } from '@/types/RouteShape';
 import { StmAnalysis } from '@/types/StmAnalysis';
-import { median } from '@/utils/math-utils';
 
 export class StmFactory {
-    
-    static createBusData(data: JSON): BusData[] | null {
-        const busData : BusData[] = [];
-
-        for (let i = 0; i < 100; i++){
-            let isLate = Math.random() > 0.5;
-            let offset = random(0, 3601);
-            let occupancy = random(0, 5);
-            let accessRamp = random(0,3);
-            busData.push({
-                punctuality: isLate ? offset : -offset, 
-                occupancy, 
-                accessRamp: accessRamp
-            });
-        }
-
-        return busData;
-    }
 
     static createRampAccessSchedule(data: JSON) : RampAccessSchedule[] | null {
         let rampAccessSchedules : RampAccessSchedule[] = [];
@@ -105,10 +86,8 @@ export class StmFactory {
 
         return {
             offsets: offsets,
-            averageOffset: json[stmAnalysisProperties.averageOffset],
-            medianOffset: median(offsets),
             occupancies: occupancies,
-            occupancyLabels: ["Plusieurs sièges", "Quelques sièges", "Aucun siège"],
+            occupancyLabels: ["Plusieurs", "Quelques-uns", "Aucun"],
             accessibilities: accessibilities,
             accessibilityLabels: ["N'ont pas une rampe d'accès", "Ont une rampe d'accès et une place", "Ont une rampe d'accès et deux places"]
         };
@@ -146,7 +125,6 @@ const shapeProperties = {
 
 const stmAnalysisProperties = {
     offsets : "offsetArray",
-    averageOffset : "averageOffset",
     occupancies : "seatOccupancyCounts",
     occupancyLevels : ["many_seats_available", "few_seats_available", "standing_room_only"],
     accessibilities : "busWheelchairLevelCounts",

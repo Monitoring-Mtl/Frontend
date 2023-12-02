@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
-import { BusData } from "@/types/stmTypes";
 import SelectBusLineForm from "./layouts/SelectBusLineForm";
 import { Card } from "@mui/material";
 import Row from "./layouts/Row";
@@ -18,18 +17,12 @@ import { StmAnalysis } from "@/types/StmAnalysis";
 
 export default function Home() {
     const [stmAnalysis, setStmAnalysis] = useState<StmAnalysis>();
-    const [busData, setBusData] = useState<BusData[]>([]);
     const [routeShape, setRouteShape] = useState<RouteShape>();
     const [stops, setStops] = useState<Stop[]>([]);
     const [routes, setRoutes] = useState<Route[]>([]);
 
     useEffect(() => {
         async function fetchData() {
-
-            const busData = await ServerlessApiService.getBusData("", "");
-            if (busData) {
-                setBusData(busData);
-            }
 
             const stmAnalysisData = await ServerlessApiService.getStmAnalysis("16", "51095", "1699524000", "1699542000");
             if (stmAnalysisData){
@@ -81,15 +74,15 @@ export default function Home() {
 
             <Row>
                 <Card className="col-span-4">
-                    <AccessRampChart stmAnalysis={stmAnalysis}/>
+                    <AccessRampChart analysis={stmAnalysis}/>
                 </Card>
 
                 <Card className="col-span-4">
-                    <OccupancyChart busData={busData} />
+                    <OccupancyChart analysis={stmAnalysis}/>
                 </Card>
 
                 <Card className="col-span-4">
-                    <BusPunctualityChart busData={busData} />
+                    <BusPunctualityChart analysis={stmAnalysis}/>
                 </Card>
             </Row>
             <Row>
