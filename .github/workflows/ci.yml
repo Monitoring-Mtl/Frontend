@@ -25,13 +25,13 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run Unit Tests
+      - name: Run Automated Tests
         run: npm run ci:test
 
-      - name: Check Unit Test Results
+      - name: Check Automated Test Results
         run: |
           if [ $? -ne 0 ]; then
-            echo "Unit tests failed. Commit rejected."
+            echo "Automated tests failed. Commit rejected."
             exit 1
           fi
 

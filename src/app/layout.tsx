@@ -18,11 +18,11 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={inter.className}>
-        <Header />
-        <div style={{ height: "6rem" }}></div>
-        <main>{children}</main>
-        <div style={{ height: "6rem" }}></div>
-        <Footer />
+        <div>
+          <Header />
+          <main>{children}</main>
+        </div>
+        {/* <Footer /> */}
       </body>
     </html>
   );
