@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Select, MenuItem, FormControl, InputLabel, SelectChangeEvent } from '@mui/material';
-import { Route } from '@/types/stmTypes';
+import { Route } from "@/types/Route";
 
 interface DropdownProps {
   routes: Route[];
