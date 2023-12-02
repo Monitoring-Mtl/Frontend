@@ -4,6 +4,8 @@ import { Direction } from '@/types/Direction';
 import { Route } from '@/types/Route';
 import { Stop } from '@/types/Stop';
 import { RouteShape } from '@/types/RouteShape';
+import { StmAnalysis } from '@/types/StmAnalysis';
+import { median } from '@/utils/math-utils';
 
 export class StmFactory {
     
@@ -14,11 +16,11 @@ export class StmFactory {
             let isLate = Math.random() > 0.5;
             let offset = random(0, 3601);
             let occupancy = random(0, 5);
-            let hasAccessRamp = Math.random() > 0.66;
+            let accessRamp = random(0,3);
             busData.push({
                 punctuality: isLate ? offset : -offset, 
                 occupancy, 
-                hasAccessRamp
+                accessRamp: accessRamp
             });
         }
 
@@ -33,7 +35,7 @@ export class StmFactory {
             date.setMinutes(random(0, 60));
             date.setSeconds(0);
             date.setMilliseconds(0);
-            rampAccessSchedules.push({date})
+            rampAccessSchedules.push({date});
         }
 
         rampAccessSchedules.sort((a, b) => a.date.getTime() - b.date.getTime());
@@ -88,7 +90,29 @@ export class StmFactory {
         return routes;
     }
 
-    
+    static createStmAnalysis(json:JSON) : StmAnalysis | null {
+        if(!json){
+            return null;
+        }
+
+        const offsets = json[stmAnalysisProperties.offsets];
+
+        const occupancyObject = json[stmAnalysisProperties.occupancies];
+        const occupancies = stmAnalysisProperties.occupancyLevels.map(level => occupancyObject[level]);
+
+        const accessibilityObject = json[stmAnalysisProperties.accessibilities];
+        const accessibilities = stmAnalysisProperties.accessibilityLevels.map(level => accessibilityObject[level]);
+
+        return {
+            offsets: offsets,
+            averageOffset: json[stmAnalysisProperties.averageOffset],
+            medianOffset: median(offsets),
+            occupancies: occupancies,
+            occupancyLabels: ["Plusieurs sièges", "Quelques sièges", "Aucun siège"],
+            accessibilities: accessibilities,
+            accessibilityLabels: ["N'ont pas une rampe d'accès", "Ont une rampe d'accès et une place", "Ont une rampe d'accès et deux places"]
+        };
+    }
 }
 
 const random = (min:number, max:number) => Math.floor(Math.random() *  (max - min) + min);
@@ -118,6 +142,15 @@ const shapeProperties = {
     id : "shape_id",
     longitude : "shape_pt_lon",
     latitude : "shape_pt_lat",
+}
+
+const stmAnalysisProperties = {
+    offsets : "offsetArray",
+    averageOffset : "averageOffset",
+    occupancies : "seatOccupancyCounts",
+    occupancyLevels : ["many_seats_available", "few_seats_available", "standing_room_only"],
+    accessibilities : "busWheelchairLevelCounts",
+    accessibilityLevels : ["not_accessible", "accessible_1", "accessible_2"]
 }
 
 const createStops = (data) : Stop[] => {

@@ -2,110 +2,100 @@
 
 import React, { useEffect, useState } from "react";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
-import { BusData} from "@/types/stmTypes";
+import { BusData } from "@/types/stmTypes";
 import SelectBusLineForm from "./layouts/SelectBusLineForm";
 import { Card } from "@mui/material";
 import Row from "./layouts/Row";
 import { StmMap } from "./components/map/StmMap";
-import PieChartLayout from "./layouts/PieChart";
 import { OccupancyChart } from "./components/graphs/OccupancyChart";
 import { BusPunctualityChart } from "./components/graphs/BusPunctualityChart";
+import { AccessRampChart } from "./components/graphs/AccessRampChart";
 import { Stop } from "@/types/Stop";
 import { Route } from "@/types/Route";
 import { Direction } from "@/types/Direction";
 import { RouteShape } from "@/types/RouteShape";
+import { StmAnalysis } from "@/types/StmAnalysis";
 
 export default function Home() {
-  const [busData, setBusData] = useState<BusData[]>([]);
-  const [routeShape, setRouteShape] = useState<RouteShape>();
-  const [stops, setStops] = useState<Stop[]>([]);
-  const [displayedDiagram, setDisplayedDiagram] = useState<number>(0);
-  const [routes, setRoutes] = useState<Route[]>([]);
+    const [stmAnalysis, setStmAnalysis] = useState<StmAnalysis>();
+    const [busData, setBusData] = useState<BusData[]>([]);
+    const [routeShape, setRouteShape] = useState<RouteShape>();
+    const [stops, setStops] = useState<Stop[]>([]);
+    const [routes, setRoutes] = useState<Route[]>([]);
 
-  useEffect(() => {
-    async function fetchData() {
+    useEffect(() => {
+        async function fetchData() {
 
-    const busData = await ServerlessApiService.getBusData("", "");
-      if (busData) {
-        setBusData(busData);
-      }
+            const busData = await ServerlessApiService.getBusData("", "");
+            if (busData) {
+                setBusData(busData);
+            }
 
-      const rampAccessSchedule =
-        await ServerlessApiService.getRampAccessSchedule("", "");
+            const stmAnalysisData = await ServerlessApiService.getStmAnalysis("16", "51095", "1699524000", "1699542000");
+            if (stmAnalysisData){
+                setStmAnalysis(stmAnalysisData);
+            }
 
-      const routeData = await ServerlessApiService.getRoutes()
-      setRoutes(routeData);
+            const rampAccessSchedule =
+                await ServerlessApiService.getRampAccessSchedule("", "");
 
-      if (routeData && routeData.length > 0){
-        setDirection(routeData[0].directions[0]);
-      }
-    }
+            const routeData = await ServerlessApiService.getRoutes()
+            setRoutes(routeData);
 
-    fetchData();
-  }, []);
-
-  const numWithRamp = busData.filter((b) => b.hasAccessRamp).length;
-
-  const setDirection = (direction:Direction) => {
-    ServerlessApiService.getShape(direction.shapeId).then(shape => {
-        if (shape) {
-            setRouteShape(shape);
+            if (routeData && routeData.length > 0) {
+                setDirection(routeData[0].directions[0]);
+            }
         }
 
-        setStops(direction.stops);
-    });
-  }
+        fetchData();
+    }, []);
 
-  return (
-    <div>
-      <Row>
-        <Card className="col-span-10 h-96 pt-0">
-          <StmMap routeShape={routeShape} stops={stops} />
-        </Card>
+    const setDirection = (direction: Direction) => {
+        ServerlessApiService.getShape(direction.shapeId).then(shape => {
+            if (shape) {
+                setRouteShape(shape);
+            }
 
-        <Card
-          className="col-span-2"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
-          <SelectBusLineForm />
-        </Card>
-      </Row>
+            setStops(direction.stops);
+        });
+    }
 
-      <Row>
-        <Card className="col-span-4">
-          <PieChartLayout
-            id="ramp-chart"
-            title="Autobus ayant une rampe d'accès"
-            pies={[
-              {
-                label: "Ont une rampe d'accès",
-                value: numWithRamp,
-              },
-              {
-                label: "N'ont pas une rampe d'accès",
-                value: busData.length - numWithRamp,
-              },
-            ]}
-            renderListener={displayedDiagram}
-          />
-        </Card>
+    return (
+        <div>
+            <Row>
+                <Card className="col-span-10 h-96 pt-0">
+                    <StmMap routeShape={routeShape} stops={stops} />
+                </Card>
 
-        <Card className="col-span-4">
-          <OccupancyChart busData={busData} />
-        </Card>
+                <Card
+                    className="col-span-2"
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <SelectBusLineForm />
+                </Card>
+            </Row>
 
-        <Card className="col-span-4">
-          <BusPunctualityChart busData={busData} />
-        </Card>
-      </Row>
-      <Row>
-        {/* Dernière ligne vide qui réutilise le même padding que les rows précédentes. Si jamais on change le padding des rows, ceci va changer aussi. */}
-        <></>
-      </Row>
-    </div>
-  );
+            <Row>
+                <Card className="col-span-4">
+                    <AccessRampChart stmAnalysis={stmAnalysis}/>
+                </Card>
+
+                <Card className="col-span-4">
+                    <OccupancyChart busData={busData} />
+                </Card>
+
+                <Card className="col-span-4">
+                    <BusPunctualityChart busData={busData} />
+                </Card>
+            </Row>
+            <Row>
+                {/* Dernière ligne vide qui réutilise le même padding que les rows précédentes. Si jamais on change le padding des rows, ceci va changer aussi. */}
+                <></>
+            </Row>
+        </div>
+    );
 }

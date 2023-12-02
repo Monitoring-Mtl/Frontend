@@ -1,7 +1,7 @@
 export type BusData = {
     punctuality:number;
-    occupancy:number; // TODO probably change to enum or string depending on API format
-    hasAccessRamp:boolean;
+    occupancy:number;
+    accessRamp:number;
 }
 
 export type RampAccessSchedule = {
