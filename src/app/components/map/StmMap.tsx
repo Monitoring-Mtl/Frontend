@@ -70,7 +70,10 @@ export const StmMap = memo(({ routeShape, stops }: IStmMap) => {
             }),
         });
 
-        center = stops[integerDivision(stops.length, 2)].coordinates;
+        const centralStop = stops[integerDivision(stops.length, 2)];
+        if (centralStop){
+            center = centralStop.coordinates;
+        }
     }
 
     const pointermoveCallback = (event:MapBrowserEvent<any>, map:OlMap, overlay:Overlay) => {
