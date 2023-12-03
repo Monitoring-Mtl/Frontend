@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "private": true,
   "scripts": {
-    "setupTestCoverage": "npm install --save-dev @istanbuljs/nyc-config-typescript && npm install --save-dev @cypress/code-coverage",
+    "setupTestCoverage": "npm install --save-dev cypress@latest && npm install --save-dev @istanbuljs/nyc-config-typescript && npm install --save-dev @cypress/code-coverage",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -11,7 +11,7 @@
     "test": "npm run build && concurrently  \"npm run start\" \"npm run cypress:test\" --kill-others",
     "ci:test": " bash scripts/ci_tests.sh",
     "cypress:e2e": "nyc --require istanbul-lib-instrument --reporter=lcov --reporter=text-summary cypress run",
-    "cypress:component": "cypress run --component",
+    "cypress:component": "nyc --require istanbul-lib-instrument --reporter=lcov --reporter=text-summary cypress run --component",
     "cypress:open": "cypress open",
     "cypress:test": "npm run cypress:component && wait-port localhost:3000 && npm run cypress:e2e"
   },
@@ -30,6 +30,7 @@
     "yup": "^1.3.2"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^3.12.12",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/d3": "^7.4.2",
     "@types/node": "^20",

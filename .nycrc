@@ -1,6 +1,6 @@
 {
   "extends": "@istanbuljs/nyc-config-typescript",
   "all": true,
-  "include": ["src/**/*.js"],
+  "include": ["src/**/*.js", "src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "cypress", "coverage", ".github", ".idea", ".next", ".nyc_output", "public", "scripts", "tests", "to_copy_under_.git_hooks"]
 }
