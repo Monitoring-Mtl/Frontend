@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
 import ControlsForm from "./layouts/ControlsForm";
 import { Card } from "@mui/material";
@@ -10,43 +10,33 @@ import { OccupancyChart } from "./components/graphs/OccupancyChart";
 import { BusPunctualityChart } from "./components/graphs/BusPunctualityChart";
 import { AccessRampChart } from "./components/graphs/AccessRampChart";
 import { Stop } from "@/types/Stop";
-import { Route } from "@/types/Route";
 import { Direction } from "@/types/Direction";
 import { RouteShape } from "@/types/RouteShape";
 import { StmAnalysis } from "@/types/StmAnalysis";
+import { toEpoch } from "@/utils/datetime-utils";
 
 export default function Home() {
     const [stmAnalysis, setStmAnalysis] = useState<StmAnalysis>();
     const [routeShape, setRouteShape] = useState<RouteShape>();
     const [stops, setStops] = useState<Stop[]>([]);
-    const [routes, setRoutes] = useState<Route[]>([]);
 
-    useEffect(() => {
-        const fetchData= async () => {
-            const rampAccessSchedule = await ServerlessApiService.getRampAccessSchedule("", "");
-
-            const routeData = await ServerlessApiService.getRoutes()
-            setRoutes(routeData);
-
-            if (routeData && routeData.length > 0) {
-                setDirection(routeData[5].directions[0]);
-                const stmAnalysisData = await ServerlessApiService.getStmAnalysis(routeData[5].id, routeData[5].directions[0].stops[0].id, "1699524000", "1699542000");
-                if (stmAnalysisData){
-                    setStmAnalysis(stmAnalysisData);
-                }
-            }
-        }
-
-        fetchData();
-    }, []);
-
-    const setDirection = (direction: Direction) => {
+    const directionCallback = (direction: Direction) => {
         ServerlessApiService.getShape(direction.shapeId).then(shape => {
             if (shape) {
                 setRouteShape(shape);
             }
-
             setStops(direction.stops);
+        });
+    }
+
+    const stmAnalysisCallback = (routeId:string, stopId:string, startDate:string, startTime:string, endDate:string, endTime:string) => {
+        const start = toEpoch(startDate, startTime).toString();
+        const end = toEpoch(endDate, endTime).toString();
+
+        ServerlessApiService.getStmAnalysis(routeId, stopId, "1699524000", "1699542000").then(stmAnalysis => {
+            if (stmAnalysis){
+                setStmAnalysis(stmAnalysis);
+            }
         });
     }
 
@@ -66,7 +56,7 @@ export default function Home() {
                         justifyContent: "space-between",
                     }}
                 >
-                    <ControlsForm />
+                    <ControlsForm directionCallback={directionCallback} stmAnalysisCallback={stmAnalysisCallback}/>
                 </Card>
             </Row>
 

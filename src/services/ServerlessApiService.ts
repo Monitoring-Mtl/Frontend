@@ -8,10 +8,6 @@ const stmAnalysisEndpoint = "analyze?"
 
 export class ServerlessApiService {
 
-    public static async getRampAccessSchedule(routeId:string, stopId:string){
-        return StmFactory.createRampAccessSchedule(JSON.parse("{}"));
-    }
-
     public static async getRoutes(){
         const response = await fetch(baseUrl+routesEndpoint, { method: "GET"});
 

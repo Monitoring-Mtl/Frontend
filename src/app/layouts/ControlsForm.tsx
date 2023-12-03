@@ -17,14 +17,18 @@ import { Route } from "@/types/Route";
 import { Direction } from "@/types/Direction";
 import { Stop } from "@/types/Stop";
 
+interface IControlsForm{
+    directionCallback: (direction:Direction) => void;
+    stmAnalysisCallback: (routeId:string, stopId:string, startDate:string, startTime:string, endDate:string, endTime:string) => void;
+}
 
 type ControlsFormFields = {
   busLine: number;
   direction: string;
   stopId: number;
-  beginDate: Date;
+  beginDate: string;
   beginTime: string;
-  endDate: Date;
+  endDate: string;
   endTime: string;
 };
 
@@ -38,14 +42,14 @@ const ControlsFormSchema = yup.object().shape({
   direction: yup.string().required("Required"),
 });
 
-export default function ControlsForm() {
+export default function ControlsForm({directionCallback, stmAnalysisCallback} : IControlsForm) {
   const [formInitialValues] = useState<ControlsFormFields>({
     busLine: 51,
     direction: "",
     stopId: -1,
-    beginDate: new Date(),
+    beginDate: "",
     beginTime: "",
-    endDate: new Date(),
+    endDate: "",
     endTime: "",
   });
 
@@ -107,7 +111,14 @@ export default function ControlsForm() {
       initialValues={formInitialValues}
       validationSchema={ControlsFormSchema}
       onSubmit={(values: ControlsFormFields) => {
-        console.log(values);
+        stmAnalysisCallback(
+            values.busLine.toString(),
+            values.stopId.toString(),
+            values.beginDate,
+            values.beginTime,
+            values.endDate,
+            values.endTime
+        );
       }}
     >
       {({ submitForm, setFieldValue, values }) => (
@@ -141,6 +152,10 @@ export default function ControlsForm() {
                     (e) => {
                       setFieldValue("direction", e.target.value)
                       updateStops(e)
+                      const direction = findDirectionByName(e.target.value);
+                      if (direction){
+                        directionCallback(direction)
+                      }
                     }
                   }
                 >
@@ -216,7 +231,7 @@ export default function ControlsForm() {
               />
             </CardContent>
           </div>
-          <FullButton onClick={() => submitForm()}>Suivant</FullButton>
+          <FullButton onClick={() => submitForm()}>Analyser</FullButton>
         </>
       )}
     </Formik>

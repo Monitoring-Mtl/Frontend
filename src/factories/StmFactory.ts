@@ -1,5 +1,4 @@
 import { fromLonLat } from 'ol/proj';
-import { RampAccessSchedule} from "@/types/stmTypes";
 import { Direction } from '@/types/Direction';
 import { Route } from '@/types/Route';
 import { Stop } from '@/types/Stop';
@@ -7,22 +6,6 @@ import { RouteShape } from '@/types/RouteShape';
 import { StmAnalysis } from '@/types/StmAnalysis';
 
 export class StmFactory {
-
-    static createRampAccessSchedule(data: JSON) : RampAccessSchedule[] | null {
-        let rampAccessSchedules : RampAccessSchedule[] = [];
-        for (let i = 0; i < 50; i++){
-            const date = new Date();
-            date.setHours(random(0,24));
-            date.setMinutes(random(0, 60));
-            date.setSeconds(0);
-            date.setMilliseconds(0);
-            rampAccessSchedules.push({date});
-        }
-
-        rampAccessSchedules.sort((a, b) => a.date.getTime() - b.date.getTime());
-
-        return rampAccessSchedules;
-    }
 
     static createRouteShape(data: JSON) : RouteShape | null{
 
@@ -93,8 +76,6 @@ export class StmFactory {
         };
     }
 }
-
-const random = (min:number, max:number) => Math.floor(Math.random() *  (max - min) + min);
 
 const routeProperties = {
     id : "route_id",
