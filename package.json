@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "private": true,
   "scripts": {
-    "setupCoverage": "npm install --save-dev @istanbuljs/nyc-config-typescript",
+    "setupTestCoverage": "npm install --save-dev @istanbuljs/nyc-config-typescript",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
