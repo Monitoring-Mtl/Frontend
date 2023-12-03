@@ -11,4 +11,4 @@ Comment as-tu résolu le problème? Y-a-t'il eu des concessions à faire?
 ### 📸 Screenshots (optional)
 
 If you made UI changes, what are the before and after?
-Si tu as fait un changement à l'interface, quel est le avant après?
+Si tu as fait un changement à l'interface graphique, quel est le avant et le après?

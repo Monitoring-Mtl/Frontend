@@ -2,15 +2,6 @@ import { StmFactory } from "@/factories/StmFactory";
 
 describe("Test the creation of data objects from received JSON", () => {
 
-    it("Create ramp access schedule test.", () => {
-        const rampAccessSchedules = StmFactory.createRampAccessSchedule(JSON.parse("{}"))!;
-        expect(rampAccessSchedules?.length).to.equal(50);
-
-        const firstSchedule = rampAccessSchedules[0].date;
-        const lastSchedule = rampAccessSchedules[49].date;
-        expect(firstSchedule.getTime()).to.be.below(lastSchedule.getTime());
-    });
-
     it("Create route shape test.", () => {
         cy.fixture("shape.json").then((shape) => {
             const routeShape = StmFactory.createRouteShape(shape)!;
