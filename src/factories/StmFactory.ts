@@ -1,5 +1,4 @@
 import { fromLonLat } from 'ol/proj';
-import { RampAccessSchedule} from "@/types/stmTypes";
 import { Direction } from '@/types/Direction';
 import { Route } from '@/types/Route';
 import { Stop } from '@/types/Stop';
