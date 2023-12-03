@@ -18,7 +18,7 @@ import { Direction } from "@/types/Direction";
 import { Stop } from "@/types/Stop";
 
 
-type SelectBusLineFormFields = {
+type ControlsFormFields = {
   busLine: number;
   direction: string;
   stopId: number;
@@ -28,7 +28,7 @@ type SelectBusLineFormFields = {
   endTime: string;
 };
 
-const SelectBusLineFormSchema = yup.object().shape({
+const ControlsFormSchema = yup.object().shape({
   busLine: yup.number().required("Required"),
   stopId: yup.number().required("Required"),
   beginDate: yup.date().required("Required"),
@@ -38,8 +38,8 @@ const SelectBusLineFormSchema = yup.object().shape({
   direction: yup.string().required("Required"),
 });
 
-export default function SelectBusLineForm() {
-  const [formInitialValues] = useState<SelectBusLineFormFields>({
+export default function ControlsForm() {
+  const [formInitialValues] = useState<ControlsFormFields>({
     busLine: 51,
     direction: "",
     stopId: -1,
@@ -105,8 +105,8 @@ export default function SelectBusLineForm() {
   return (
     <Formik
       initialValues={formInitialValues}
-      validationSchema={SelectBusLineFormSchema}
-      onSubmit={(values: SelectBusLineFormFields) => {
+      validationSchema={ControlsFormSchema}
+      onSubmit={(values: ControlsFormFields) => {
         console.log(values);
       }}
     >

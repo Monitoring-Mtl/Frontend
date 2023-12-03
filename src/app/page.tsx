@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
-import SelectBusLineForm from "./layouts/SelectBusLineForm";
+import ControlsForm from "./layouts/ControlsForm";
 import { Card } from "@mui/material";
 import Row from "./layouts/Row";
 import { StmMap } from "./components/map/StmMap";
@@ -66,7 +66,7 @@ export default function Home() {
                         justifyContent: "space-between",
                     }}
                 >
-                    <SelectBusLineForm />
+                    <ControlsForm />
                 </Card>
             </Row>
 
