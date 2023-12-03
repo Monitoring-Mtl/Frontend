@@ -20,14 +20,17 @@ export const BarChart = ({chartOptions}) => {
                 },
                 title: {
                     display: true,
-                    text: chartOptions.xAxisTitle
+                    text: chartOptions.xTitle
                 }
             },
             y: {
-                ticks: { precision: 0 },
+                beginAtZero:chartOptions.yBeginAt0,
+                ticks: { 
+                    precision: 0 
+                },
                 title:{
                     display: true,
-                    text: chartOptions.yAxisTitle
+                    text: chartOptions.yTitle
                 },
                 type: "linear"
             }
@@ -44,6 +47,8 @@ export const BarChart = ({chartOptions}) => {
                 padding: 10,
                 position:"cursor",
                 displayColors: false,
+                borderWidth: 1,
+                borderColor:'rgb(0, 0, 0)',
                 callbacks: {
                     title : () => null,
                     label: chartOptions.tooltipLabelCallBack
@@ -66,7 +71,7 @@ export const BarChart = ({chartOptions}) => {
             
         };
 
-        let barChart
+        let chart
         let context;
 
         if (canvasRef.current) {
@@ -74,15 +79,15 @@ export const BarChart = ({chartOptions}) => {
         }
 
         if (context){
-            barChart = new Chart(context, {
+            chart = new Chart(context, {
                 type: "bar",
                 data: data,
                 options: options
             });
         }
         return () => {
-            if (barChart){
-                barChart.destroy();
+            if (chart){
+                chart.destroy();
             }
         }
     });

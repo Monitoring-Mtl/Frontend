@@ -1,24 +1,31 @@
-import { BarChartLayout } from "@/app/layouts/BarChart"
-import { BarChartOptions } from "@/types/BarChartOptions"
+import { CardContent, CardHeader } from "@mui/material";
+import { ChartjsOptions } from "@/types/ChartjsOptions"
 import { LightRed, EtsRed, getColorsFromScale } from "@/utils/color-utils";
+import { BarChart } from "./templates/BarChart";
+import { StmAnalysis } from "@/types/StmAnalysis";
 
-const occupancyCount = 5;
+export const OccupancyChart = ({analysis} : IOccupancyChart) => {
 
-export const OccupancyChart = ({busData}) => {
-
-    const busCount : number[] = Array(occupancyCount).fill(0);
-    busData.forEach(bus => busCount[bus.occupancy]++);
-
-    const chartOptions : BarChartOptions = {
-        labels:["Vide", "Faible", "Moyen", "Élevé", "Plein"],
-        data:busCount,
-        colors:getColorsFromScale(occupancyCount, LightRed, EtsRed),
-        xAxisTitle:"Taux d'occupation",
-        yAxisTitle:"Nombre d'autobus",
+    const chartOptions : ChartjsOptions = {
+        labels: analysis.occupancyLabels,
+        data: analysis.occupancies,
+        colors:getColorsFromScale(analysis.occupancies.length, LightRed, EtsRed),
+        xTitle:"Sièges disponibles",
+        yTitle:"Nombre d'autobus",
+        yBeginAt0:true,
         tooltipLabelCallBack:(context) => `${context.raw} autobus`
     }
 
     return (
-        <BarChartLayout chartOptions={chartOptions}/>
+        <>
+            <CardHeader title="Niveau d'occupation des autobus"></CardHeader>
+            <CardContent id="occupancy-chart" className="w-full h-full">
+                <BarChart chartOptions={chartOptions}/>
+            </CardContent>
+        </>
     )
+}
+
+interface IOccupancyChart {
+    analysis:StmAnalysis
 }
