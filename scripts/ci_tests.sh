@@ -1,6 +1,6 @@
 #!/bin/bash
 
-npm setupTestCoverage &
+npm run setupTestCoverage &
 
 npm run start &
 
