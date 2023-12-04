@@ -3,6 +3,7 @@ import { Formik, FormikHelpers, Field } from "formik";
 import { useEffect, useState } from "react";
 import * as yup from "yup";
 import {
+  Box,
   CardContent,
   CardHeader,
   CircularProgress,
@@ -143,9 +144,11 @@ export default function ControlsForm({
             <CardContent>
               {routes.length === 0 ? (
                 routeError ? (
-                  routeError
+                  <div className="text-center">{routeError}</div>
                 ) : (
-                  <CircularProgress />
+                  <Box sx={{ display: "flex" }}>
+                    <CircularProgress className="mx-auto w-full" />
+                  </Box>
                 )
               ) : (
                 <>
