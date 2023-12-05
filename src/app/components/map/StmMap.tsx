@@ -5,10 +5,12 @@ import { LineString, Point } from "ol/geom";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
 import { Style, Stroke } from "ol/style";
-import { RouteShape, Stop } from "@/types/stmTypes";
+import { RouteShape} from "@/types/RouteShape";
+import { Stop } from "@/types/Stop";
 import { MapOptions } from "@/types/MapOptions";
 import { Map as OlMap } from "openlayers";
 import { Map } from "./Map";
+import { integerDivision } from "@/utils/math-utils";
 
 const montrealCoordinates = fromLonLat([-73.56198339521531, 45.49501768328183]);
 
@@ -18,6 +20,7 @@ interface IStmMap {
 }
 
 export const StmMap = memo(({ routeShape, stops }: IStmMap) => {
+
     let routeLayer;
     if (routeShape) {
         routeLayer = new VectorLayer({
@@ -36,6 +39,8 @@ export const StmMap = memo(({ routeShape, stops }: IStmMap) => {
             }),
         });
     }
+
+    let center = montrealCoordinates;
 
     let stopsLayer;
     if (stops) {
@@ -64,6 +69,11 @@ export const StmMap = memo(({ routeShape, stops }: IStmMap) => {
                 features: features,
             }),
         });
+
+        const centralStop = stops[integerDivision(stops.length, 2)];
+        if (centralStop){
+            center = centralStop.coordinates;
+        }
     }
 
     const pointermoveCallback = (event:MapBrowserEvent<any>, map:OlMap, overlay:Overlay) => {
@@ -82,8 +92,8 @@ export const StmMap = memo(({ routeShape, stops }: IStmMap) => {
 
     const mapOptions: MapOptions = {
         id: "stm-map",
-        center: montrealCoordinates,
-        zoom: 10,
+        center: center,
+        zoom: 12,
         layers: [routeLayer, stopsLayer],
         pointermoveCallback:pointermoveCallback
     };
