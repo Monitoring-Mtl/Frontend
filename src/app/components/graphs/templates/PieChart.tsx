@@ -57,7 +57,8 @@ export default function PieChart({
             const pieGenerator = d3
                 .pie()
                 .padAngle(0)
-                .value((d) => d.valueOf());
+                .value((d) => d.valueOf())
+                .sort(null);
 
             const arc = svg
                 .selectAll()
@@ -77,7 +78,7 @@ export default function PieChart({
                 .attr("text-anchor", "middle")
                 .attr("alignment-baseline", "middle")
                 .attr("class", "graph-element")
-                .text((d: any, i) => labelCallback(d.data))
+                .text((d: any, i) => labelCallback(d.data, i))
                 .style("font-size", `${computeFontSize(width, height)}px`)
                 .attr("transform", (d) => {
                     const [x, y] = arcGenerator.centroid(d);
@@ -88,12 +89,12 @@ export default function PieChart({
                 .selectAll(".graph-element")
                 .on("mouseover", function (event, d: any) {
                     overlay
-                        .html(tooltipCallback(d.data))
+                        .html(tooltipCallback(d.data, d.index))
                         .style("left", event.clientX + 10 + "px")
                         .style("top", event.clientY - 40 + "px")
                         .style("display", "block");
                 })
-                .on("mousemove", function (event, d) {
+                .on("mousemove", function (event, _) {
                     overlay
                         .style("left", event.clientX + 10 + "px")
                         .style("top", event.clientY - 40 + "px");
