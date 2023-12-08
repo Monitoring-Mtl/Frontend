@@ -142,10 +142,8 @@ const resetStopStyles = (stopsLayer:VectorLayer<VectorSource> | null) => {
 const etsCoordinates = fromLonLat([-73.56198339521531, 45.49501768328183]);
 
 const getMapCenter = (routeShape:RouteShape | undefined) => {
-    let center = etsCoordinates;
-
     if (!routeShape || routeShape.coordinates.length < 1){
-        return center;
+        return etsCoordinates;
     }
 
     return routeShape.coordinates[integerDivision(routeShape.coordinates.length, 2)];
