@@ -13,7 +13,7 @@ export const OccupancyChart = ({analysis} : IOccupancyChart) => {
         xTitle:"Sièges disponibles",
         yTitle:"Nombre d'autobus",
         yBeginAt0:true,
-        tooltipLabelCallBack:(context) => `${context.raw} autobus`
+        tooltipLabelCallBack:(context) => `${context.raw} autobus ${tooltipLabels[context.dataIndex]}`
     }
 
     return (
@@ -29,3 +29,5 @@ export const OccupancyChart = ({analysis} : IOccupancyChart) => {
 interface IOccupancyChart {
     analysis:StmAnalysis
 }
+
+const tooltipLabels = ["ont plusieurs sièges disponibles", "ont quelques sièges disponibles", "n'ont aucun siège disponible"]
