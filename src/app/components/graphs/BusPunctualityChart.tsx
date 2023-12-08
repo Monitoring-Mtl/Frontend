@@ -20,7 +20,7 @@ export const BusPunctualityChart = ({analysis } : IBusPunctualityChart)  => {
         data: scatterFormatData,
         colors: colors,
         xTitle: "",
-        yTitle: "Décalage avec le temps d'arrivé prévu (minutes)",
+        yTitle: "Décalage avec l'horaire (minutes)",
         yBeginAt0: false,
         tooltipLabelCallBack: (context) => offsetToString(context.raw.y),
     };
@@ -66,13 +66,13 @@ const toColor = (offset) => {
 }
 
 const offsetToString = (offset) => {
-    if (offset === 0) {
+    if (offset == 0) {
         return "Arrivé à temps";
     }
 
     const absOffset = Math.abs(offset);
     const timeUnit = ` ${absOffset > 1 ? "minutes" : "minute"}`;
-    const timeQualifier = ` ${offset < 0 ? "d'avance" : "de retard"}`;
+    const timeQualifier = ` ${offset < 0 ? "en avance" : "en retard"}`;
 
     return absOffset + timeUnit + timeQualifier;
 };
