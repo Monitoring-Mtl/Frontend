@@ -55,13 +55,13 @@ export default function Home() {
   return (
     <div>
       <Row>
-        <Card className="col-span-10 h-100 pt-0">
+        <Card className="col-span-9 h-100 pt-0">
           <StmMap routeShape={routeShape} stops={stops} />
         </Card>
 
         <Card
           id="bus-line-form"
-          className="col-span-2 min-h-[676px]"
+          className="col-span-3 min-h-[676px]"
           style={{
             display: "flex",
             flexDirection: "column",
