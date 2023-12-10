@@ -8,8 +8,8 @@ export const AccessRampChart = ({analysis} : IAccessRampChart)  => {
 
     const colors = getColorsFromScale(3, EtsRed, LightRed);
 
-    const labelCallback = (data) => data != 0 ? `${((data / analysis.offsets.length) * 100).toFixed(1)}%` : "";
-    const tooltipCallback = (data) => `${data} autobus`;
+    const labelCallback = (data, _) => data != 0 ? `${((data / analysis.offsets.length) * 100).toFixed(1)}%` : "";
+    const tooltipCallback = (data, i) => `${data} autobus ${analysis.accessibilityLabels[i].toLowerCase()}`;
 
     const arcs = [
         {

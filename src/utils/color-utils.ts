@@ -5,6 +5,7 @@ export const EtsRed : string = "#ef3e45";
 export const EtsCharcoal : string = "#414042";
 export const LightGreen : string = "#b1f8b2";
 export const Green : string = "#3eef45";
+export const StmBusBlue : string = "#0085ca";
 
 export const getColorsFromScale = (nbOfColors:number, fromColor:string, toColor:string) => {
     const colorScale = d3.scaleSequential(d3.interpolate(fromColor, toColor));

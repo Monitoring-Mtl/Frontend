@@ -16,70 +16,85 @@ import { StmAnalysis } from "@/types/StmAnalysis";
 import { toEpoch } from "@/utils/datetime-utils";
 
 export default function Home() {
-    const [stmAnalysis, setStmAnalysis] = useState<StmAnalysis>();
-    const [routeShape, setRouteShape] = useState<RouteShape>();
-    const [stops, setStops] = useState<Stop[]>([]);
+  const [stmAnalysis, setStmAnalysis] = useState<StmAnalysis>();
+  const [routeShape, setRouteShape] = useState<RouteShape>();
+  const [stops, setStops] = useState<Stop[]>([]);
 
-    const directionCallback = (direction: Direction) => {
-        ServerlessApiService.getShape(direction.shapeId).then(shape => {
-            if (shape) {
-                setRouteShape(shape);
-            }
-            setStops(direction.stops);
-        });
-    }
+  const directionCallback = (direction: Direction) => {
+    ServerlessApiService.getShape(direction.shapeId).then((shape) => {
+      if (shape) {
+        setRouteShape(shape);
+      }
+      setStops(direction.stops);
+    });
+  };
 
-    const stmAnalysisCallback = (routeId:string, stopId:string, startDate:string, startTime:string, endDate:string, endTime:string) => {
-        const start = toEpoch(startDate, startTime).toString();
-        const end = toEpoch(endDate, endTime).toString();
+  const stmAnalysisCallback = (
+    routeId: string,
+    stopId: string,
+    startDate: string,
+    startTime: string,
+    endDate: string,
+    endTime: string
+  ) => {
+    const start = toEpoch(startDate, startTime).toString();
+    const end = toEpoch(endDate, endTime).toString();
 
-        ServerlessApiService.getStmAnalysis(routeId, stopId, "1699524000", "1699542000").then(stmAnalysis => {
-            if (stmAnalysis){
-                setStmAnalysis(stmAnalysis);
-            }
-        });
-    }
+    ServerlessApiService.getStmAnalysis(
+      routeId,
+      stopId,
+      "1699524000",
+      "1699542000"
+    ).then((stmAnalysis) => {
+      if (stmAnalysis) {
+        setStmAnalysis(stmAnalysis);
+      }
+    });
+  };
 
-    return (
-        <div>
-            <Row>
-                <Card className="col-span-10 h-100 pt-0">
-                    <StmMap routeShape={routeShape} stops={stops} />
-                </Card>
+  return (
+    <div>
+      <Row>
+        <Card className="col-span-10 h-100 pt-0">
+          <StmMap routeShape={routeShape} stops={stops} />
+        </Card>
 
-                <Card
-                    id="bus-line-form"
-                    className="col-span-2"
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                    }}
-                >
-                    <ControlsForm directionCallback={directionCallback} stmAnalysisCallback={stmAnalysisCallback}/>
-                </Card>
-            </Row>
+        <Card
+          id="bus-line-form"
+          className="col-span-2 min-h-[676px]"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          <ControlsForm
+            directionCallback={directionCallback}
+            stmAnalysisCallback={stmAnalysisCallback}
+          />
+        </Card>
+      </Row>
 
-            {stmAnalysis && (
-            <Row>
-                <Card className="col-span-4">
-                    <AccessRampChart analysis={stmAnalysis}/>
-                </Card>
+      {stmAnalysis && (
+        <Row>
+          <Card className="col-span-4">
+            <AccessRampChart analysis={stmAnalysis} />
+          </Card>
 
-                <Card className="col-span-4">
-                    <OccupancyChart analysis={stmAnalysis}/>
-                </Card>
+          <Card className="col-span-4">
+            <OccupancyChart analysis={stmAnalysis} />
+          </Card>
 
-                <Card className="col-span-4">
-                    <BusPunctualityChart analysis={stmAnalysis}/>
-                </Card>
-            </Row>
-            )}
+          <Card className="col-span-4">
+            <BusPunctualityChart analysis={stmAnalysis} />
+          </Card>
+        </Row>
+      )}
 
-            <Row>
-                {/* Dernière ligne vide qui réutilise le même padding que les rows précédentes. Si jamais on change le padding des rows, ceci va changer aussi. */}
-                <></>
-            </Row>
-        </div>
-    );
+      <Row>
+        {/* Dernière ligne vide qui réutilise le même padding que les rows précédentes. Si jamais on change le padding des rows, ceci va changer aussi. */}
+        <></>
+      </Row>
+    </div>
+  );
 }
