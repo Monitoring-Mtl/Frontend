@@ -1,6 +1,5 @@
-import React from "react";
-import { Formik, FormikHelpers, Field } from "formik";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Formik, Field } from "formik";
 import * as yup from "yup";
 import {
   Box,
@@ -150,7 +149,7 @@ export default function ControlsForm({
         }
       }}
     >
-      {({ submitForm, setFieldValue, values }) => (
+      {({ submitForm, setFieldValue, values, isValid, dirty }) => (
         <>
           <div>
             <CardHeader title="Choix de la ligne et de l'arrêt" />
@@ -270,8 +269,12 @@ export default function ControlsForm({
               )}
             </CardContent>
           </div>
-          <FullButton onClick={() => submitForm()}>Analyser</FullButton>
-        </>
+          <FullButton 
+            isDisabled={!(isValid && dirty)} // Disable button when form is invalid or not dirty
+            onClick={() => submitForm()}
+          >
+            Analyser
+          </FullButton>        </>
       )}
     </Formik>
   );
