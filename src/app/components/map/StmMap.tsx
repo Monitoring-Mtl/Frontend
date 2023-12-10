@@ -11,15 +11,15 @@ import { MapOptions } from "@/types/MapOptions";
 import { Map as OlMap } from "openlayers";
 import { Map } from "./Map";
 import { integerDivision } from "@/utils/math-utils";
-import { StmBusBlue } from "@/utils/color-utils";
+import { EtsRed, StmBusBlue } from "@/utils/color-utils";
 
 interface IStmMap {
     routeShape?: RouteShape;
+    selectedStopId?: string;
     stops: Stop[];
 }
 
-export const StmMap = memo(({ routeShape, stops }: IStmMap) => {
-
+export const StmMap = memo(({ routeShape, selectedStopId, stops }: IStmMap) => {
     let routeLayer:VectorLayer<VectorSource> | null = null;
     if (routeShape) {
         routeLayer = new VectorLayer({
@@ -54,6 +54,7 @@ export const StmMap = memo(({ routeShape, stops }: IStmMap) => {
 
             feature.setProperties({
                 isStop: true,
+                isSelected: stop.id === selectedStopId,
                 id: stop.id,
                 name: stop.name
             });
@@ -66,9 +67,10 @@ export const StmMap = memo(({ routeShape, stops }: IStmMap) => {
         stopsLayer = new VectorLayer({
             source: new VectorSource({
                 features: features,
-            }),
-            style: stopStyle
+            })
         });
+
+        setStopStyles(stopsLayer)
     }
 
     const pointermoveCallback = (event:MapBrowserEvent<any>, map:OlMap, overlay:Overlay) => {
@@ -83,14 +85,14 @@ export const StmMap = memo(({ routeShape, stops }: IStmMap) => {
                 overlayRef.textContent = `Arrêt ${properties.name}`
             }
 
-            resetStopStyles(stopsLayer);
+            setStopStyles(stopsLayer);
 
             if (feature instanceof Feature){
-                feature.setStyle(hoverStopStyle);
+                feature.setStyle(properties.isSelected ? selectedHoverStyle : hoverStyle);
             }
         } else {
             overlay.setPosition(undefined);
-            resetStopStyles(stopsLayer);
+            setStopStyles(stopsLayer);
         }
     }
 
@@ -118,7 +120,7 @@ const stopStyle = new Style({
     })
 });
 
-const hoverStopStyle = new Style({
+const hoverStyle = new Style({
     image: new Circle({
         radius: 6,
         fill: new Fill({
@@ -131,10 +133,37 @@ const hoverStopStyle = new Style({
     })
 });
 
-const resetStopStyles = (stopsLayer:VectorLayer<VectorSource> | null) => {
+const selectedStyle = new Style({
+    image: new Circle({
+        radius: 5,
+        fill: new Fill({
+          color: EtsRed
+        }),
+        stroke: new Stroke({
+            color: StmBusBlue,
+            width: 2,
+        }),
+    })
+});
+
+const selectedHoverStyle = new Style({
+    image: new Circle({
+        radius: 6,
+        fill: new Fill({
+          color: EtsRed
+        }),
+        stroke: new Stroke({
+            color: StmBusBlue,
+            width: 2,
+        }),
+    })
+});
+
+const setStopStyles = (stopsLayer:VectorLayer<VectorSource> | null) => {
     stopsLayer?.getSource()?.getFeatures()?.forEach((feature => {
-        if (feature.getProperties().isStop && feature instanceof Feature){
-            feature.setStyle(stopStyle);
+        const properties = feature.getProperties();
+        if (properties.isStop && feature instanceof Feature){
+            feature.setStyle(properties.isSelected ? selectedStyle : stopStyle);
         }
     }));
 }
