@@ -56,7 +56,7 @@ export default function ControlsForm({
   stmAnalysisCallback,
 }: IControlsForm) {
   const [formInitialValues] = useState<ControlsFormFields>({
-    busLine: 51,
+    busLine: -1,
     direction: "",
     stopId: -1,
     beginDate: "",
@@ -127,14 +127,27 @@ export default function ControlsForm({
       initialValues={formInitialValues}
       validationSchema={ControlsFormSchema}
       onSubmit={(values: ControlsFormFields) => {
-        stmAnalysisCallback(
-          values.busLine.toString(),
-          values.stopId.toString(),
-          values.beginDate,
-          values.beginTime,
-          values.endDate,
-          values.endTime
-        );
+
+        const beginDateHourMinuteString = values.beginDate + " " + values.beginTime;
+
+        const beginDateHourMinuteDate = new Date(beginDateHourMinuteString);
+
+        const endDateHourMinuteString = values.endDate + " " + values.endTime;
+        const endDateHourMinuteDate = new Date(endDateHourMinuteString);
+
+        if (beginDateHourMinuteDate > endDateHourMinuteDate) {
+          alert("Erreur: La date-heure-minute de fin est plus petit que la date-heure-minute de début. ");
+        } 
+        else {
+          stmAnalysisCallback(
+            values.busLine.toString(),
+            values.stopId.toString(),
+            values.beginDate,
+            values.beginTime,
+            values.endDate,
+            values.endTime
+          );
+        }
       }}
     >
       {({ submitForm, setFieldValue, values }) => (
