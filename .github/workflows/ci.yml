@@ -27,7 +27,7 @@ jobs:
 
       - name: Run Automated Tests
         run: npm jestTest
-        run: npm run ci:test
+        run: npm ci:test
 
       - name: Check Automated Test Results
         run: |
