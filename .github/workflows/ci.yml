@@ -25,9 +25,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run Automated Tests
+      - name: Run unit jest Tests
         run: npm jestTest
-        run: npm ci:test
+        
+      - name: Run Automated Tests with Cypress
+        run: npm run ci:test
 
       - name: Check Automated Test Results
         run: |
