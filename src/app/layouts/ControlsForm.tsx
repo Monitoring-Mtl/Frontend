@@ -29,6 +29,7 @@ interface IControlsForm {
     endDate: string,
     endTime: string
   ) => void;
+  selectedStopCallback: (stopId: string) => void;
 }
 
 type ControlsFormFields = {
@@ -54,6 +55,7 @@ const ControlsFormSchema = yup.object().shape({
 export default function ControlsForm({
   directionCallback,
   stmAnalysisCallback,
+  selectedStopCallback
 }: IControlsForm) {
   const [formInitialValues] = useState<ControlsFormFields>({
     busLine: -1,
@@ -208,7 +210,10 @@ export default function ControlsForm({
                     <Select
                       value={values["stopId"]}
                       label="# arrêt"
-                      onChange={(e) => setFieldValue("stopId", e.target.value)}
+                      onChange={(e) => {
+                        setFieldValue("stopId", e.target.value)
+                        selectedStopCallback(e.target.value.toString())
+                      }}
                     >
                       {stops &&
                         stops.map((stop) => (
