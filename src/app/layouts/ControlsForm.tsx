@@ -1,5 +1,5 @@
-import React, {useRef} from "react";
-import { Formik, FormikHelpers, Field, useFormikContext } from "formik";
+import React from "react";
+import { Formik, Field, useFormikContext } from "formik";
 import { useEffect, useState } from "react";
 import * as yup from "yup";
 import {
@@ -29,7 +29,7 @@ interface IControlsForm {
     endDate: string,
     endTime: string
   ) => void;
-  contextCallback: (context) => any;
+  contextCallback: (context) => void;
 }
 
 type ControlsFormFields = {
@@ -277,18 +277,16 @@ export default function ControlsForm({
 }
 
 const StopFormControl = ({values, stops, contextCallback}) => {
-    const selectRef = useRef<any>(null);
     const context = useFormikContext();
 
     useEffect(() => {
         contextCallback(context);
-    })
+    });
 
     return (
         <FormControl fullWidth>
             <InputLabel># arrêt</InputLabel>
             <Select
-                ref={selectRef}
                 id="stopId"
                 value={values["stopId"]}
                 label="# arrêt"

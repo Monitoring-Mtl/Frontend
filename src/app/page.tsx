@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef , useEffect} from "react";
+import React, { useState } from "react";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
 import ControlsForm from "./layouts/ControlsForm";
 import { Card } from "@mui/material";
@@ -20,8 +20,6 @@ export default function Home() {
     const [routeShape, setRouteShape] = useState<RouteShape>();
     const [stops, setStops] = useState<Stop[]>([]);
     const [formContext, setFormContext] = useState<any>();
-
-    const stmMapRef = useRef<HTMLDivElement>(null);
 
     const directionCallback = (direction: Direction) => {
         ServerlessApiService.getShape(direction.shapeId).then((shape) => {
@@ -68,7 +66,7 @@ export default function Home() {
     return (
         <div>
             <Row>
-                <Card ref={stmMapRef} className="col-span-9 h-100 pt-0">
+                <Card className="col-span-9 h-100 pt-0">
                     <StmMap
                         routeShape={routeShape}
                         stops={stops}

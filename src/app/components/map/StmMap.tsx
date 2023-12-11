@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { fromLonLat } from "ol/proj";
 import { Feature, MapBrowserEvent, Overlay } from "ol";
 import { LineString, Point } from "ol/geom";
@@ -111,15 +111,16 @@ export const StmMap = memo(({ routeShape, stops, stopCallback }: IStmMap) => {
         clickCallback:clickCallback
     };
 
-    if (typeof window !== "undefined"){
-        document.addEventListener("stopchanged", (event) => {
-            if (event instanceof CustomEvent){
-                selectedStopId = event.detail;
-                setSelectedStop(stopsLayer);
-                setStopStyles(stopsLayer, selectedStyle);
+    useEffect(() => {
+        if (typeof window !== "undefined"){
+            document.addEventListener("stopchanged", (event) => stopChangedCallback(event, stopsLayer));
+        }
+        return () => {
+            if (typeof window !== "undefined"){
+                document.removeEventListener("stopchanged", (event) => stopChangedCallback(event, stopsLayer));
             }
-        });
-    }
+        }
+    });
 
     return <Map mapOptions={mapOptions} />;
 });
@@ -208,6 +209,14 @@ const setSelectedStop = (stopsLayer:VectorLayer<VectorSource> | null) => {
             feature.setProperties({isSelected: properties.id === selectedStopId});
         }
     }));
+}
+
+const stopChangedCallback = (event:Event, stopsLayer:VectorLayer<VectorSource> | null) => {
+    if (event instanceof CustomEvent){
+        selectedStopId = event.detail;
+        setSelectedStop(stopsLayer);
+        setStopStyles(stopsLayer, selectedStyle);
+    }
 }
 
 let selectedStopId:string;
