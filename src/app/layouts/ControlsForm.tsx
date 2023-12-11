@@ -168,6 +168,7 @@ export default function ControlsForm({
                   <FormControl fullWidth>
                     <InputLabel># ligne</InputLabel>
                     <Select
+                      id="busLine"
                       value={values["busLine"]}
                       label="# ligne"
                       onChange={(e) => {
@@ -185,6 +186,7 @@ export default function ControlsForm({
                   <FormControl fullWidth>
                     <InputLabel>Direction</InputLabel>
                     <Select
+                      id="direction"
                       value={values["direction"]}
                       label="Direction"
                       onChange={(e) => {
@@ -206,6 +208,7 @@ export default function ControlsForm({
                   <FormControl fullWidth>
                     <InputLabel># arrêt</InputLabel>
                     <Select
+                      id="stopId"
                       value={values["stopId"]}
                       label="# arrêt"
                       onChange={(e) => setFieldValue("stopId", e.target.value)}
@@ -220,6 +223,7 @@ export default function ControlsForm({
                   </FormControl>
 
                   <Field
+                    id="beginDate"
                     component={TextField}
                     fullWidth
                     name="beginDate"
@@ -232,6 +236,7 @@ export default function ControlsForm({
                   />
 
                   <Field
+                    id="beginTime"
                     component={TextField}
                     fullWidth
                     name="beginTime"
@@ -244,6 +249,7 @@ export default function ControlsForm({
                   />
 
                   <Field
+                    id="endDate"
                     component={TextField}
                     fullWidth
                     name="endDate"
@@ -256,6 +262,7 @@ export default function ControlsForm({
                   />
 
                   <Field
+                    id="endTime"
                     component={TextField}
                     fullWidth
                     name="endTime"
