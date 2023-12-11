@@ -3,8 +3,9 @@ import React, {useEffect, useRef} from 'react';
 import {Map as OlMap, Overlay, View} from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
+import { MapOptions } from '@/types/MapOptions';
 
-export const Map = ({mapOptions}) => {
+export const Map = ({mapOptions} : IMap) => {
 
     const overlayRef = useRef<HTMLDivElement>(null);
     const mapRef = useRef<HTMLDivElement>(null);
@@ -48,6 +49,12 @@ export const Map = ({mapOptions}) => {
                     mapOptions.pointermoveCallback(event, map, overlay);
                 });
             }
+
+            if (mapOptions.clickCallback){
+                map.on("click", (event) => {
+                    mapOptions.clickCallback(event, map, overlay);
+                })
+            }
         }
 
         return () => {
@@ -63,4 +70,8 @@ export const Map = ({mapOptions}) => {
             <div ref={mapRef} id={mapOptions.id} className="h-full w-full"></div>
         </>
     );
+}
+
+interface IMap {
+    mapOptions:MapOptions
 }

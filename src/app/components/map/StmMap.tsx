@@ -5,10 +5,10 @@ import { LineString, Point } from "ol/geom";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
 import { Circle, Fill, Style, Stroke } from "ol/style";
+import { Map as OlMap } from "openlayers";
 import { RouteShape} from "@/types/RouteShape";
 import { Stop } from "@/types/Stop";
 import { MapOptions } from "@/types/MapOptions";
-import { Map as OlMap } from "openlayers";
 import { Map } from "./Map";
 import { integerDivision } from "@/utils/math-utils";
 import { EtsRed, StmBusBlue } from "@/utils/color-utils";
@@ -74,7 +74,7 @@ export const StmMap = memo(({ routeShape, selectedStopId, stops }: IStmMap) => {
     }
 
     const pointermoveCallback = (event:MapBrowserEvent<any>, map:OlMap, overlay:Overlay) => {
-        let feature = map.forEachFeatureAtPixel(event.pixel as ol.Pixel, (feature) => feature );
+        let feature = map.forEachFeatureAtPixel(event.pixel as ol.Pixel, (feature) => feature);
         const properties = feature?.getProperties();
 
         if (feature !== undefined && properties.isStop) {
@@ -96,12 +96,25 @@ export const StmMap = memo(({ routeShape, selectedStopId, stops }: IStmMap) => {
         }
     }
 
+    const clickCallback = (event:MapBrowserEvent<any>, map:OlMap, overlay:Overlay) => {
+        let feature = map.forEachFeatureAtPixel(event.pixel as ol.Pixel, (feature) => feature);
+        const properties = feature?.getProperties();
+
+        if (feature !== undefined && properties.isStop) {
+            if (feature instanceof Feature){
+                setSelectedStop(properties.id, stopsLayer);
+                setStopStyles(stopsLayer);
+            }
+        }
+    }
+
     const mapOptions: MapOptions = {
         id: "stm-map",
         center: center,
         zoom: 13,
         layers: [routeLayer, stopsLayer],
         pointermoveCallback:pointermoveCallback,
+        clickCallback:clickCallback
     };
 
     return <Map mapOptions={mapOptions} />;
@@ -176,6 +189,15 @@ const getMapCenter = (routeShape:RouteShape | undefined) => {
     }
 
     return routeShape.coordinates[integerDivision(routeShape.coordinates.length, 2)];
+}
+
+const setSelectedStop = (selectedStopId:string, stopsLayer:VectorLayer<VectorSource> | null) => {
+    stopsLayer?.getSource()?.getFeatures()?.forEach((feature => {
+        const properties = feature.getProperties();
+        if (properties.isStop && feature instanceof Feature){
+            feature.setProperties({isSelected:properties.id == selectedStopId});
+        }
+    }));
 }
 
 StmMap.displayName = "StmMap";
