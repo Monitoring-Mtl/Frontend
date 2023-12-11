@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef , useEffect} from "react";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
 import ControlsForm from "./layouts/ControlsForm";
 import { Card } from "@mui/material";
@@ -19,7 +19,9 @@ export default function Home() {
     const [stmAnalysis, setStmAnalysis] = useState<StmAnalysis>();
     const [routeShape, setRouteShape] = useState<RouteShape>();
     const [stops, setStops] = useState<Stop[]>([]);
-    const [selectedStopId, setSelectedStopId] = useState<string>();
+    const [formContext, setFormContext] = useState<any>();
+
+    const stmMapRef = useRef<HTMLDivElement>(null);
 
     const directionCallback = (direction: Direction) => {
         ServerlessApiService.getShape(direction.shapeId).then((shape) => {
@@ -30,7 +32,15 @@ export default function Home() {
         });
     };
 
-    const selectedStopCallback = (stopId: string) => setSelectedStopId(stopId);
+    const stopSelectionCallback = (stopId: string) => {
+        formContext?.setFieldValue("stopId", Number(stopId));
+    }
+
+    const contextCallback = (context) => {
+        if (!formContext){
+            setFormContext(context);
+        }
+    }
 
     const stmAnalysisCallback = (
         routeId: string,
@@ -46,8 +56,8 @@ export default function Home() {
         ServerlessApiService.getStmAnalysis(
             routeId,
             stopId,
-            "1699524000",
-            "1699542000"
+            start,
+            end
         ).then((stmAnalysis) => {
             if (stmAnalysis) {
                 setStmAnalysis(stmAnalysis);
@@ -58,8 +68,12 @@ export default function Home() {
     return (
         <div>
             <Row>
-                <Card className="col-span-9 h-100 pt-0">
-                    <StmMap routeShape={routeShape} stops={stops} selectedStopId={selectedStopId}/>
+                <Card ref={stmMapRef} className="col-span-9 h-100 pt-0">
+                    <StmMap
+                        routeShape={routeShape}
+                        stops={stops}
+                        stopCallback={stopSelectionCallback}
+                    />
                 </Card>
 
                 <Card
@@ -74,7 +88,7 @@ export default function Home() {
                     <ControlsForm
                         directionCallback={directionCallback}
                         stmAnalysisCallback={stmAnalysisCallback}
-                        selectedStopCallback={selectedStopCallback}
+                        contextCallback={contextCallback}
                     />
                 </Card>
             </Row>

@@ -12,7 +12,7 @@ export const Map = ({mapOptions} : IMap) => {
 
     useEffect(() =>  {
 
-        if (!mapRef.current){
+        if (!mapRef.current || !overlayRef.current){
             return;
         }
 
@@ -35,31 +35,41 @@ export const Map = ({mapOptions} : IMap) => {
             }
         })
 
-        if (overlayRef.current){
-            let overlay = new Overlay({
-                element: overlayRef.current,
-                autoPan:true,
-                positioning:"center-left"
-            });
+        let overlay = new Overlay({
+            element: overlayRef.current,
+            autoPan:true,
+            positioning:"center-left",
+            stopEvent:false
+        });
           
-            map.addOverlay(overlay);
+        map.addOverlay(overlay);
+        
 
-            if (mapOptions.pointermoveCallback){
-                map.on('pointermove', (event) => {
-                    mapOptions.pointermoveCallback(event, map, overlay);
-                });
-            }
+        if (mapOptions.pointermoveCallback){
+            map.on('pointermove', (event) => {
+                mapOptions.pointermoveCallback(event, map, overlay);
+            });
+        }
 
-            if (mapOptions.clickCallback){
-                map.on("click", (event) => {
-                    mapOptions.clickCallback(event, map, overlay);
-                })
-            }
+        if (mapOptions.clickCallback){
+            map.on("click", (event) => {
+                mapOptions.clickCallback(event, map, overlay);
+            });
         }
 
         return () => {
-            // This is necessary so that the map is properly cleared before being re-rendered. 
-            // Otherwise, it could cause issues like multiple renderings.
+            if (mapOptions.pointermoveCallback){
+                map.un('pointermove', (event) => {
+                    mapOptions.pointermoveCallback(event, map, overlay);
+                });
+            }
+    
+            if (mapOptions.clickCallback){
+                map.un("click", (event) => {
+                    mapOptions.clickCallback(event, map, overlay);
+                })
+            }
+            
             map.setTarget(undefined);
         }
     });

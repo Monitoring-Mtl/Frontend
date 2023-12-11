@@ -13,13 +13,7 @@ import { Map } from "./Map";
 import { integerDivision } from "@/utils/math-utils";
 import { EtsRed, StmBusBlue } from "@/utils/color-utils";
 
-interface IStmMap {
-    routeShape?: RouteShape;
-    selectedStopId?: string;
-    stops: Stop[];
-}
-
-export const StmMap = memo(({ routeShape, selectedStopId, stops }: IStmMap) => {
+export const StmMap = memo(({ routeShape, stops, stopCallback }: IStmMap) => {
     let routeLayer:VectorLayer<VectorSource> | null = null;
     if (routeShape) {
         routeLayer = new VectorLayer({
@@ -54,8 +48,8 @@ export const StmMap = memo(({ routeShape, selectedStopId, stops }: IStmMap) => {
 
             feature.setProperties({
                 isStop: true,
-                isSelected: stop.id === selectedStopId,
                 id: stop.id,
+                isSelected: stop.id === selectedStopId,
                 name: stop.name
             });
 
@@ -69,8 +63,8 @@ export const StmMap = memo(({ routeShape, selectedStopId, stops }: IStmMap) => {
                 features: features,
             })
         });
-
-        setStopStyles(stopsLayer)
+        
+        setStopStyles(stopsLayer, selectedStyle);
     }
 
     const pointermoveCallback = (event:MapBrowserEvent<any>, map:OlMap, overlay:Overlay) => {
@@ -85,14 +79,14 @@ export const StmMap = memo(({ routeShape, selectedStopId, stops }: IStmMap) => {
                 overlayRef.textContent = `Arrêt ${properties.name}`
             }
 
-            setStopStyles(stopsLayer);
+            setStopStyles(stopsLayer, selectedStyle);
 
             if (feature instanceof Feature){
                 feature.setStyle(properties.isSelected ? selectedHoverStyle : hoverStyle);
             }
         } else {
             overlay.setPosition(undefined);
-            setStopStyles(stopsLayer);
+            setStopStyles(stopsLayer, selectedStyle);
         }
     }
 
@@ -100,11 +94,11 @@ export const StmMap = memo(({ routeShape, selectedStopId, stops }: IStmMap) => {
         let feature = map.forEachFeatureAtPixel(event.pixel as ol.Pixel, (feature) => feature);
         const properties = feature?.getProperties();
 
-        if (feature !== undefined && properties.isStop) {
-            if (feature instanceof Feature){
-                setSelectedStop(properties.id, stopsLayer);
-                setStopStyles(stopsLayer);
-            }
+        if (feature !== undefined && properties.isStop && feature instanceof Feature) {
+            selectedStopId = properties.id;
+            setSelectedStop(stopsLayer);
+            setStopStyles(stopsLayer, selectedHoverStyle);
+            stopCallback(properties.id);
         }
     }
 
@@ -117,8 +111,24 @@ export const StmMap = memo(({ routeShape, selectedStopId, stops }: IStmMap) => {
         clickCallback:clickCallback
     };
 
+    if (typeof window !== "undefined"){
+        document.addEventListener("stopchanged", (event) => {
+            if (event instanceof CustomEvent){
+                selectedStopId = event.detail;
+                setSelectedStop(stopsLayer);
+                setStopStyles(stopsLayer, selectedStyle);
+            }
+        });
+    }
+
     return <Map mapOptions={mapOptions} />;
 });
+
+interface IStmMap {
+    routeShape?: RouteShape;
+    stops: Stop[];
+    stopCallback: (stopId: string) => void;
+}
 
 const stopStyle = new Style({
     image: new Circle({
@@ -172,11 +182,11 @@ const selectedHoverStyle = new Style({
     })
 });
 
-const setStopStyles = (stopsLayer:VectorLayer<VectorSource> | null) => {
+const setStopStyles = (stopsLayer:VectorLayer<VectorSource> | null, selectedStopStyle:Style) => {
     stopsLayer?.getSource()?.getFeatures()?.forEach((feature => {
         const properties = feature.getProperties();
         if (properties.isStop && feature instanceof Feature){
-            feature.setStyle(properties.isSelected ? selectedStyle : stopStyle);
+            feature.setStyle(properties.isSelected ? selectedStopStyle : stopStyle);
         }
     }));
 }
@@ -191,13 +201,15 @@ const getMapCenter = (routeShape:RouteShape | undefined) => {
     return routeShape.coordinates[integerDivision(routeShape.coordinates.length, 2)];
 }
 
-const setSelectedStop = (selectedStopId:string, stopsLayer:VectorLayer<VectorSource> | null) => {
+const setSelectedStop = (stopsLayer:VectorLayer<VectorSource> | null) => {
     stopsLayer?.getSource()?.getFeatures()?.forEach((feature => {
         const properties = feature.getProperties();
         if (properties.isStop && feature instanceof Feature){
-            feature.setProperties({isSelected:properties.id == selectedStopId});
+            feature.setProperties({isSelected: properties.id === selectedStopId});
         }
     }));
 }
+
+let selectedStopId:string;
 
 StmMap.displayName = "StmMap";
