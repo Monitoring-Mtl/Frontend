@@ -94,10 +94,15 @@ export default function ControlsForm({
     return routes.find((route) => route.id === id);
   };
 
-  const updateDirections = async (event) => {
+  const updateDirections = async (event, setFieldValue, validateForm) => {
     try {
       const route = findRouteById(event.target.value);
       setDirections(route?.directions || []);
+
+      setFieldValue("direction", "");
+      setFieldValue("stopId", "");
+
+      validateForm();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -112,13 +117,22 @@ export default function ControlsForm({
     return directions?.find((direction) => direction.name === name);
   };
 
-  const updateStops = async (event) => {
+  const updateStops = async (event, setFieldValue, validateForm) => {
     try {
       const direction = findDirectionByName(event.target.value);
       setStops(direction?.stops || []);
+      setFieldValue("stopId", "");
+
+      validateForm();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+  };
+
+  // Function to check if required fields are filled
+  const areRequiredFieldsFilled = (values) => {
+    const requiredFields = ['busLine', 'direction', 'stopId', 'beginDate', 'beginTime', 'endDate', 'endTime'];
+    return requiredFields.every(field => values[field]);
   };
 
   return (
@@ -128,16 +142,13 @@ export default function ControlsForm({
       onSubmit={(values: ControlsFormFields) => {
 
         const beginDateHourMinuteString = values.beginDate + " " + values.beginTime;
-
         const beginDateHourMinuteDate = new Date(beginDateHourMinuteString);
-
         const endDateHourMinuteString = values.endDate + " " + values.endTime;
         const endDateHourMinuteDate = new Date(endDateHourMinuteString);
 
         if (beginDateHourMinuteDate > endDateHourMinuteDate) {
-          alert("Erreur: La date-heure-minute de fin est plus petit que la date-heure-minute de début. ");
-        } 
-        else {
+          alert("Erreur: La date-heure-minute de fin est plus petit que la date-heure-minute de début.");
+        } else {
           stmAnalysisCallback(
             values.busLine.toString(),
             values.stopId.toString(),
@@ -149,7 +160,7 @@ export default function ControlsForm({
         }
       }}
     >
-      {({ submitForm, setFieldValue, values, isValid, dirty }) => (
+      {({ submitForm, setFieldValue, setFieldTouched, values, isValid, validateForm }) => (
         <>
           <div>
             <CardHeader title="Choix de la ligne et de l'arrêt" />
@@ -171,7 +182,7 @@ export default function ControlsForm({
                       label="# ligne"
                       onChange={(e) => {
                         setFieldValue("busLine", e.target.value);
-                        updateDirections(e);
+                        updateDirections(e, setFieldValue, validateForm);
                       }}
                     >
                       {routes.map((route) => (
@@ -188,7 +199,7 @@ export default function ControlsForm({
                       label="Direction"
                       onChange={(e) => {
                         setFieldValue("direction", e.target.value);
-                        updateStops(e);
+                        updateStops(e, setFieldValue, validateForm);
                         const direction = findDirectionByName(e.target.value);
                         if (direction) {
                           directionCallback(direction);
@@ -270,11 +281,12 @@ export default function ControlsForm({
             </CardContent>
           </div>
           <FullButton 
-            isDisabled={!(isValid && dirty)} // Disable button when form is invalid or not dirty
+            isDisabled={!areRequiredFieldsFilled(values) || !isValid}
             onClick={() => submitForm()}
           >
             Analyser
-          </FullButton>        </>
+          </FullButton>
+        </>
       )}
     </Formik>
   );
