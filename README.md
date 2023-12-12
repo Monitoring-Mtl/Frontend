@@ -16,7 +16,7 @@ Example of useful nvm command:
 `nvm use 14.17.3`
 `nvm ls`
 
-Install the node version the console tells you when `npm run dev` fails. 
+Install the node version the console tells you when `npm run dev` or Cypress fail for example. 
 
 and run the development server:
 
