@@ -41,7 +41,7 @@ describe('ControlsForm', () => {
     cy.wait(12000)
 
     cy.on('window:alert', (message) => {
-      expect(message).to.equal('Erreur: La date-heure-minute de fin est plus petit que la date-heure-minute de début.');
+      expect(message).to.equal('Erreur: La date-heure-minute de fin est plus petit ou égal que la date-heure-minute de début.');
     });
 
     cy.get('[aria-labelledby="busLine"]').click();
@@ -77,7 +77,7 @@ describe('ControlsForm', () => {
     cy.wait(12000)
 
     cy.on('window:alert', (message) => {
-      expect(message).to.equal('Erreur: La date-heure-minute de fin est plus petit que la date-heure-minute de début.');
+      expect(message).to.equal('Erreur: La date-heure-minute de fin est plus petit ou égal que la date-heure-minute de début.');
     });
 
     cy.get('[aria-labelledby="busLine"]').click();

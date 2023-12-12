@@ -148,8 +148,8 @@ export default function ControlsForm({
         const endDateHourMinuteString = values.endDate + " " + values.endTime;
         const endDateHourMinuteDate = new Date(endDateHourMinuteString);
 
-        if (beginDateHourMinuteDate > endDateHourMinuteDate) {
-          alert("Erreur: La date-heure-minute de fin est plus petit que la date-heure-minute de début.");
+        if (beginDateHourMinuteDate >= endDateHourMinuteDate) {
+          alert("Erreur: La date-heure-minute de fin est plus petit ou égal que la date-heure-minute de début.");
         } 
         else {
           stmAnalysisCallback(
