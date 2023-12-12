@@ -38,11 +38,7 @@ describe('ControlsForm', () => {
   });
 
   it('should not submit when begin date is later than end date', () => {
-    cy.wait(12000)
-
-    cy.on('window:alert', (message) => {
-      expect(message).to.equal('Erreur: La date-heure-minute de fin est plus petit ou égal que la date-heure-minute de début.');
-    });
+    cy.wait(12000);
 
     cy.get('[aria-labelledby="busLine"]').click();
     cy.get('[role="option"]').contains('10').click();
@@ -70,15 +66,13 @@ describe('ControlsForm', () => {
     cy.get('#endTime').type('12:00');
 
     cy.contains('Analyser').click();
+    cy.get('.Toastify__toast-container').should('be.visible');
+    cy.contains('.Toastify__toast-body', 'Erreur: La date-heure-minute de fin est plus petite ou égale à la date-heure-minute de début.').should('exist');
 
   });
 
   it('should not submit when begin hour-minute is later than end hour-minute', () => {
-    cy.wait(12000)
-
-    cy.on('window:alert', (message) => {
-      expect(message).to.equal('Erreur: La date-heure-minute de fin est plus petit ou égal que la date-heure-minute de début.');
-    });
+    cy.wait(12000);
 
     cy.get('[aria-labelledby="busLine"]').click();
     cy.get('[role="option"]').contains('10').click();
@@ -103,7 +97,8 @@ describe('ControlsForm', () => {
     cy.get('#endTime').type('12:00');
 
     cy.contains('Analyser').click();
-
+    cy.get('.Toastify__toast-container').should('be.visible');
+    cy.contains('.Toastify__toast-body', 'Erreur: La date-heure-minute de fin est plus petite ou égale à la date-heure-minute de début.').should('exist');
   });
 
 });

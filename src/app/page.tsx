@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 import { ServerlessApiService } from "@/services/ServerlessApiService";
 import ControlsForm from "./layouts/ControlsForm";
 import { Card } from "@mui/material";
@@ -59,6 +61,8 @@ export default function Home() {
         ).then((stmAnalysis) => {
             if (stmAnalysis) {
                 setStmAnalysis(stmAnalysis);
+            } else {
+                toast.error("Il n'y a pas de données disponibles pour cet arrêt durant cette période.");
             }
         });
     };
@@ -111,6 +115,7 @@ export default function Home() {
                 {/* Dernière ligne vide qui réutilise le même padding que les rows précédentes. Si jamais on change le padding des rows, ceci va changer aussi. */}
                 <></>
             </Row>
+            <ToastContainer autoClose={2000} pauseOnFocusLoss={false} closeOnClick newestOnTop={true} pauseOnHover={true} icon={true} />
         </div>
     );
 }

@@ -12,6 +12,8 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 import FullButton from "../components/FullButton";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
 import { Route } from "@/types/Route";
@@ -138,157 +140,160 @@ export default function ControlsForm({
   };
 
   return (
-    <Formik
-      initialValues={formInitialValues}
-      validationSchema={ControlsFormSchema}
-      onSubmit={(values: ControlsFormFields) => {
+    <>
+        <Formik
+        initialValues={formInitialValues}
+        validationSchema={ControlsFormSchema}
+        onSubmit={(values: ControlsFormFields) => {
 
-        const beginDateHourMinuteString = values.beginDate + " " + values.beginTime;
-        const beginDateHourMinuteDate = new Date(beginDateHourMinuteString);
-        const endDateHourMinuteString = values.endDate + " " + values.endTime;
-        const endDateHourMinuteDate = new Date(endDateHourMinuteString);
+            const beginDateHourMinuteString = values.beginDate + " " + values.beginTime;
+            const beginDateHourMinuteDate = new Date(beginDateHourMinuteString);
+            const endDateHourMinuteString = values.endDate + " " + values.endTime;
+            const endDateHourMinuteDate = new Date(endDateHourMinuteString);
 
-        if (beginDateHourMinuteDate >= endDateHourMinuteDate) {
-          alert("Erreur: La date-heure-minute de fin est plus petit ou égal que la date-heure-minute de début.");
-        } 
-        else {
-          stmAnalysisCallback(
-            values.busLine.toString(),
-            values.stopId.toString(),
-            values.beginDate,
-            values.beginTime,
-            values.endDate,
-            values.endTime
-          );
-        }
-      }}
-    >
-      {({ submitForm, setFieldValue, setFieldTouched, values, isValid, validateForm }) => (
-        <>
-          <div>
-            <CardHeader title="Choix de la ligne et de l'arrêt" />
-            <CardContent>
-              {routes.length === 0 ? (
-                routeError ? (
-                  <div className="text-center">{routeError}</div>
+            if (beginDateHourMinuteDate >= endDateHourMinuteDate) {
+                toast.error("Erreur: La date-heure-minute de fin est plus petite ou égale à la date-heure-minute de début.");
+            } 
+            else {
+            stmAnalysisCallback(
+                values.busLine.toString(),
+                values.stopId.toString(),
+                values.beginDate,
+                values.beginTime,
+                values.endDate,
+                values.endTime
+            );
+            }
+        }}
+        >
+        {({ submitForm, setFieldValue, setFieldTouched, values, isValid, validateForm }) => (
+            <>
+            <div>
+                <CardHeader title="Choix de la ligne et de l'arrêt" />
+                <CardContent>
+                {routes.length === 0 ? (
+                    routeError ? (
+                    <div className="text-center">{routeError}</div>
+                    ) : (
+                    <Box sx={{ display: "flex" }}>
+                        <CircularProgress className="mx-auto w-full" />
+                    </Box>
+                    )
                 ) : (
-                  <Box sx={{ display: "flex" }}>
-                    <CircularProgress className="mx-auto w-full" />
-                  </Box>
-                )
-              ) : (
-                <>
-                  <FormControl fullWidth>
-                    <InputLabel># ligne</InputLabel>
-                    <Select
-                      id="busLine"
-                      value={values["busLine"]}
-                      label="# ligne"
-                      onChange={(e) => {
-                        setFieldValue("busLine", e.target.value);
-                        updateDirections(e, setFieldValue, validateForm);
-                      }}
-                    >
-                      {routes.map((route) => (
-                        <MenuItem key={route.id} value={route.id}>
-                          {route.id} {route.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl fullWidth>
-                    <InputLabel>Direction</InputLabel>
-                    <Select
-                      id="direction"
-                      value={values["direction"]}
-                      label="Direction"
-                      onChange={(e) => {
-                        setFieldValue("direction", e.target.value);
-                        updateStops(e, setFieldValue, validateForm);
-                        const direction = findDirectionByName(e.target.value);
-                        if (direction) {
-                          directionCallback(direction);
-                        }
-                      }}
-                    >
-                      {directions?.map((direction) => (
-                        <MenuItem key={direction.name} value={direction.name}>
-                          {direction.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                    <>
+                    <FormControl fullWidth>
+                        <InputLabel># ligne</InputLabel>
+                        <Select
+                        id="busLine"
+                        value={values["busLine"]}
+                        label="# ligne"
+                        onChange={(e) => {
+                            setFieldValue("busLine", e.target.value);
+                            updateDirections(e, setFieldValue, validateForm);
+                        }}
+                        >
+                        {routes.map((route) => (
+                            <MenuItem key={route.id} value={route.id}>
+                            {route.id} {route.name}
+                            </MenuItem>
+                        ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl fullWidth>
+                        <InputLabel>Direction</InputLabel>
+                        <Select
+                        id="direction"
+                        value={values["direction"]}
+                        label="Direction"
+                        onChange={(e) => {
+                            setFieldValue("direction", e.target.value);
+                            updateStops(e, setFieldValue, validateForm);
+                            const direction = findDirectionByName(e.target.value);
+                            if (direction) {
+                            directionCallback(direction);
+                            }
+                        }}
+                        >
+                        {directions?.map((direction) => (
+                            <MenuItem key={direction.name} value={direction.name}>
+                            {direction.name}
+                            </MenuItem>
+                        ))}
+                        </Select>
+                    </FormControl>
 
-                  <StopFormControl
-                    values={values}
-                    stops={stops}
-                    contextCallback={contextCallback}
-                  />
+                    <StopFormControl
+                        values={values}
+                        stops={stops}
+                        contextCallback={contextCallback}
+                    />
 
-                  <Field
-                    id="beginDate"
-                    component={TextField}
-                    fullWidth
-                    name="beginDate"
-                    label="Date de début"
-                    type="date"
-                    onChange={(e) => setFieldValue("beginDate", e.target.value)}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
+                    <Field
+                        id="beginDate"
+                        component={TextField}
+                        fullWidth
+                        name="beginDate"
+                        label="Date de début"
+                        type="date"
+                        onChange={(e) => setFieldValue("beginDate", e.target.value)}
+                        InputLabelProps={{
+                        shrink: true,
+                        }}
+                    />
 
-                  <Field
-                    id="beginTime"
-                    component={TextField}
-                    fullWidth
-                    name="beginTime"
-                    label="Heure de début"
-                    type="time"
-                    onChange={(e) => setFieldValue("beginTime", e.target.value)}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
+                    <Field
+                        id="beginTime"
+                        component={TextField}
+                        fullWidth
+                        name="beginTime"
+                        label="Heure de début"
+                        type="time"
+                        onChange={(e) => setFieldValue("beginTime", e.target.value)}
+                        InputLabelProps={{
+                        shrink: true,
+                        }}
+                    />
 
-                  <Field
-                    id="endDate"
-                    component={TextField}
-                    fullWidth
-                    name="endDate"
-                    label="Date de fin"
-                    type="date"
-                    onChange={(e) => setFieldValue("endDate", e.target.value)}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
+                    <Field
+                        id="endDate"
+                        component={TextField}
+                        fullWidth
+                        name="endDate"
+                        label="Date de fin"
+                        type="date"
+                        onChange={(e) => setFieldValue("endDate", e.target.value)}
+                        InputLabelProps={{
+                        shrink: true,
+                        }}
+                    />
 
-                  <Field
-                    id="endTime"
-                    component={TextField}
-                    fullWidth
-                    name="endTime"
-                    label="Heure de fin"
-                    type="time"
-                    onChange={(e) => setFieldValue("endTime", e.target.value)}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                </>
-              )}
-            </CardContent>
-          </div>
-          <FullButton 
-            isDisabled={!areRequiredFieldsFilled(values) || !isValid}
-            onClick={() => submitForm()}
-          >
-            Analyser
-          </FullButton>
-        </>
-      )}
-    </Formik>
+                    <Field
+                        id="endTime"
+                        component={TextField}
+                        fullWidth
+                        name="endTime"
+                        label="Heure de fin"
+                        type="time"
+                        onChange={(e) => setFieldValue("endTime", e.target.value)}
+                        InputLabelProps={{
+                        shrink: true,
+                        }}
+                    />
+                    </>
+                )}
+                </CardContent>
+            </div>
+            <FullButton
+                isDisabled={!areRequiredFieldsFilled(values) || !isValid}
+                onClick={() => submitForm()}
+            >
+                Analyser
+            </FullButton>
+            </>
+        )}
+        </Formik>
+        <ToastContainer autoClose={2000} pauseOnFocusLoss={false} closeOnClick newestOnTop={true} pauseOnHover={true} icon={true} />
+    </>
   );
 }
 
