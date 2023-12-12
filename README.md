@@ -8,10 +8,15 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-Uninstall other version of node and install node 18.16.0: https://nodejs.org/dist/v18.16.0/
-yarn install -force
-yarn -force
-yarn build
+Install this node version manager app: https://github.com/coreybutler/nvm-windows
+Example of useful nvm command:  
+`nvm install <node_version>`
+`nvm install 14.17.3`
+`nvm use <node_version>`
+`nvm use 14.17.3`
+`nvm ls`
+
+Install the node version the console tells you when `npm run dev` or Cypress fail for example. 
 
 and run the development server:
 
