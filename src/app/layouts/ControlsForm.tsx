@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Formik, Field } from "formik";
+import { Formik, Field, useFormikContext } from "formik";
 import * as yup from "yup";
 import {
   Box,
@@ -28,7 +28,7 @@ interface IControlsForm {
     endDate: string,
     endTime: string
   ) => void;
-  selectedStopCallback: (stopId: string) => void;
+  contextCallback: (context) => void;
 }
 
 type ControlsFormFields = {
@@ -54,7 +54,7 @@ const ControlsFormSchema = yup.object().shape({
 export default function ControlsForm({
   directionCallback,
   stmAnalysisCallback,
-  selectedStopCallback
+  contextCallback
 }: IControlsForm) {
   const [formInitialValues] = useState<ControlsFormFields>({
     busLine: -1,
@@ -218,25 +218,12 @@ export default function ControlsForm({
                       ))}
                     </Select>
                   </FormControl>
-                  <FormControl fullWidth>
-                    <InputLabel># arrêt</InputLabel>
-                    <Select
-                      id="stopId"
-                      value={values["stopId"]}
-                      label="# arrêt"
-                      onChange={(e) => {
-                        setFieldValue("stopId", e.target.value)
-                        selectedStopCallback(e.target.value.toString())
-                      }}
-                    >
-                      {stops &&
-                        stops.map((stop) => (
-                          <MenuItem key={stop.id} value={stop.id}>
-                            {stop.id} {stop.name}
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  </FormControl>
+
+                  <StopFormControl
+                    values={values}
+                    stops={stops}
+                    contextCallback={contextCallback}
+                  />
 
                   <Field
                     id="beginDate"
@@ -303,4 +290,36 @@ export default function ControlsForm({
       )}
     </Formik>
   );
+}
+
+const StopFormControl = ({values, stops, contextCallback}) => {
+    const context = useFormikContext();
+
+    useEffect(() => {
+        contextCallback(context);
+    });
+
+    return (
+        <FormControl fullWidth>
+            <InputLabel># arrêt</InputLabel>
+            <Select
+                id="stopId"
+                value={values["stopId"]}
+                label="# arrêt"
+                onChange={(e) => {
+                    context.setFieldValue("stopId", e.target.value);
+                    if(typeof window !== "undefined"){
+                        document.dispatchEvent(new CustomEvent("stopchanged", {detail: e.target.value.toString()}))
+                    }
+                }}
+            >
+            {stops &&
+                stops.map((stop) => (
+                    <MenuItem key={stop.id} value={stop.id}>
+                        {stop.id} {stop.name}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
+    )
 }
