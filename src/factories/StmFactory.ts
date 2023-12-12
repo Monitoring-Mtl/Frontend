@@ -61,6 +61,10 @@ export class StmFactory {
 
         const offsets = json[stmAnalysisProperties.offsets];
 
+        if (!offsets || offsets.length < 1){
+            return null;
+        }
+
         const occupancyObject = json[stmAnalysisProperties.occupancies];
         const occupancies = stmAnalysisProperties.occupancyLevels.map(level => occupancyObject[level]);
 
