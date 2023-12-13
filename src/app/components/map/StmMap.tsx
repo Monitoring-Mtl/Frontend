@@ -11,7 +11,7 @@ import { Stop } from "@/types/Stop";
 import { MapOptions } from "@/types/MapOptions";
 import { Map } from "./Map";
 import { integerDivision } from "@/utils/math-utils";
-import { EtsRed, StmBusBlue } from "@/utils/color-utils";
+import { BlueNCS, ImperialRed } from "@/utils/color-utils";
 
 export const StmMap = memo(({ routeShape, stops, stopCallback }: IStmMap) => {
     let routeLayer:VectorLayer<VectorSource> | null = null;
@@ -26,7 +26,7 @@ export const StmMap = memo(({ routeShape, stops, stopCallback }: IStmMap) => {
             }),
             style: new Style({
                 stroke: new Stroke({
-                    color: StmBusBlue,
+                    color: BlueNCS,
                     width: 3,
                 }),
             }),
@@ -138,7 +138,7 @@ const stopStyle = new Style({
           color: "white"
         }),
         stroke: new Stroke({
-            color: StmBusBlue,
+            color: BlueNCS,
             width: 2,
         }),
     })
@@ -151,7 +151,7 @@ const hoverStyle = new Style({
           color: "white"
         }),
         stroke: new Stroke({
-            color: StmBusBlue,
+            color: BlueNCS,
             width: 2,
         }),
     })
@@ -161,10 +161,10 @@ const selectedStyle = new Style({
     image: new Circle({
         radius: 5,
         fill: new Fill({
-          color: EtsRed
+          color: ImperialRed
         }),
         stroke: new Stroke({
-            color: StmBusBlue,
+            color: BlueNCS,
             width: 2,
         }),
     })
@@ -174,10 +174,10 @@ const selectedHoverStyle = new Style({
     image: new Circle({
         radius: 6,
         fill: new Fill({
-          color: EtsRed
+          color: ImperialRed
         }),
         stroke: new Stroke({
-            color: StmBusBlue,
+            color: BlueNCS,
             width: 2,
         }),
     })

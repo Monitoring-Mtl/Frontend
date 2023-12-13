@@ -1,6 +1,6 @@
 # Frontend
 
-Application web pour la visualisation des données.
+Application web pour la visualisation des données. L'application affiche des données issues d'un API qui envoie des données brutes et transformées provenant de la STM.
 
 # Instructions pour le projet Next.js
 

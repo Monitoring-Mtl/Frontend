@@ -74,7 +74,7 @@ export class StmFactory {
         return {
             offsets: offsets,
             occupancies: occupancies,
-            occupancyLabels: ["Plusieurs", "Quelques-uns", "Aucun"],
+            occupancyLabels: ["Faible", "Moyen", "Élevé"],
             accessibilities: accessibilities,
             accessibilityLabels: ["N'ont pas une rampe d'accès", "Ont une rampe d'accès et une place", "Ont une rampe d'accès et deux places"]
         };

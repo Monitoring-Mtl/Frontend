@@ -1,6 +1,6 @@
 import { CardContent, CardHeader } from "@mui/material";
 import { ChartjsOptions } from "@/types/ChartjsOptions";
-import {LightGreen, Green, LightRed, EtsRed} from "@/utils/color-utils";
+import {LightGreen, Erin, SalmonPink, ImperialRed, getColorsFromScale} from "@/utils/color-utils";
 import { ScatterPlot } from "./templates/ScatterPlot";
 import { integerDivision, mean, median } from "@/utils/math-utils";
 import { StmAnalysis } from "@/types/StmAnalysis";
@@ -13,7 +13,7 @@ export const BusPunctualityChart = ({analysis } : IBusPunctualityChart)  => {
     }));
     
     const minuteOffsets = analysis.offsets.map((offset) => integerDivision(offset, 60));
-    const colors = minuteOffsets.map(toColor);
+    const colors = toColors(minuteOffsets);
 
     const chartOptions: ChartjsOptions = {
         labels: [],
@@ -33,11 +33,11 @@ export const BusPunctualityChart = ({analysis } : IBusPunctualityChart)  => {
                     <ScatterPlot chartOptions={chartOptions} />
                     <span>
                         <strong>Moyenne: </strong>
-                        {offsetToString(mean(minuteOffsets).toFixed(1))}
+                        {offsetToString((mean(analysis.offsets)/60).toFixed(1))}
                     </span>
                     <span>
                         <strong>Médiane: </strong>
-                        {offsetToString(median(minuteOffsets).toFixed(1))}
+                        {offsetToString((median(analysis.offsets)/60).toFixed(1))}
                     </span>
                 </div>
             </CardContent>
@@ -47,22 +47,6 @@ export const BusPunctualityChart = ({analysis } : IBusPunctualityChart)  => {
 
 interface IBusPunctualityChart {
     analysis: StmAnalysis
-}
-
-const toColor = (offset) => {
-    if (offset <= -5){
-        return Green;
-    }
-
-    if (offset < 1){
-        return LightGreen;
-    }
-
-    if (offset < 5){
-        return LightRed;
-    }
-
-    return EtsRed;
 }
 
 const offsetToString = (offset) => {
@@ -76,3 +60,9 @@ const offsetToString = (offset) => {
 
     return absOffset + timeUnit + timeQualifier;
 };
+
+const toColors = (offsets) => {
+    const greens = getColorsFromScale(Math.max(Math.abs(Math.min(...offsets)) + 1, 2), LightGreen, Erin);
+    const reds = getColorsFromScale(Math.max(...offsets), SalmonPink, ImperialRed);
+    return offsets.map(offset => offset <= 0 ? greens[Math.abs(offset)] : reds[offset-1]);
+}
