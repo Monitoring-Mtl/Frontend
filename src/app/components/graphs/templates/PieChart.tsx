@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import * as d3 from "d3";
 import { Arc } from "@/types/Arc";
+import { Onyx } from "@/utils/color-utils";
 
 interface IPieChart {
     arcs: Arc[];
@@ -49,36 +50,52 @@ export default function PieChart({
                 .append("g")
                 .attr("transform", `translate(${width * 0.5}, ${height * 0.5})`);
 
+            const radius = computeOuterRadius(width, height, margin);
+
             const arcGenerator: any = d3
                 .arc()
                 .innerRadius(0)
-                .outerRadius(computeOuterRadius(width, height, margin));
+                .outerRadius(radius);
 
             const pieGenerator = d3
                 .pie()
                 .padAngle(0)
-                .value((d) => d.valueOf());
+                .value((d) => d.valueOf())
+                .sort(null);
 
             const arc = svg
                 .selectAll()
                 .data(pieGenerator(arcs.map((d) => d.value)))
                 .enter();
 
+            const hasOneArc = arcs.filter(x => x.value > 0).length == 1;
+
             arc
                 .append("path")
                 .attr("d", arcGenerator)
                 .attr("class", "graph-element")
                 .style("fill", (_, i) => colors[i])
-                .style("stroke", "#ffffff")
-                .style("stroke-width", 0);
+                .style("stroke", Onyx)
+                .style("stroke-width", hasOneArc ? 0 : 2);
+
+            if (hasOneArc){
+                arc.append("circle")
+                    .attr("cx", 0)
+                    .attr("cy", 0)
+                    .attr("r", radius)
+                    .style("fill", "none")
+                    .style("stroke", Onyx)
+                    .style("stroke-width", 1.7);
+            }
 
             arc
                 .append("text")
                 .attr("text-anchor", "middle")
                 .attr("alignment-baseline", "middle")
                 .attr("class", "graph-element")
-                .text((d: any, i) => labelCallback(d.data))
+                .text((d: any, i) => labelCallback(d.data, i))
                 .style("font-size", `${computeFontSize(width, height)}px`)
+                .style("font-weight", "bold")
                 .attr("transform", (d) => {
                     const [x, y] = arcGenerator.centroid(d);
                     return `translate(${x}, ${y})`;
@@ -88,12 +105,12 @@ export default function PieChart({
                 .selectAll(".graph-element")
                 .on("mouseover", function (event, d: any) {
                     overlay
-                        .html(tooltipCallback(d.data))
+                        .html(tooltipCallback(d.data, d.index))
                         .style("left", event.clientX + 10 + "px")
                         .style("top", event.clientY - 40 + "px")
                         .style("display", "block");
                 })
-                .on("mousemove", function (event, d) {
+                .on("mousemove", function (event, _) {
                     overlay
                         .style("left", event.clientX + 10 + "px")
                         .style("top", event.clientY - 40 + "px");

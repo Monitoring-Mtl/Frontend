@@ -61,6 +61,10 @@ export class StmFactory {
 
         const offsets = json[stmAnalysisProperties.offsets];
 
+        if (!offsets || offsets.length < 1){
+            return null;
+        }
+
         const occupancyObject = json[stmAnalysisProperties.occupancies];
         const occupancies = stmAnalysisProperties.occupancyLevels.map(level => occupancyObject[level]);
 
@@ -70,7 +74,7 @@ export class StmFactory {
         return {
             offsets: offsets,
             occupancies: occupancies,
-            occupancyLabels: ["Plusieurs", "Quelques-uns", "Aucun"],
+            occupancyLabels: ["Faible", "Moyen", "Élevé"],
             accessibilities: accessibilities,
             accessibilityLabels: ["N'ont pas une rampe d'accès", "Ont une rampe d'accès et une place", "Ont une rampe d'accès et deux places"]
         };

@@ -4,4 +4,5 @@ export type MapOptions = {
     zoom:number;
     layers;
     pointermoveCallback?;
+    clickCallback?;
 }
