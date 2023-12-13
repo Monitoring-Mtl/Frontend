@@ -1,5 +1,6 @@
 import React, { useEffect} from "react";
 import {Chart, registerables, Tooltip} from "chart.js"
+import { Onyx } from "@/utils/color-utils";
 
 export const BarChart = ({chartOptions}) => {
 
@@ -63,7 +64,8 @@ export const BarChart = ({chartOptions}) => {
             labels: chartOptions.labels,
             datasets: [{
                 data: chartOptions.data,
-                borderWidth: 0,
+                borderWidth: 2,
+                borderColor: Onyx,
                 barPercentage: 0.95,
                 categoryPercentage: 1,
                 backgroundColor: chartOptions.colors

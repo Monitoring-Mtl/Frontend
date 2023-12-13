@@ -8,5 +8,3 @@ describe("Basic E2E tests", () => {
   });
 
 })
-
-

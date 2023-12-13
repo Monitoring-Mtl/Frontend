@@ -1,12 +1,11 @@
 import { CardContent, CardHeader } from "@mui/material";
 import PieChart from "./templates/PieChart";
 import Legend from "../../layouts/Legend";
-import { LightRed, EtsRed, getColorsFromScale } from "@/utils/color-utils";
+import { ImperialRed, BlueNCS, Canary } from "@/utils/color-utils";
 import { StmAnalysis } from "@/types/StmAnalysis";
 
 export const AccessRampChart = ({analysis} : IAccessRampChart)  => {
-
-    const colors = getColorsFromScale(3, EtsRed, LightRed);
+    const colors = [ImperialRed,  Canary, BlueNCS];
 
     const labelCallback = (data, _) => data != 0 ? `${((data / analysis.offsets.length) * 100).toFixed(1)}%` : "";
     const tooltipCallback = (data, i) => `${data} autobus ${analysis.accessibilityLabels[i].toLowerCase()}`;
