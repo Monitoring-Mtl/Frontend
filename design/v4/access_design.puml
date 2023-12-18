@@ -1,0 +1,35 @@
+@startuml access-design
+
+title Conception du composant du graphique de la rampe d'accès
+skinparam classAttributeIconSize 0
+!theme blueprint
+
+class AccessRampChart<<React Component>>{
+    Legend:React.FC
+}
+
+class PieChart<<React Component>>{
+    colors:string[]
+    labelCallback:function
+    tooltipCallback:function
+}
+
+class StmAnalysis<<type>> {
+    offsets:number[]
+    occupancies:number[]
+    occupancyLabels:string[]
+    accessibilities:number[]
+    accessibilityLabels:string[]
+}
+
+class Arc<<type>> {
+    label: string
+    value: number
+}
+
+AccessRampChart *-- PieChart
+AccessRampChart -right-> StmAnalysis
+AccessRampChart -left-> "*" Arc
+PieChart --> "*" Arc
+
+@enduml

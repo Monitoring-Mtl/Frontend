@@ -1,0 +1,55 @@
+@startuml map-design
+
+title Conception du composant de la carte
+skinparam classAttributeIconSize 0
+!theme blueprint
+
+class StmMap<<React Component>>{
+   
+}
+
+class Map<<React Component>>{
+   map:OlMap
+   overlay:Overlay
+}
+
+class RouteShape<<type>> {
+    id:string
+    coordinates:Coordinate[]
+}
+
+class Route<<type>> {
+    id:string
+    name:string
+    shortName:string
+}
+
+class Direction<<type>> {
+    name:string
+    shapeId:string
+}
+
+class Stop<<type>> {
+    id:string
+    name:string
+    coordinate:Coordinate
+}
+
+class MapOptions<<type>> {
+    id:string
+    center:Coordinate
+    zoom:number
+    layers:[]
+    pointermoveCallback:function
+    clickCallback:function
+}
+
+StmMap *-- Map
+StmMap --> MapOptions
+Map --> MapOptions
+StmMap -left-> RouteShape
+StmMap -right-> "*" Route
+Route  *-right- "*" Direction
+Direction "*" *-right- "*" Stop
+
+@enduml
