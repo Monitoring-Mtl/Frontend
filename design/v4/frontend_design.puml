@@ -1,0 +1,90 @@
+@startuml frontend-design
+
+title Conception du frontend
+skinparam classAttributeIconSize 0
+!theme blueprint
+
+
+class Dashboard<<React Component>>{
+
+}
+
+class StmMap<<React Component>>{
+    Map:React.FC
+}
+
+class AccessRampChart<<React Component>>{
+    PieChart:React.FC
+    Legend:React.FC
+}
+
+class OccupancyChart<<React Component>>{
+    BarChart:React.FC
+}
+
+class BusPunctualityChart<<React Component>>{
+    ScatterPlot:React.FC
+}
+
+class ControlsForm<<React Component>>{
+}
+
+
+class ServerlessApiService<<static>>{
+    getRoutes():Route[]
+    getShape(routeId:string):RouteShape
+    getStmAnalysis(routeId:string, stopId:string, start:string, end:string):StmAnalysis
+}
+
+class StmFactory<<static>>{
+    createRoutes(json:JSON):Route[]
+    createRouteShape(json:JSON):RouteShape
+    createStmAnalysis(json:JSON):StmAnalysis
+}
+
+class Route<<type>> {
+    id:string
+    name:string
+    shortName:string
+}
+
+class Direction<<type>> {
+    name:string
+    shapeId:string
+}
+
+class Stop<<type>> {
+    id:string
+    name:string
+    coordinate:Coordinate
+}
+
+class RouteShape<<type>> {
+    id:string
+    coordinates:Coordinate[]
+}
+
+class StmAnalysis<<type>> {
+    offsets:number[]
+    occupancies:number[]
+    occupancyLabels:string[]
+    accessibilities:number[]
+    accessibilityLabels:string[]
+}
+
+Dashboard *-left- ControlsForm
+Dashboard *-right- StmMap
+Dashboard *-- AccessRampChart
+Dashboard *-- OccupancyChart
+Dashboard *-- BusPunctualityChart
+Dashboard --> ServerlessApiService
+ServerlessApiService --> StmFactory
+AccessRampChart --> StmAnalysis
+OccupancyChart --> StmAnalysis
+BusPunctualityChart --> StmAnalysis
+StmMap -right-> RouteShape
+StmMap -up-> "*" Route
+Route  *-right- "*" Direction
+Direction "*" *-right- "*" Stop
+
+@enduml

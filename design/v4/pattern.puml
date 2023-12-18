@@ -1,0 +1,25 @@
+@startuml pattern-design
+
+title Patron générique des visualisations
+skinparam classAttributeIconSize 0
+!theme blueprint
+
+class ComposantNommé<<React Component>>{
+}
+
+class ComposantDeVisualisation<<React Component>>{
+}
+
+class ObjetDeDonnées<<type>> {
+}
+
+class ObjetOptions<<type>> {
+    
+}
+
+ComposantNommé *-- ComposantDeVisualisation
+ComposantNommé -right-> ObjetDeDonnées
+ComposantNommé -left-> ObjetOptions
+ComposantDeVisualisation --> ObjetOptions
+
+@enduml

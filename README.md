@@ -1,68 +1,54 @@
-# Frontend
+<!-- Entête basé sur le README.md du repo: https://github.com/Monitoring-Mtl/Serverless-API -->
 
-Application web pour la visualisation des données. L'application affiche des données issues d'un API qui envoie des données brutes et transformées provenant de la STM.
+<div align="center">
 
-# Instructions pour le projet Next.js
+  <a href="">![GitHub contributors](https://img.shields.io/github/contributors/Monitoring-Mtl/Frontend?color=green)</a>
+  <a href="">![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Monitoring-Mtl/Frontend/main)</a>
+  <a href="">![GitHub issues](https://img.shields.io/github/issues/Monitoring-Mtl/Frontend)</a>
+  <a href="">![GitHub top language](https://img.shields.io/github/languages/top/Monitoring-Mtl/Frontend)</a>
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+</div>
 
-## Getting Started
+<div align="center">
+  <a href="https://www.etsmtl.ca/">
+    <img src="https://www.etsmtl.ca/getmedia/a38cc621-8248-453b-a24e-ff22bd68ada5/Logo_ETS_SansTypo_FR" alt="Logo" width="200" height="200">
+  </a>
 
-Install this node version manager app: https://github.com/coreybutler/nvm-windows
-Example of useful nvm command:  
-`nvm install <node_version>`
-`nvm install 14.17.3`
-`nvm use <node_version>`
-`nvm use 14.17.3`
-`nvm ls`
+  <h3 align="center">Monitoring Mtl - Frontend</h3>
+</div>
 
-Install the node version the console tells you when `npm run dev` or Cypress fail for example. 
+# Le projet Frontend
 
-and run the development server:
+Le projet Frontend de Monitoring MTL est une application web pour la visualisation des données. L'application affiche des données issues d'une [API](https://github.com/Monitoring-Mtl/Serverless-API) qui envoie des données brutes et transformées provenant de la STM.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Exécuter l'application en mode développement
+
+L'application utilise le cadriciel [Next.js](https://nextjs.org/) créer avec [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+Pour installer les modules node:
+```
+npm i
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Pour lancer l'application en mode développement:
+```
+npm run dev
+```
+Pour voir le site, visitez [http://localhost:3000](http://localhost:3000) avec un fureteur.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Exécuter les tests
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Pour exécuter les tests localement:
+```
+npm test
+```
 
-## Learn More
+# Documentation
 
-To learn more about Next.js, take a look at the following resources:
+Voir le [Wiki](https://github.com/Monitoring-Mtl/Frontend/wiki). 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Plus spécifiquement:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-## Documentation vers modules npm installés
-
-- [mui](https://mui.com/material-ui/getting-started/)
-- [yup](https://www.npmjs.com/package/yup)
-- [formik](https://formik.org/docs/overview)
-
-## Unit tests
-
-npm run setup
-npx jest or npm test
-open coverage/index.html
-
-## AWS amplify
-npm update if getting : npm ERR! `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
-2023-11-09T00:46:09.052Z [WARNING]: npm ERR!
+- [Pour avoir une idée générale de la conception et comment ajouter une nouvelle visualisation d'analyse](https://github.com/Monitoring-Mtl/Frontend/wiki/Conception)
+- [Pour de la documentation sur le pipeline CI/CD](https://github.com/Monitoring-Mtl/Frontend/wiki/Pipeline-CI-CD)
+- [Pour voir quelques exemples de problèmes-solutions rencontrés par l'équipe](https://github.com/Monitoring-Mtl/Frontend/wiki/Troubleshooting)
