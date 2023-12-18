@@ -1,0 +1,36 @@
+@startuml occupancy-design
+
+title Conception du composant du graphique du niveau d'occupation
+skinparam classAttributeIconSize 0
+!theme blueprint
+
+class OccupancyChart<<React Component>>{
+}
+
+class BarChart<<React Component>>{
+}
+
+class StmAnalysis<<type>> {
+    offsets:number[]
+    occupancies:number[]
+    occupancyLabels:string[]
+    accessibilities:number[]
+    accessibilityLabels:string[]
+}
+
+class ChartjsOptions<<type>> {
+    labels:string[]
+    data: number[] | { x: number; y: number;}[]
+    colors:string[]
+    xTitle:string
+    yTitle:string
+    yBeginAt0:boolean
+    tooltipLabelCallBack:function
+}
+
+OccupancyChart *-- BarChart
+OccupancyChart -right-> StmAnalysis
+OccupancyChart -left-> ChartjsOptions
+BarChart --> ChartjsOptions
+
+@enduml

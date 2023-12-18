@@ -1,0 +1,36 @@
+@startuml punctuality-design
+
+title Conception du composant du graphique de la ponctualité des autobus
+skinparam classAttributeIconSize 0
+!theme blueprint
+
+class BusPunctualityChart<<React Component>>{
+}
+
+class ScatterPlot<<React Component>>{
+}
+
+class StmAnalysis<<type>> {
+    offsets:number[]
+    occupancies:number[]
+    occupancyLabels:string[]
+    accessibilities:number[]
+    accessibilityLabels:string[]
+}
+
+class ChartjsOptions<<type>> {
+    labels:string[]
+    data: number[] | { x: number; y: number;}[]
+    colors:string[]
+    xTitle:string
+    yTitle:string
+    yBeginAt0:boolean
+    tooltipLabelCallBack:function
+}
+
+BusPunctualityChart *-- ScatterPlot
+BusPunctualityChart -right-> StmAnalysis
+BusPunctualityChart -left-> ChartjsOptions
+ScatterPlot --> ChartjsOptions
+
+@enduml
