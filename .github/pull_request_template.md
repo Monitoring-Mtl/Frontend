@@ -1,14 +1,22 @@
-### 🛠  Why are these changes being made? / Quel est l'objectif du changement?
+## Description
 
-What's the context for the changes? Is there an issue linked with this merge request?
-Pourquoi faire ce changement? Est-ce qu'il y a une issue liée à la merge request?
+Briefly describe the purpose of this pull request.
 
-### 🧠 How are these changes made? / Comment as-tu implémenté ce changement?
+## Changes Made
 
-How did you fix the issue? Were there any trade-offs you had to consider?
-Comment as-tu résolu le problème? Y-a-t'il eu des concessions à faire?
+List the changes you've made in this pull request.
 
-### 📸 Screenshots (optional)
+## Related Issue
 
-If you made UI changes, what are the before and after?
-Si tu as fait un changement à l'interface graphique, quel est le avant et le après?
+If this pull request is related to a GitHub issue, 
+link it here.
+
+## Checklist
+
+- [ ] I have tested these changes locally.
+- [ ] I have included necessary documentation 
+updates (if applicable).
+- [ ] My code follows the project's coding standards.
+- [ ] All existing tests are passing.
+- [ ] I have added new tests (if new features or 
+changes warrant them).

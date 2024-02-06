@@ -1,0 +1,70 @@
+name: Kanban Automation
+
+on:
+  issues:
+    types: [opened, assigned]
+  pull_request:
+    types: [review_requested, closed]
+
+jobs:
+  automate-project-board:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Move new issues to the backlog
+        if: github.event_name == 'issues' && github.event.action == 'opened'
+        uses: alex-page/github-project-automation-plus@v0.8.3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          project: 'PFE Données de la VdM H24 - Kanban'
+          column: 'Backlog'
+          issue-number: ${{ github.event.issue.number }}
+
+      - name: Move assigned issues to Todo
+        if: github.event_name == 'issues' && github.event.action == 'assigned'
+        uses: alex-page/github-project-automation-plus@v0.8.3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          project: 'PFE Données de la VdM H24 - Kanban'
+          column: 'Todo'
+          issue-number: ${{ github.event.issue.number }}
+
+      - name: Move linked issues on review requested
+        if: github.event_name == 'pull_request' && github.event.action == 'review_requested'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Use GraphQL API to find linked issues
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO=${{ github.repository }}
+          ISSUES_LINKED=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -X POST -d '{ "query": "query ($number: Int!, $owner: String!, $repo: String!) { repository(owner:$owner, name:$repo) { pullRequest(number:$number) { closingIssuesReferences(first: 100) { nodes { id } } } } }", "variables": { "number": '$PR_NUMBER', "owner": "'${REPO%/*}'", "repo": "'${REPO#*/}'" } }' \
+            https://api.github.com/graphql | jq -r '.data.repository.pullRequest.closingIssuesReferences.nodes[].id')
+          
+          for ISSUE_ID in $ISSUES_LINKED; do
+            # Use REST API to move the issue to the in review column
+            curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github.inertia-preview+json" \
+              "https://api.github.com/projects/columns/df73e18b/cards" \
+              -d "{\"content_id\": ${ISSUE_ID}, \"content_type\": \"Issue\"}"
+          done
+        
+      - name: Move linked issues on PR close
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Use GraphQL API to find linked issues
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO=${{ github.repository }}
+          ISSUES_LINKED=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -X POST -d '{ "query": "query ($number: Int!, $owner: String!, $repo: String!) { repository(owner:$owner, name:$repo) { pullRequest(number:$number) { closingIssuesReferences(first: 100) { nodes { id } } } } }", "variables": { "number": '$PR_NUMBER', "owner": "'${REPO%/*}'", "repo": "'${REPO#*/}'" } }' \
+            https://api.github.com/graphql | jq -r '.data.repository.pullRequest.closingIssuesReferences.nodes[].id')
+          
+          for ISSUE_ID in $ISSUES_LINKED; do
+            # Use REST API to move the issue to the done column
+            curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github.inertia-preview+json" \
+              "https://api.github.com/projects/columns/98236657/cards" \
+              -d "{\"content_id\": ${ISSUE_ID}, \"content_type\": \"Issue\"}"
+          done
+
