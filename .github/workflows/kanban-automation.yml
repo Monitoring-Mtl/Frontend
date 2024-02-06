@@ -6,6 +6,13 @@ on:
   pull_request:
     types: [review_requested, closed]
 
+# Sets permissions of the GITHUB_TOKEN
+permissions:
+   contents: read
+   issues: write
+   pull-requests: write
+   projects: write 
+
 jobs:
   automate-project-board:
     runs-on: ubuntu-latest
