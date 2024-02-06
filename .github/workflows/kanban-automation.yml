@@ -6,31 +6,43 @@ on:
   pull_request:
     types: [review_requested, closed]
 
-# Sets permissions of the GITHUB_TOKEN
-permissions:
-   contents: write
-   issues: write
-   pull-requests: write
-
 jobs:
   automate-project-board:
     runs-on: ubuntu-latest
     steps:
       - name: Move new issues to the backlog
         if: github.event_name == 'issues' && github.event.action == 'opened'
-        uses: alex-page/github-project-automation-plus@v0.8.3
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          project: 'PFE Données de la VdM H24 - Kanban'
-          column: 'Backlog'
-
+         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE_NUMBER=${{ github.event.issue.number }}
+          COLUMN_ID=7ee237bb
+          
+          # Get the node_id of the issue
+          NODE_ID=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${ISSUE_NUMBER} | jq -r '.node_id')
+          
+          # Move the issue to the backlog column
+          curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/projects/columns/cards" \
+            -d "{\"content_id\": \"${NODE_ID}\", \"content_type\": \"Issue\", \"column_id\": ${COLUMN_ID}}"
+        
       - name: Move assigned issues to Todo
-        if: github.event_name == 'issues' && github.event.action == 'assigned'
-        uses: alex-page/github-project-automation-plus@v0.8.3
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          project: 'PFE Données de la VdM H24 - Kanban'
-          column: 'Todo'
+      if: github.event_name == 'issues' && github.event.action == 'assigned'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COLUMN_ID_TODO: f75ad846 
+      run: |
+        ISSUE_NUMBER=${{ github.event.issue.number }}
+        # Get the node_id of the issue
+        NODE_ID=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+          https://api.github.com/repos/${{ github.repository }}/issues/${ISSUE_NUMBER} | jq -r '.node_id')
+        # Move the issue to the Todo column
+        curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "https://api.github.com/projects/columns/cards" \
+          -d "{\"content_id\": \"${NODE_ID}\", \"content_type\": \"Issue\", \"column_id\": $COLUMN_ID_TODO}"
 
       - name: Move linked issues on review requested
         if: github.event_name == 'pull_request' && github.event.action == 'review_requested'
