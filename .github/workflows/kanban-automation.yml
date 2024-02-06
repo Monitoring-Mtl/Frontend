@@ -8,10 +8,9 @@ on:
 
 # Sets permissions of the GITHUB_TOKEN
 permissions:
-   contents: read
+   contents: write
    issues: write
    pull-requests: write
-   projects: write 
 
 jobs:
   automate-project-board:
