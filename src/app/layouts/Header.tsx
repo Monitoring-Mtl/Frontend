@@ -12,7 +12,7 @@ export default function Header() {
         <picture className="h-full">
           <img src={"/logo-pfe.png"} alt="logo" className="h-full" />
         </picture>
-        <ServiceTabs></ServiceTabs>
+        <ServiceTabs/>
       </div>
     </LayoutContextProvider>
   );
