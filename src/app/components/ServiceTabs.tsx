@@ -1,9 +1,10 @@
 "use client";
+import { useLayout } from "@/contexts/LayoutContext";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent } from "react";
 
 const redTheme = createTheme({
   palette: {
@@ -14,17 +15,17 @@ const redTheme = createTheme({
 });
 
 export default function ServiceTabs() {
-  const [value, setValue] = useState(0);
+  const { serviceTabValue, setServiceTabValue } = useLayout();
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setServiceTabValue(newValue);
   };
 
   return (
     <ThemeProvider theme={redTheme}>
       <Box>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs value={value} onChange={handleChange}>
+          <Tabs value={serviceTabValue} onChange={handleChange}>
             <Tab label="STM" />
             <Tab label="Bixi" />
             <Tab label="À propos" />
