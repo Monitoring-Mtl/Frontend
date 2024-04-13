@@ -1,3 +1,4 @@
+import { LayoutContextProvider } from "@/contexts/LayoutContext";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../css/globals.css";
@@ -18,8 +19,10 @@ export default function RootLayout({
     <html lang="fr">
       <body className={inter.className}>
         <div>
-          <Header />
-          <main>{children}</main>
+          <LayoutContextProvider>
+            <Header />
+            <main>{children}</main>
+          </LayoutContextProvider>
         </div>
         {/* <Footer /> */}
       </body>

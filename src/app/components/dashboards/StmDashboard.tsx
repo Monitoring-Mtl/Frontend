@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayout } from "@/contexts/LayoutContext";
 import { ServerlessApiService } from "@/services/ServerlessApiService";
 import { Direction } from "@/types/Direction";
 import { RouteShape } from "@/types/RouteShape";
@@ -22,6 +23,7 @@ export default function StmDashboard() {
   const [routeShape, setRouteShape] = useState<RouteShape>();
   const [stops, setStops] = useState<Stop[]>([]);
   const [formContext, setFormContext] = useState<any>();
+  const { serviceTabValue } = useLayout();
 
   const directionCallback = (direction: Direction) => {
     ServerlessApiService.getShape(direction.shapeId).then((shape) => {
@@ -67,61 +69,63 @@ export default function StmDashboard() {
   };
 
   return (
-    <div>
-      <Row>
-        <Card className="col-span-9 h-100 pt-0">
-          <StmMap
-            routeShape={routeShape}
-            stops={stops}
-            stopCallback={stopSelectionCallback}
-          />
-        </Card>
-
-        <Card
-          id="bus-line-form"
-          className="col-span-3 min-h-[676px]"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
-          <ControlsForm
-            directionCallback={directionCallback}
-            stmAnalysisCallback={stmAnalysisCallback}
-            contextCallback={contextCallback}
-          />
-        </Card>
-      </Row>
-
-      {stmAnalysis && (
+    serviceTabValue === 0 && (
+      <div>
         <Row>
-          <Card className="col-span-4">
-            <AccessRampChart analysis={stmAnalysis} />
+          <Card className="col-span-9 h-100 pt-0">
+            <StmMap
+              routeShape={routeShape}
+              stops={stops}
+              stopCallback={stopSelectionCallback}
+            />
           </Card>
 
-          <Card className="col-span-4">
-            <OccupancyChart analysis={stmAnalysis} />
-          </Card>
-
-          <Card className="col-span-4">
-            <BusPunctualityChart analysis={stmAnalysis} />
+          <Card
+            id="bus-line-form"
+            className="col-span-3 min-h-[676px]"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <ControlsForm
+              directionCallback={directionCallback}
+              stmAnalysisCallback={stmAnalysisCallback}
+              contextCallback={contextCallback}
+            />
           </Card>
         </Row>
-      )}
 
-      <Row>
-        {/* Dernière ligne vide qui réutilise le même padding que les rows précédentes. Si jamais on change le padding des rows, ceci va changer aussi. */}
-        <></>
-      </Row>
-      <ToastContainer
-        autoClose={2000}
-        pauseOnFocusLoss={false}
-        closeOnClick
-        newestOnTop={true}
-        pauseOnHover={true}
-        icon={true}
-      />
-    </div>
+        {stmAnalysis && (
+          <Row>
+            <Card className="col-span-4">
+              <AccessRampChart analysis={stmAnalysis} />
+            </Card>
+
+            <Card className="col-span-4">
+              <OccupancyChart analysis={stmAnalysis} />
+            </Card>
+
+            <Card className="col-span-4">
+              <BusPunctualityChart analysis={stmAnalysis} />
+            </Card>
+          </Row>
+        )}
+
+        <Row>
+          {/* Dernière ligne vide qui réutilise le même padding que les rows précédentes. Si jamais on change le padding des rows, ceci va changer aussi. */}
+          <></>
+        </Row>
+        <ToastContainer
+          autoClose={2000}
+          pauseOnFocusLoss={false}
+          closeOnClick
+          newestOnTop={true}
+          pauseOnHover={true}
+          icon={true}
+        />
+      </div>
+    )
   );
 }
