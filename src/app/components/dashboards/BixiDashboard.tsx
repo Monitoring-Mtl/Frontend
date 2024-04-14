@@ -12,7 +12,7 @@ export default function BixiDashboard() {
 
   return (
     serviceTabValue === 1 && (
-      <div>
+      <div data-testid="bixi-dashboard">
         <Row>
           <Card className="col-span-9 h-100 pt-0"></Card>
           <Card

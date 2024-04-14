@@ -12,6 +12,6 @@ export default defineConfig({
       framework: "next",
       bundler: "webpack",
     },
-    specPattern: ["**/unit/**/*.cy.ts", "**/component/**/*.cy.ts"],
+    specPattern: ["**/unit/**/*.cy.ts", "**/component/**/*.cy.tsx"],
   },
 });

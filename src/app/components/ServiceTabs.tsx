@@ -26,9 +26,9 @@ export default function ServiceTabs() {
       <Box>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs value={serviceTabValue} onChange={handleChange}>
-            <Tab label="STM" />
-            <Tab label="Bixi" />
-            <Tab label="À propos" />
+            <Tab label="STM" data-testid="tab-stm" />
+            <Tab label="Bixi" data-testid="tab-bixi" />
+            <Tab label="À propos" data-testid="tab-about" />{" "}
           </Tabs>
         </Box>
       </Box>

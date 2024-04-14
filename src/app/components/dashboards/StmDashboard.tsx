@@ -70,7 +70,7 @@ export default function StmDashboard() {
 
   return (
     serviceTabValue === 0 && (
-      <div>
+      <div data-testid="stm-dashboard">
         <Row>
           <Card className="col-span-9 h-100 pt-0">
             <StmMap
