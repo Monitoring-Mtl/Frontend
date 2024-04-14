@@ -1,4 +1,4 @@
-import ServiceTabs from "../components/ServiceTabs";
+import ServiceTabs from "../components/tabs/ServiceTabs";
 
 export default function Header() {
   return (

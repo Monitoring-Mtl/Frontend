@@ -16,6 +16,7 @@ const redTheme = createTheme({
 
 export default function ServiceTabs() {
   const { serviceTabValue, setServiceTabValue } = useLayout();
+  const prefix = "service-tabs";
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setServiceTabValue(newValue);
@@ -25,10 +26,27 @@ export default function ServiceTabs() {
     <ThemeProvider theme={redTheme}>
       <Box>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs value={serviceTabValue} onChange={handleChange}>
-            <Tab label="STM" data-testid="tab-stm" />
-            <Tab label="Bixi" data-testid="tab-bixi" />
-            <Tab label="À propos" data-testid="tab-about" />{" "}
+          <Tabs
+            value={serviceTabValue}
+            onChange={handleChange}
+            id={`${prefix}-tabs`}
+            data-testid={`${prefix}-tabs`}
+          >
+            <Tab
+              label="STM"
+              id={`${prefix}-tab-stm`}
+              data-testid={`${prefix}-tab-stm`}
+            />
+            <Tab
+              label="Bixi"
+              id={`${prefix}-tab-bixi`}
+              data-testid={`${prefix}-tab-bixi`}
+            />
+            <Tab
+              label="À propos"
+              id={`${prefix}-tab-about`}
+              data-testid={`${prefix}-tab-about`}
+            />
           </Tabs>
         </Box>
       </Box>
