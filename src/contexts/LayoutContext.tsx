@@ -44,7 +44,7 @@ export const LayoutContextProvider: React.FC<{ children: ReactNode }> = ({
 export const useLayout = (): LayoutState => {
   const context = useContext(LayoutContext);
   if (context === null || context === undefined) {
-    throw new Error("use useLayout within a LayoutProvider");
+    throw new Error("use useLayout within a LayoutContextProvider");
   }
   return context;
 };
