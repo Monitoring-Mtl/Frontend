@@ -5,7 +5,7 @@ describe("Bixi Controls Tabs Switching", () => {
       body: ["Arrondissement A", "Arrondissement B"],
     }).as("fetchArrondissements");
     cy.visit("http://localhost:3000");
-    Cypress.config('defaultCommandTimeout', 15000);
+    Cypress.config("defaultCommandTimeout", 15000);
   });
 
   it("should display the Bixi Trajets controls when the Trajets tab is clicked", () => {
@@ -73,6 +73,73 @@ describe("Bixi Controls Tabs Switching", () => {
                   cy.get("body").click(0, 0);
                 });
             });
+          });
+      });
+  });
+});
+
+describe("Bixi Controls Arrondissement and Station Fetching", () => {
+  beforeEach(() => {
+    cy.intercept("GET", "/api/bixi/stations/arrondissements", {
+      statusCode: 200,
+      body: ["Arrondissement A", "Arrondissement B"],
+    }).as("fetchArrondissements");
+
+    cy.intercept("GET", /\/api\/bixi\/stations\?arrondissement=(.*)/, (req) => {
+      console.log("Intercepted request to:", req.url);
+      if (decodeURIComponent(req.url.split("=")[1]) === "Arrondissement A") {
+        return req.reply({
+          statusCode: 200,
+          body: [
+            {
+              name: "Station A1",
+              arrondissement: "Arrondissement A",
+              latitude: 45.5017,
+              longitude: -73.5673,
+            },
+            {
+              name: "Station A2",
+              arrondissement: "Arrondissement A",
+              latitude: 45.502,
+              longitude: -73.567,
+            },
+          ],
+        });
+      }
+    }).as("fetchStations");
+
+    cy.visit("http://localhost:3000");
+    Cypress.config("defaultCommandTimeout", 15000);
+  });
+
+  it("should load and display mock stations in the select dropdown when an arrondissement is selected", () => {
+    cy.get('[data-testid="service-tabs-tab-bixi"]')
+      .click()
+      .then(() => {
+        cy.get('[data-testid="bixi-control-tabs-tab-trajets"]')
+          .click()
+          .then(() => {
+            cy.wait("@fetchArrondissements");
+            cy.get(
+              '[data-testid="bixi-trip-control-form-depart-arrondissement-select"]'
+            )
+              .click()
+              .then(() => {
+                cy.contains("Arrondissement A").click();
+              })
+              .then(() => {
+                cy.wait("@fetchStations").then((interception) => {
+                  expect(interception.response?.statusCode).to.eq(200);
+                  cy.get(
+                    '[data-testid="bixi-trip-control-form-depart-station-select"]'
+                  )
+                    .click()
+                    .then(() => {
+                      cy.contains("Station A1").should("be.visible");
+                      cy.contains("Station A2").should("be.visible");
+                    });
+                });
+              });
           });
       });
   });

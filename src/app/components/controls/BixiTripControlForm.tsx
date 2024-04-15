@@ -1,5 +1,6 @@
 import { useData } from "@/contexts/DataContext";
 import { useLayout } from "@/contexts/LayoutContext";
+import { StationLocation } from "@/types/bixiTypes";
 import {
   Button,
   CardContent,
@@ -7,14 +8,82 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 
 function BixiTripControlForm() {
   const prefix = "bixi-trip-control-form";
   const { bixiControlTabValue } = useLayout();
-  const { arrondissements } = useData();
+  const {
+    bixiTripControlBoroughs,
+    bixiTripControlStartBoroughSelect,
+    setBixiTripControlStartBoroughSelect,
+    bixiTripControlEndBoroughSelect,
+    setBixiTripControlEndBoroughSelect,
+    bixiTripControlStartStationSelect,
+    setBixiTripControlStartStationSelect,
+    bixiTripControlEndStationSelect,
+    setBixiTripControlEndStationSelect,
+  } = useData();
+
+  const [startStations, setStartStations] = useState<{}>([]);
+  const [endStations, setEndStations] = useState<{}>([]);
+
+  const handleArrondissementChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (event: SelectChangeEvent<string>) => {
+      const arrondissement = event.target.value;
+      setter(arrondissement);
+    };
+
+  const handleStationChange =
+    (
+      setter: React.Dispatch<React.SetStateAction<StationLocation>>,
+      stations: {}
+    ) =>
+    (event: SelectChangeEvent<string>) => {
+      const stationLocationName = event.target.value;
+      setter(stations[stationLocationName]);
+    };
+
+  const fetchStations = (
+    arrondissement: string,
+    setStations: React.Dispatch<
+      React.SetStateAction<{ [key: string]: StationLocation }>
+    >
+  ) => {
+    if (!arrondissement) return;
+
+    fetch(
+      `/api/bixi/stations?arrondissement=${encodeURIComponent(arrondissement)}`
+    )
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch stations");
+        }
+        const data: StationLocation[] = await response.json();
+        const stationDict = data.reduce((acc, station) => {
+          if (station.name) acc[station.name] = station;
+          return acc;
+        }, {} as { [key: string]: StationLocation });
+        setStations(stationDict);
+      })
+      .catch((error) => {
+        console.error("Error fetching stations:", error);
+        setStations({});
+      });
+  };
+
+  useEffect(() => {
+    fetchStations(bixiTripControlStartBoroughSelect, setStartStations);
+  }, [bixiTripControlStartBoroughSelect, setStartStations]);
+
+  useEffect(() => {
+    fetchStations(bixiTripControlEndBoroughSelect, setEndStations);
+  }, [bixiTripControlEndBoroughSelect, setEndStations]);
 
   return (
     bixiControlTabValue === 0 && (
@@ -30,10 +99,14 @@ function BixiTripControlForm() {
             <Select
               defaultValue=""
               label="Arrondissement"
+              value={bixiTripControlStartBoroughSelect}
+              onChange={handleArrondissementChange(
+                setBixiTripControlStartBoroughSelect
+              )}
               id={`${prefix}-depart-arrondissement-select`}
               data-testid={`${prefix}-depart-arrondissement-select`}
             >
-              {arrondissements.map((arrondissement, index) => (
+              {bixiTripControlBoroughs.map((arrondissement, index) => (
                 <MenuItem
                   key={arrondissement}
                   value={arrondissement}
@@ -54,11 +127,24 @@ function BixiTripControlForm() {
             <Select
               defaultValue=""
               label="Nom de la station"
+              value={bixiTripControlStartStationSelect.name}
+              onChange={handleStationChange(
+                setBixiTripControlStartStationSelect,
+                startStations
+              )}
               id={`${prefix}-depart-station-select`}
               data-testid={`${prefix}-depart-station-select`}
             >
-              <MenuItem value={10}>Station Ten</MenuItem>
-              <MenuItem value={20}>Station Twenty</MenuItem>
+              {Object.keys(startStations).map((stationName, index) => (
+                <MenuItem
+                  key={stationName}
+                  value={stationName}
+                  id={`${prefix}-depart-station-item-${index}`}
+                  data-testid={`${prefix}-depart-station-item-${index}`}
+                >
+                  {stationName}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 
@@ -72,10 +158,14 @@ function BixiTripControlForm() {
             <Select
               defaultValue=""
               label="Arrondissement"
+              value={bixiTripControlEndBoroughSelect}
+              onChange={handleArrondissementChange(
+                setBixiTripControlEndBoroughSelect
+              )}
               id={`${prefix}-arrivee-arrondissement-select`}
               data-testid={`${prefix}-arrivee-arrondissement-select`}
             >
-              {arrondissements.map((arrondissement, index) => (
+              {bixiTripControlBoroughs.map((arrondissement, index) => (
                 <MenuItem
                   key={arrondissement}
                   value={arrondissement}
@@ -96,11 +186,24 @@ function BixiTripControlForm() {
             <Select
               defaultValue=""
               label="Nom de la station"
+              value={bixiTripControlEndStationSelect.name}
+              onChange={handleStationChange(
+                setBixiTripControlEndStationSelect,
+                endStations
+              )}
               id={`${prefix}-arrivee-station-select`}
               data-testid={`${prefix}-arrivee-station-select`}
             >
-              <MenuItem value={10}>Station Ten</MenuItem>
-              <MenuItem value={20}>Station Twenty</MenuItem>
+              {Object.keys(endStations).map((stationName, index) => (
+                <MenuItem
+                  key={stationName}
+                  value={stationName}
+                  id={`${prefix}-arrivee-station-item-${index}`}
+                  data-testid={`${prefix}-arrivee-station-item-${index}`}
+                >
+                  {stationName}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 

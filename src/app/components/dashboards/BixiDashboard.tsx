@@ -14,7 +14,7 @@ export default function BixiDashboard() {
   const prefix = "bixi-dashboard";
   const bixiAnalysis = true;
   const { serviceTabValue } = useLayout();
-  const { setArrondissements } = useData();
+  const { setBixiTripControlBoroughs: setArrondissements } = useData();
 
   useEffect(() => {
     fetch("/api/bixi/stations/arrondissements")
