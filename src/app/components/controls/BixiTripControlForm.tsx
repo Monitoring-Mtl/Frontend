@@ -1,3 +1,4 @@
+import { useData } from "@/contexts/DataContext";
 import { useLayout } from "@/contexts/LayoutContext";
 import {
   Button,
@@ -13,6 +14,7 @@ import {
 function BixiTripControlForm() {
   const prefix = "bixi-trip-control-form";
   const { bixiControlTabValue } = useLayout();
+  const { arrondissements } = useData();
 
   return (
     bixiControlTabValue === 0 && (
@@ -31,8 +33,16 @@ function BixiTripControlForm() {
               id={`${prefix}-depart-arrondissement-select`}
               data-testid={`${prefix}-depart-arrondissement-select`}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
+              {arrondissements.map((arrondissement, index) => (
+                <MenuItem
+                  key={arrondissement}
+                  value={arrondissement}
+                  id={`${prefix}-depart-arrondissement-item-${index}`}
+                  data-testid={`${prefix}-depart-arrondissement-item-${index}`}
+                >
+                  {arrondissement}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControl
@@ -65,8 +75,16 @@ function BixiTripControlForm() {
               id={`${prefix}-arrivee-arrondissement-select`}
               data-testid={`${prefix}-arrivee-arrondissement-select`}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
+              {arrondissements.map((arrondissement, index) => (
+                <MenuItem
+                  key={arrondissement}
+                  value={arrondissement}
+                  id={`${prefix}-arrivee-arrondissement-item-${index}`}
+                  data-testid={`${prefix}-arrivee-arrondissement-item-${index}`}
+                >
+                  {arrondissement}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControl

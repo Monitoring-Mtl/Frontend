@@ -1,6 +1,11 @@
 describe("Bixi Controls Tabs Switching", () => {
   beforeEach(() => {
+    cy.intercept("GET", "/api/bixi/stations/arrondissements", {
+      statusCode: 200,
+      body: ["Arrondissement A", "Arrondissement B"],
+    }).as("fetchArrondissements");
     cy.visit("http://localhost:3000");
+    Cypress.config('defaultCommandTimeout', 15000);
   });
 
   it("should display the Bixi Trajets controls when the Trajets tab is clicked", () => {
@@ -24,4 +29,51 @@ describe("Bixi Controls Tabs Switching", () => {
   //     });
   //   });
   // });
+
+  it("should load and display mock arrondissements in the select dropdowns", () => {
+    cy.get('[data-testid="service-tabs-tab-bixi"]')
+      .click()
+      .then(() => {
+        cy.get('[data-testid="bixi-control-tabs-tab-trajets"]')
+          .click()
+          .then(() => {
+            cy.wait("@fetchArrondissements").then((interception) => {
+              expect(interception.response?.statusCode).to.eq(200);
+              expect(interception.response?.body).to.deep.equal([
+                "Arrondissement A",
+                "Arrondissement B",
+              ]);
+
+              cy.get('[data-testid="bixi-trip-control-form"]').should(
+                "be.visible"
+              );
+              cy.get(
+                '[data-testid="bixi-trip-control-form-depart-arrondissement-select"]'
+              )
+                .click()
+                .then(() => {
+                  interception.response?.body.forEach(
+                    (arrondissement: string) => {
+                      cy.contains(arrondissement).should("be.visible");
+                    }
+                  );
+                  cy.get("body").click(0, 0);
+                });
+
+              cy.get(
+                '[data-testid="bixi-trip-control-form-arrivee-arrondissement-select"]'
+              )
+                .click()
+                .then(() => {
+                  interception.response?.body.forEach(
+                    (arrondissement: string) => {
+                      cy.contains(arrondissement).should("be.visible");
+                    }
+                  );
+                  cy.get("body").click(0, 0);
+                });
+            });
+          });
+      });
+  });
 });

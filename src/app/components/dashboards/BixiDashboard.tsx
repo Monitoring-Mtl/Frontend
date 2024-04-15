@@ -1,7 +1,9 @@
 "use client";
 
+import { useData } from "@/contexts/DataContext";
 import { useLayout } from "@/contexts/LayoutContext";
 import { Card } from "@mui/material";
+import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Row from "../../layouts/Row";
@@ -12,6 +14,20 @@ export default function BixiDashboard() {
   const prefix = "bixi-dashboard";
   const bixiAnalysis = true;
   const { serviceTabValue } = useLayout();
+  const { setArrondissements } = useData();
+
+  useEffect(() => {
+    fetch("/api/bixi/stations/arrondissements")
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch arrondissements");
+        }
+        setArrondissements(await response.json());
+      })
+      .catch((error) => {
+        console.error(`init arrondissements failed:`, error);
+      });
+  }, [setArrondissements]);
 
   return (
     serviceTabValue === 1 && (
