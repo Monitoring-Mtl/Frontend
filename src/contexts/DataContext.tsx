@@ -1,5 +1,10 @@
 "use client";
-import { StationLocation, defaultBixiStation } from "@/types/bixiTypes";
+import {
+  BixiStationLocation,
+  BixiYearlyAverageTripDurations,
+  defaultBixiStation,
+  defaultBixiYearlyAverageTripDurations,
+} from "@/types/bixiTypes";
 import { createContext, useContext, useState, type ReactNode } from "react";
 
 interface DataContextState {
@@ -9,13 +14,13 @@ interface DataContextState {
   setBixiTripControlStartBorough: React.Dispatch<React.SetStateAction<string>>;
   bixiTripControlEndBorough: string;
   setBixiTripControlEndBorough: React.Dispatch<React.SetStateAction<string>>;
-  bixiTripControlStartStation: StationLocation;
+  bixiTripControlStartStation: BixiStationLocation;
   setBixiTripControlStartStation: React.Dispatch<
-    React.SetStateAction<StationLocation>
+    React.SetStateAction<BixiStationLocation>
   >;
-  bixiTripControlEndStation: StationLocation;
+  bixiTripControlEndStation: BixiStationLocation;
   setBixiTripControlEndStation: React.Dispatch<
-    React.SetStateAction<StationLocation>
+    React.SetStateAction<BixiStationLocation>
   >;
   bixiTripControlStartDate: string;
   setBixiTripControlStartDate: React.Dispatch<React.SetStateAction<string>>;
@@ -25,8 +30,11 @@ interface DataContextState {
   setBixiTripControlStartTime: React.Dispatch<React.SetStateAction<string>>;
   bixiTripControlEndTime: string;
   setBixiTripControlEndTime: React.Dispatch<React.SetStateAction<string>>;
+  bixiYearlyAverageTripDurations: BixiYearlyAverageTripDurations;
+  setBixiYearlyAverageTripDurations: React.Dispatch<
+    React.SetStateAction<BixiYearlyAverageTripDurations>
+  >;
 }
-
 
 const DataContext = createContext<DataContextState>({
   bixiTripControlBoroughs: [],
@@ -47,6 +55,8 @@ const DataContext = createContext<DataContextState>({
   setBixiTripControlStartTime: () => {},
   bixiTripControlEndTime: "",
   setBixiTripControlEndTime: () => {},
+  bixiYearlyAverageTripDurations: defaultBixiYearlyAverageTripDurations,
+  setBixiYearlyAverageTripDurations: () => {},
 });
 
 export const DataContextProvider: React.FC<{ children: ReactNode }> = ({
@@ -60,9 +70,9 @@ export const DataContextProvider: React.FC<{ children: ReactNode }> = ({
   const [bixiTripControlEndBorough, setBixiTripControlEndBorough] =
     useState("");
   const [bixiTripControlStartStation, setBixiTripControlStartStation] =
-    useState<StationLocation>(defaultBixiStation);
+    useState<BixiStationLocation>(defaultBixiStation);
   const [bixiTripControlEndStation, setBixiTripControlEndStation] =
-    useState<StationLocation>(defaultBixiStation);
+    useState<BixiStationLocation>(defaultBixiStation);
   const [bixiTripControlStartDate, setBixiTripControlStartDate] =
     useState<string>("");
   const [bixiTripControlEndDate, setBixiTripControlEndDate] =
@@ -71,6 +81,10 @@ export const DataContextProvider: React.FC<{ children: ReactNode }> = ({
     useState<string>("");
   const [bixiTripControlEndTime, setBixiTripControlEndTime] =
     useState<string>("");
+  const [bixiYearlyAverageTripDurations, setBixiYearlyAverageTripDurations] =
+    useState<BixiYearlyAverageTripDurations>(
+      defaultBixiYearlyAverageTripDurations
+    );
 
   return (
     <DataContext.Provider
@@ -93,6 +107,8 @@ export const DataContextProvider: React.FC<{ children: ReactNode }> = ({
         setBixiTripControlStartTime,
         bixiTripControlEndTime,
         setBixiTripControlEndTime,
+        bixiYearlyAverageTripDurations,
+        setBixiYearlyAverageTripDurations,
       }}
     >
       {children}

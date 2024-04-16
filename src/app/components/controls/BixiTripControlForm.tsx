@@ -1,6 +1,6 @@
 import { useData } from "@/contexts/DataContext";
 import { useLayout } from "@/contexts/LayoutContext";
-import { StationLocation, defaultBixiStation } from "@/types/bixiTypes";
+import { BixiStationLocation, defaultBixiStation } from "@/types/bixiTypes";
 import { toEpochMillis } from "@/utils/datetime-utils";
 import {
   Button,
@@ -37,6 +37,7 @@ function BixiTripControlForm() {
     setBixiTripControlStartTime,
     bixiTripControlEndTime,
     setBixiTripControlEndTime,
+    setBixiYearlyAverageTripDurations,
   } = useData();
   const [startStations, setStartStations] = useState<{}>([]);
   const [endStations, setEndStations] = useState<{}>([]);
@@ -46,13 +47,13 @@ function BixiTripControlForm() {
   const handleArrondissementChange =
     (setter: React.Dispatch<React.SetStateAction<string>>) =>
     (event: SelectChangeEvent<string>) => {
-      const arrondissement = event.target.value;
-      setter(arrondissement);
+      const borough = event.target.value;
+      setter(borough);
     };
 
   const handleStationChange =
     (
-      setter: React.Dispatch<React.SetStateAction<StationLocation>>,
+      setter: React.Dispatch<React.SetStateAction<BixiStationLocation>>,
       stations: {}
     ) =>
     (event: SelectChangeEvent<string>) => {
@@ -80,10 +81,10 @@ function BixiTripControlForm() {
       query.append("endStationName", bixiTripControlEndStation.name);
     }
     if (startEpochMillis) {
-      query.append("minStartTime", startEpochMillis.toString());
+      query.append("startEpochMillis", startEpochMillis.toString());
     }
     if (endEpochMillis) {
-      query.append("maxStartTime", endEpochMillis.toString());
+      query.append("endEpochMillis", endEpochMillis.toString());
     }
 
     fetch(`/api/bixi/trips/duration/average?${query}`)
@@ -95,6 +96,7 @@ function BixiTripControlForm() {
       })
       .then((data) => {
         console.log("Success:", data);
+        setBixiYearlyAverageTripDurations(data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -104,7 +106,7 @@ function BixiTripControlForm() {
   const fetchStations = (
     arrondissement: string,
     setStations: React.Dispatch<
-      React.SetStateAction<{ [key: string]: StationLocation }>
+      React.SetStateAction<{ [key: string]: BixiStationLocation }>
     >
   ) => {
     if (!arrondissement) return;
@@ -116,11 +118,11 @@ function BixiTripControlForm() {
         if (!response.ok) {
           throw new Error("Failed to fetch stations");
         }
-        const data: StationLocation[] = await response.json();
+        const data: BixiStationLocation[] = await response.json();
         const stationDict = data.reduce((acc, station) => {
           if (station.name) acc[station.name] = station;
           return acc;
-        }, {} as { [key: string]: StationLocation });
+        }, {} as { [key: string]: BixiStationLocation });
         stationDict[noSelection] = defaultBixiStation;
         setStations(stationDict);
       })
@@ -131,12 +133,22 @@ function BixiTripControlForm() {
   };
 
   useEffect(() => {
+    setBixiTripControlStartStation(defaultBixiStation);
     fetchStations(bixiTripControlStartBorough, setStartStations);
-  }, [bixiTripControlStartBorough, setStartStations]);
+  }, [
+    bixiTripControlStartBorough,
+    setStartStations,
+    setBixiTripControlStartStation,
+  ]);
 
   useEffect(() => {
+    setBixiTripControlEndStation(defaultBixiStation);
     fetchStations(bixiTripControlEndBorough, setEndStations);
-  }, [bixiTripControlEndBorough, setEndStations]);
+  }, [
+    bixiTripControlEndBorough,
+    setEndStations,
+    setBixiTripControlEndStation,
+  ]);
 
   return (
     bixiControlTabValue === 0 && (

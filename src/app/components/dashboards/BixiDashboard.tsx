@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Row from "../../layouts/Row";
 import BixiTripControlForm from "../controls/BixiTripControlForm";
+import { BixiYearlyTripDurationAverageChart } from "../graphs/BixiYearlyTripDurationAverageChart";
 import BixiControlTabs from "../tabs/BixiControlTabs";
 
 export default function BixiDashboard() {
@@ -54,7 +55,9 @@ export default function BixiDashboard() {
               id={`${prefix}-analysis-card-1`}
               className="col-span-4 h-96"
               data-testid={`${prefix}-analysis-card-1`}
-            ></Card>
+            >
+              <BixiYearlyTripDurationAverageChart />
+            </Card>
             <Card
               id={`${prefix}-analysis-card-2`}
               className="col-span-4"
