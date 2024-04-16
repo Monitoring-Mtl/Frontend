@@ -1,6 +1,7 @@
 import { useData } from "@/contexts/DataContext";
 import { useLayout } from "@/contexts/LayoutContext";
-import { StationLocation } from "@/types/bixiTypes";
+import { StationLocation, defaultBixiStation } from "@/types/bixiTypes";
+import { toEpochMillis } from "@/utils/datetime-utils";
 import {
   Button,
   CardContent,
@@ -16,21 +17,31 @@ import { useEffect, useState } from "react";
 
 function BixiTripControlForm() {
   const prefix = "bixi-trip-control-form";
+  const noSelection = "No selection";
   const { bixiControlTabValue } = useLayout();
   const {
     bixiTripControlBoroughs,
-    bixiTripControlStartBoroughSelect,
-    setBixiTripControlStartBoroughSelect,
-    bixiTripControlEndBoroughSelect,
-    setBixiTripControlEndBoroughSelect,
-    bixiTripControlStartStationSelect,
-    setBixiTripControlStartStationSelect,
-    bixiTripControlEndStationSelect,
-    setBixiTripControlEndStationSelect,
+    bixiTripControlStartBorough,
+    setBixiTripControlStartBorough,
+    bixiTripControlEndBorough,
+    setBixiTripControlEndBorough,
+    bixiTripControlStartStation,
+    setBixiTripControlStartStation,
+    bixiTripControlEndStation,
+    setBixiTripControlEndStation,
+    bixiTripControlStartDate,
+    setBixiTripControlStartDate,
+    bixiTripControlEndDate,
+    setBixiTripControlEndDate,
+    bixiTripControlStartTime,
+    setBixiTripControlStartTime,
+    bixiTripControlEndTime,
+    setBixiTripControlEndTime,
   } = useData();
-
   const [startStations, setStartStations] = useState<{}>([]);
   const [endStations, setEndStations] = useState<{}>([]);
+  const isAnalyzeDisabled =
+    !bixiTripControlStartDate || !bixiTripControlEndDate;
 
   const handleArrondissementChange =
     (setter: React.Dispatch<React.SetStateAction<string>>) =>
@@ -46,8 +57,49 @@ function BixiTripControlForm() {
     ) =>
     (event: SelectChangeEvent<string>) => {
       const stationLocationName = event.target.value;
-      setter(stations[stationLocationName]);
+      if (stationLocationName) setter(stations[stationLocationName]);
+      else setter(stations[noSelection]);
     };
+
+  function handleAnalyserClick() {
+    const startEpochMillis = toEpochMillis(
+      bixiTripControlStartDate,
+      bixiTripControlStartTime || undefined
+    );
+    const endEpochMillis = toEpochMillis(
+      bixiTripControlEndDate,
+      bixiTripControlEndTime || undefined
+    );
+
+    const query = new URLSearchParams();
+
+    if (bixiTripControlStartStation?.name) {
+      query.append("startStationName", bixiTripControlStartStation.name);
+    }
+    if (bixiTripControlEndStation?.name) {
+      query.append("endStationName", bixiTripControlEndStation.name);
+    }
+    if (startEpochMillis) {
+      query.append("minStartTime", startEpochMillis.toString());
+    }
+    if (endEpochMillis) {
+      query.append("maxStartTime", endEpochMillis.toString());
+    }
+
+    fetch(`/api/bixi/trips/duration/average?${query}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
   const fetchStations = (
     arrondissement: string,
@@ -69,6 +121,7 @@ function BixiTripControlForm() {
           if (station.name) acc[station.name] = station;
           return acc;
         }, {} as { [key: string]: StationLocation });
+        stationDict[noSelection] = defaultBixiStation;
         setStations(stationDict);
       })
       .catch((error) => {
@@ -78,12 +131,12 @@ function BixiTripControlForm() {
   };
 
   useEffect(() => {
-    fetchStations(bixiTripControlStartBoroughSelect, setStartStations);
-  }, [bixiTripControlStartBoroughSelect, setStartStations]);
+    fetchStations(bixiTripControlStartBorough, setStartStations);
+  }, [bixiTripControlStartBorough, setStartStations]);
 
   useEffect(() => {
-    fetchStations(bixiTripControlEndBoroughSelect, setEndStations);
-  }, [bixiTripControlEndBoroughSelect, setEndStations]);
+    fetchStations(bixiTripControlEndBorough, setEndStations);
+  }, [bixiTripControlEndBorough, setEndStations]);
 
   return (
     bixiControlTabValue === 0 && (
@@ -99,9 +152,9 @@ function BixiTripControlForm() {
             <Select
               defaultValue=""
               label="Arrondissement"
-              value={bixiTripControlStartBoroughSelect}
+              value={bixiTripControlStartBorough}
               onChange={handleArrondissementChange(
-                setBixiTripControlStartBoroughSelect
+                setBixiTripControlStartBorough
               )}
               id={`${prefix}-depart-arrondissement-select`}
               data-testid={`${prefix}-depart-arrondissement-select`}
@@ -127,9 +180,9 @@ function BixiTripControlForm() {
             <Select
               defaultValue=""
               label="Nom de la station"
-              value={bixiTripControlStartStationSelect.name}
+              value={bixiTripControlStartStation.name}
               onChange={handleStationChange(
-                setBixiTripControlStartStationSelect,
+                setBixiTripControlStartStation,
                 startStations
               )}
               id={`${prefix}-depart-station-select`}
@@ -158,9 +211,9 @@ function BixiTripControlForm() {
             <Select
               defaultValue=""
               label="Arrondissement"
-              value={bixiTripControlEndBoroughSelect}
+              value={bixiTripControlEndBorough}
               onChange={handleArrondissementChange(
-                setBixiTripControlEndBoroughSelect
+                setBixiTripControlEndBorough
               )}
               id={`${prefix}-arrivee-arrondissement-select`}
               data-testid={`${prefix}-arrivee-arrondissement-select`}
@@ -186,9 +239,9 @@ function BixiTripControlForm() {
             <Select
               defaultValue=""
               label="Nom de la station"
-              value={bixiTripControlEndStationSelect.name}
+              value={bixiTripControlEndStation.name}
               onChange={handleStationChange(
-                setBixiTripControlEndStationSelect,
+                setBixiTripControlEndStation,
                 endStations
               )}
               id={`${prefix}-arrivee-station-select`}
@@ -212,6 +265,8 @@ function BixiTripControlForm() {
             fullWidth
             label="Date de début"
             type="date"
+            value={bixiTripControlStartDate}
+            onChange={(e) => setBixiTripControlStartDate(e.target.value)}
             id={`${prefix}-date-debut`}
             data-testid={`${prefix}-date-debut`}
             InputLabelProps={{ shrink: true }}
@@ -220,6 +275,8 @@ function BixiTripControlForm() {
             fullWidth
             label="Heure de début"
             type="time"
+            value={bixiTripControlStartTime}
+            onChange={(e) => setBixiTripControlStartTime(e.target.value)}
             id={`${prefix}-heure-debut`}
             data-testid={`${prefix}-heure-debut`}
             InputLabelProps={{ shrink: true }}
@@ -228,6 +285,8 @@ function BixiTripControlForm() {
             fullWidth
             label="Date de fin"
             type="date"
+            value={bixiTripControlEndDate}
+            onChange={(e) => setBixiTripControlEndDate(e.target.value)}
             id={`${prefix}-date-fin`}
             data-testid={`${prefix}-date-fin`}
             InputLabelProps={{ shrink: true }}
@@ -236,6 +295,8 @@ function BixiTripControlForm() {
             fullWidth
             label="Heure de fin"
             type="time"
+            value={bixiTripControlEndTime}
+            onChange={(e) => setBixiTripControlEndTime(e.target.value)}
             id={`${prefix}-heure-fin`}
             data-testid={`${prefix}-heure-fin`}
             InputLabelProps={{ shrink: true }}
@@ -243,8 +304,10 @@ function BixiTripControlForm() {
           <Button
             variant="contained"
             fullWidth
+            onClick={handleAnalyserClick}
             id={`${prefix}-analyze-button`}
             data-testid={`${prefix}-analyze-button`}
+            disabled={isAnalyzeDisabled}
           >
             ANALYSER
           </Button>

@@ -4,3 +4,10 @@ export type StationLocation = {
   latitude: number | null;
   longitude: number | null;
 };
+
+export const defaultBixiStation = {
+  name: "",
+  arrondissement: "",
+  latitude: null,
+  longitude: null,
+};

@@ -1,46 +1,52 @@
 "use client";
-import { StationLocation } from "@/types/bixiTypes";
+import { StationLocation, defaultBixiStation } from "@/types/bixiTypes";
 import { createContext, useContext, useState, type ReactNode } from "react";
 
 interface DataContextState {
   bixiTripControlBoroughs: string[];
   setBixiTripControlBoroughs: React.Dispatch<React.SetStateAction<string[]>>;
-  bixiTripControlStartBoroughSelect: string;
-  setBixiTripControlStartBoroughSelect: React.Dispatch<
-    React.SetStateAction<string>
-  >;
-  bixiTripControlEndBoroughSelect: string;
-  setBixiTripControlEndBoroughSelect: React.Dispatch<
-    React.SetStateAction<string>
-  >;
-  bixiTripControlStartStationSelect: StationLocation;
-  setBixiTripControlStartStationSelect: React.Dispatch<
+  bixiTripControlStartBorough: string;
+  setBixiTripControlStartBorough: React.Dispatch<React.SetStateAction<string>>;
+  bixiTripControlEndBorough: string;
+  setBixiTripControlEndBorough: React.Dispatch<React.SetStateAction<string>>;
+  bixiTripControlStartStation: StationLocation;
+  setBixiTripControlStartStation: React.Dispatch<
     React.SetStateAction<StationLocation>
   >;
-  bixiTripControlEndStationSelect: StationLocation;
-  setBixiTripControlEndStationSelect: React.Dispatch<
+  bixiTripControlEndStation: StationLocation;
+  setBixiTripControlEndStation: React.Dispatch<
     React.SetStateAction<StationLocation>
   >;
+  bixiTripControlStartDate: string;
+  setBixiTripControlStartDate: React.Dispatch<React.SetStateAction<string>>;
+  bixiTripControlEndDate: string;
+  setBixiTripControlEndDate: React.Dispatch<React.SetStateAction<string>>;
+  bixiTripControlStartTime: string;
+  setBixiTripControlStartTime: React.Dispatch<React.SetStateAction<string>>;
+  bixiTripControlEndTime: string;
+  setBixiTripControlEndTime: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const defaultBixiStation = {
-  name: "",
-  arrondissement: "",
-  latitude: null,
-  longitude: null,
-};
 
 const DataContext = createContext<DataContextState>({
   bixiTripControlBoroughs: [],
   setBixiTripControlBoroughs: () => {},
-  bixiTripControlStartBoroughSelect: "",
-  setBixiTripControlStartBoroughSelect: () => {},
-  bixiTripControlEndBoroughSelect: "",
-  setBixiTripControlEndBoroughSelect: () => {},
-  bixiTripControlStartStationSelect: defaultBixiStation,
-  setBixiTripControlStartStationSelect: () => {},
-  bixiTripControlEndStationSelect: defaultBixiStation,
-  setBixiTripControlEndStationSelect: () => {},
+  bixiTripControlStartBorough: "",
+  setBixiTripControlStartBorough: () => {},
+  bixiTripControlEndBorough: "",
+  setBixiTripControlEndBorough: () => {},
+  bixiTripControlStartStation: defaultBixiStation,
+  setBixiTripControlStartStation: () => {},
+  bixiTripControlEndStation: defaultBixiStation,
+  setBixiTripControlEndStation: () => {},
+  bixiTripControlStartDate: "",
+  setBixiTripControlStartDate: () => {},
+  bixiTripControlEndDate: "",
+  setBixiTripControlEndDate: () => {},
+  bixiTripControlStartTime: "",
+  setBixiTripControlStartTime: () => {},
+  bixiTripControlEndTime: "",
+  setBixiTripControlEndTime: () => {},
 });
 
 export const DataContextProvider: React.FC<{ children: ReactNode }> = ({
@@ -49,32 +55,44 @@ export const DataContextProvider: React.FC<{ children: ReactNode }> = ({
   const [bixiTripControlBoroughs, setBixiTripControlBoroughs] = useState<
     string[]
   >([]);
-  const [
-    bixiTripControlStartBoroughSelect,
-    setBixiTripControlStartBoroughSelect,
-  ] = useState("");
-  const [bixiTripControlEndBoroughSelect, setBixiTripControlEndBoroughSelect] =
+  const [bixiTripControlStartBorough, setBixiTripControlStartBorough] =
     useState("");
-  const [
-    bixiTripControlStartStationSelect,
-    setBixiTripControlStartStationSelect,
-  ] = useState<StationLocation>(defaultBixiStation);
-  const [bixiTripControlEndStationSelect, setBixiTripControlEndStationSelect] =
+  const [bixiTripControlEndBorough, setBixiTripControlEndBorough] =
+    useState("");
+  const [bixiTripControlStartStation, setBixiTripControlStartStation] =
     useState<StationLocation>(defaultBixiStation);
+  const [bixiTripControlEndStation, setBixiTripControlEndStation] =
+    useState<StationLocation>(defaultBixiStation);
+  const [bixiTripControlStartDate, setBixiTripControlStartDate] =
+    useState<string>("");
+  const [bixiTripControlEndDate, setBixiTripControlEndDate] =
+    useState<string>("");
+  const [bixiTripControlStartTime, setBixiTripControlStartTime] =
+    useState<string>("");
+  const [bixiTripControlEndTime, setBixiTripControlEndTime] =
+    useState<string>("");
 
   return (
     <DataContext.Provider
       value={{
         bixiTripControlBoroughs,
         setBixiTripControlBoroughs,
-        bixiTripControlStartBoroughSelect,
-        setBixiTripControlStartBoroughSelect,
-        bixiTripControlEndBoroughSelect,
-        setBixiTripControlEndBoroughSelect,
-        bixiTripControlStartStationSelect,
-        setBixiTripControlStartStationSelect,
-        bixiTripControlEndStationSelect,
-        setBixiTripControlEndStationSelect,
+        bixiTripControlStartBorough,
+        setBixiTripControlStartBorough,
+        bixiTripControlEndBorough,
+        setBixiTripControlEndBorough,
+        bixiTripControlStartStation,
+        setBixiTripControlStartStation,
+        bixiTripControlEndStation,
+        setBixiTripControlEndStation,
+        bixiTripControlStartDate,
+        setBixiTripControlStartDate,
+        bixiTripControlEndDate,
+        setBixiTripControlEndDate,
+        bixiTripControlStartTime,
+        setBixiTripControlStartTime,
+        bixiTripControlEndTime,
+        setBixiTripControlEndTime,
       }}
     >
       {children}

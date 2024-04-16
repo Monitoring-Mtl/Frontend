@@ -3,11 +3,10 @@
 describe('ControlsForm', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000'); 
+    Cypress.config("defaultCommandTimeout", 15000);
   });
 
   it('should submit the form with valid data', () => {
-    cy.wait(12000)
-
     cy.get('[aria-labelledby="busLine"]').click();
     cy.get('[role="option"]').contains('10').click();
 
@@ -38,8 +37,6 @@ describe('ControlsForm', () => {
   });
 
   it('should not submit when begin date is later than end date', () => {
-    cy.wait(12000);
-
     cy.get('[aria-labelledby="busLine"]').click();
     cy.get('[role="option"]').contains('10').click();
 
@@ -72,8 +69,6 @@ describe('ControlsForm', () => {
   });
 
   it('should not submit when begin hour-minute is later than end hour-minute', () => {
-    cy.wait(12000);
-
     cy.get('[aria-labelledby="busLine"]').click();
     cy.get('[role="option"]').contains('10').click();
 
