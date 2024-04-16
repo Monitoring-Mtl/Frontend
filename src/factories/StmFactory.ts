@@ -4,11 +4,11 @@ import { Route } from '@/types/Route';
 import { Stop } from '@/types/Stop';
 import { RouteShape } from '@/types/RouteShape';
 import { StmAnalysis } from '@/types/StmAnalysis';
+import { SegmentData, SegmentDataAnalysis } from '@/types/StmSegmentAnalysis';
 
 export class StmFactory {
 
     static createRouteShape(data: JSON) : RouteShape | null{
-
         if (!data){
             return null;
         }
@@ -20,19 +20,22 @@ export class StmFactory {
         }
 
         let coordinates:any[] = [];
+        let colors: string[] = []
         shapes.forEach(shape => {
             const longitude = shape[shapeProperties.longitude];
             const latitude = shape[shapeProperties.latitude];
             if (longitude && latitude){
                 coordinates.push(fromLonLat([longitude, latitude]));
             }
+            colors.push('#' + Math.floor(Math.random() * 16777215).toString(16));//TODO: CHANGER LA CRISS DE COULEUR
         });
-        
-        let shapeId : string = shapes[0][shapeProperties.id];
 
+        let shapeId : string = shapes[0][shapeProperties.id];
+        
         return {
             id:shapeId, 
-            coordinates
+            coordinates,
+            colors   
         }
     }
 
@@ -54,7 +57,7 @@ export class StmFactory {
         return routes;
     }
 
-    static createStmAnalysis(json:JSON) : StmAnalysis | null {
+    static createStmAnalysis(json:JSON, average_offset_difference: SegmentDataAnalysis[]) : StmAnalysis | null {
         if(!json){
             return null;
         }
@@ -76,8 +79,57 @@ export class StmFactory {
             occupancies: occupancies,
             occupancyLabels: ["Faible", "Moyen", "Élevé"],
             accessibilities: accessibilities,
-            accessibilityLabels: ["N'ont pas une rampe d'accès", "Ont une rampe d'accès et une place", "Ont une rampe d'accès et deux places"]
+            accessibilityLabels: ["N'ont pas une rampe d'accès", "Ont une rampe d'accès et une place", "Ont une rampe d'accès et deux places"],
+            average_offset_differences: average_offset_difference
         };
+    }
+
+    static createSegmentsData(json:JSON) : SegmentData[] | null {
+        if(!json){
+            return null;
+        }
+        // Map into StmSegmentAnalysis
+        if (Array.isArray(json) && json.length > 0) {
+            let segments: SegmentData[] = json.map(item => {
+                return <SegmentData>({
+                    _id: String(item._id),
+                    index: Number(item.index),
+                    stop_id: Number(item.stop_id),
+                    routeId: Number(item.routeId),
+                    previous_stop_id: Number(item.previous_stop_id),
+                    offset_difference: Number(item.offset_difference),
+                    Current_Occupancy: String(item.Current_Occupancy),
+                    arrival_time_unix: Number(item.arrival_time_unix),
+                    trip_id: Number(item.trip_id),
+                    shape_id: Number(item.shape_id)
+                
+                })
+            });
+
+            return segments;
+        }
+
+        return null;
+    }
+
+    static createSegmentsAnalysis(json:JSON) : SegmentDataAnalysis[] | null {
+        if(!json){
+            return null;
+        }
+        // Map into StmSegmentAnalysis
+        if (Array.isArray(json) && json.length > 0) {
+            let segmentsAnalysis: SegmentDataAnalysis[] = json.map(item => {
+                return <SegmentDataAnalysis>({
+                    stop_id: Number(item._id.stop_id),
+                    previous_stop_id: Number(item._id.previous_stop_id),
+                    average_offset_difference: Number(item.average_offset_difference),
+                })
+            });
+
+            return segmentsAnalysis;
+        }
+
+        return null;
     }
 }
 

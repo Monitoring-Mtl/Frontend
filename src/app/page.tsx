@@ -16,6 +16,7 @@ import { Direction } from "@/types/Direction";
 import { RouteShape } from "@/types/RouteShape";
 import { StmAnalysis } from "@/types/StmAnalysis";
 import { toEpoch } from "@/utils/datetime-utils";
+import { BusSegmentsPunctualityOffset } from "./components/graphs/BusSegmentsPunctualityOffset";
 
 export default function Home() {
     const [stmAnalysis, setStmAnalysis] = useState<StmAnalysis>();
@@ -107,6 +108,14 @@ export default function Home() {
 
                     <Card className="col-span-4">
                         <BusPunctualityChart analysis={stmAnalysis} />
+                    </Card>
+
+                </Row>
+            )}
+            {stmAnalysis && (
+                <Row>
+                    <Card className="col-span-12">
+                        <BusSegmentsPunctualityOffset analysis={stmAnalysis} stops={stops} />
                     </Card>
                 </Row>
             )}
