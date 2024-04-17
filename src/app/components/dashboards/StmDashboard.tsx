@@ -15,6 +15,7 @@ import ControlsForm from "../../layouts/ControlsForm";
 import Row from "../../layouts/Row";
 import { AccessRampChart } from "../graphs/AccessRampChart";
 import { BusPunctualityChart } from "../graphs/BusPunctualityChart";
+import { BusSegmentsPunctualityOffset } from "../graphs/BusSegmentsPunctualityOffset";
 import { OccupancyChart } from "../graphs/OccupancyChart";
 import { StmMap } from "../map/StmMap";
 
@@ -109,6 +110,16 @@ export default function StmDashboard() {
 
             <Card className="col-span-4">
               <BusPunctualityChart analysis={stmAnalysis} />
+            </Card>
+          </Row>
+        )}
+        {stmAnalysis && (
+          <Row>
+            <Card className="col-span-12">
+              <BusSegmentsPunctualityOffset
+                analysis={stmAnalysis}
+                stops={stops}
+              />
             </Card>
           </Row>
         )}

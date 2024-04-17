@@ -13,7 +13,7 @@ describe("Test the creation of data objects from received JSON", () => {
 
     it("Create STM analysis test.", () => {
         cy.fixture("analysis.json").then((analysis) => {
-            const stmAnalysis = StmFactory.createStmAnalysis(analysis)!;
+            const stmAnalysis = StmFactory.createStmAnalysis(analysis, [])!;
             expect(stmAnalysis).not.to.be.null;
             expect(stmAnalysis.offsets.length).to.equal(17);
             expect(stmAnalysis.offsets[0]).to.equal(-229);

@@ -4,6 +4,8 @@ import About from "./components/dashboards/About";
 import BixiDashboard from "./components/dashboards/BixiDashboard";
 import StmDashboard from "./components/dashboards/StmDashboard";
 
+import "react-toastify/dist/ReactToastify.css";
+
 export default function Home() {
   useEffect(() => {
     fetch("/api/bixi/health")
@@ -11,7 +13,7 @@ export default function Home() {
         if (!response.ok) {
           throw new Error("Bixi-Api health check failed");
         }
-        return response.json()
+        return response.json();
       })
       .then((json) => {
         console.log("Bixi-Api health check:", json.message);
@@ -20,7 +22,6 @@ export default function Home() {
         console.error("API call failed:", error);
       });
   }, []);
-
 
   return (
     <>
