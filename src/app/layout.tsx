@@ -1,7 +1,8 @@
-import "../css/globals.css";
+import { DataContextProvider } from "@/contexts/DataContext";
+import { LayoutContextProvider } from "@/contexts/LayoutContext";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Footer from "./layouts/Footer";
+import "../css/globals.css";
 import Header from "./layouts/Header";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,8 +20,12 @@ export default function RootLayout({
     <html lang="fr">
       <body className={inter.className}>
         <div>
-          <Header />
-          <main>{children}</main>
+          <LayoutContextProvider>
+            <DataContextProvider>
+              <Header />
+              <main>{children}</main>
+            </DataContextProvider>
+          </LayoutContextProvider>
         </div>
         {/* <Footer /> */}
       </body>

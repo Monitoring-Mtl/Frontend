@@ -1,130 +1,33 @@
 "use client";
+import { useEffect } from "react";
+import About from "./components/dashboards/About";
+import BixiDashboard from "./components/dashboards/BixiDashboard";
+import StmDashboard from "./components/dashboards/StmDashboard";
 
-import React, { useState } from "react";
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
-import { ServerlessApiService } from "@/services/ServerlessApiService";
-import ControlsForm from "./layouts/ControlsForm";
-import { Card } from "@mui/material";
-import Row from "./layouts/Row";
-import { StmMap } from "./components/map/StmMap";
-import { OccupancyChart } from "./components/graphs/OccupancyChart";
-import { BusPunctualityChart } from "./components/graphs/BusPunctualityChart";
-import { AccessRampChart } from "./components/graphs/AccessRampChart";
-import { Stop } from "@/types/Stop";
-import { Direction } from "@/types/Direction";
-import { RouteShape } from "@/types/RouteShape";
-import { StmAnalysis } from "@/types/StmAnalysis";
-import { toEpoch } from "@/utils/datetime-utils";
-import { BusSegmentsPunctualityOffset } from "./components/graphs/BusSegmentsPunctualityOffset";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
-    const [stmAnalysis, setStmAnalysis] = useState<StmAnalysis>();
-    const [routeShape, setRouteShape] = useState<RouteShape>();
-    const [stops, setStops] = useState<Stop[]>([]);
-    const [formContext, setFormContext] = useState<any>();
-
-    const directionCallback = (direction: Direction) => {
-        ServerlessApiService.getShape(direction.shapeId).then((shape) => {
-            if (shape) {
-                setRouteShape(shape);
-            }
-            setStops(direction.stops);
-        });
-    };
-
-    const stopSelectionCallback = (stopId: string) => {
-        formContext?.setFieldValue("stopId", Number(stopId));
-    }
-
-    const contextCallback = (context) => {
-        if (!formContext){
-            setFormContext(context);
+  useEffect(() => {
+    fetch("/api/bixi/health")
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error("Bixi-Api health check failed");
         }
-    }
+        return response.json();
+      })
+      .then((json) => {
+        console.log("Bixi-Api health check:", json.message);
+      })
+      .catch((error) => {
+        console.error("API call failed:", error);
+      });
+  }, []);
 
-    const stmAnalysisCallback = (
-        routeId: string,
-        stopId: string,
-        startDate: string,
-        startTime: string,
-        endDate: string,
-        endTime: string
-    ) => {
-        const start = toEpoch(startDate, startTime).toString();
-        const end = toEpoch(endDate, endTime).toString();
-
-        ServerlessApiService.getStmAnalysis(
-            routeId,
-            stopId,
-            start,
-            end
-        ).then((stmAnalysis) => {
-            if (stmAnalysis) {
-                setStmAnalysis(stmAnalysis);
-            } else {
-                toast.error("Il n'y a pas de données disponibles pour cet arrêt durant cette période.");
-            }
-        });
-    };
-
-    return (
-        <div>
-            <Row>
-                <Card className="col-span-9 h-100 pt-0">
-                    <StmMap
-                        routeShape={routeShape}
-                        stops={stops}
-                        stopCallback={stopSelectionCallback}
-                    />
-                </Card>
-
-                <Card
-                    id="bus-line-form"
-                    className="col-span-3 min-h-[676px]"
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                    }}
-                >
-                    <ControlsForm
-                        directionCallback={directionCallback}
-                        stmAnalysisCallback={stmAnalysisCallback}
-                        contextCallback={contextCallback}
-                    />
-                </Card>
-            </Row>
-
-            {stmAnalysis && (
-                <Row>
-                    <Card className="col-span-4">
-                        <AccessRampChart analysis={stmAnalysis} />
-                    </Card>
-
-                    <Card className="col-span-4">
-                        <OccupancyChart analysis={stmAnalysis} />
-                    </Card>
-
-                    <Card className="col-span-4">
-                        <BusPunctualityChart analysis={stmAnalysis} />
-                    </Card>
-
-                </Row>
-            )}
-            {stmAnalysis && (
-                <Row>
-                    <Card className="col-span-12">
-                        <BusSegmentsPunctualityOffset analysis={stmAnalysis} stops={stops} />
-                    </Card>
-                </Row>
-            )}
-
-            <Row>
-                {/* Dernière ligne vide qui réutilise le même padding que les rows précédentes. Si jamais on change le padding des rows, ceci va changer aussi. */}
-                <></>
-            </Row>
-            <ToastContainer autoClose={2000} pauseOnFocusLoss={false} closeOnClick newestOnTop={true} pauseOnHover={true} icon={true} />
-        </div>
-    );
+  return (
+    <>
+      <StmDashboard />
+      <BixiDashboard />
+      <About />
+    </>
+  );
 }
